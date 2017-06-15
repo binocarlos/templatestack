@@ -1,0 +1,9 @@
+FROM node:7.10.0
+MAINTAINER kaiyadavenport@gmail.com
+WORKDIR /app/api
+COPY ./template-api /app/template-api
+COPY ./api/package.json /app/api/package.json
+RUN npm install
+COPY ./api /app/api
+COPY ./frontend/www /app/frontend/www
+ENTRYPOINT ["node", "src/index.js"]

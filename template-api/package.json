@@ -1,0 +1,22 @@
+{
+  "name": "template-api",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    
+  },
+  "dependencies": {
+    "ioredis": "^2.4.3",
+    "minimist": "^1.2.0",
+    "passport": "^0.3.2",
+    "pg": "^6.1.2",
+    "connect-redis": "^3.2.0",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "http-proxy": "^1.16.2",
+    "template-tools": "file:../template-tools"
+  },
+  "devDependencies": {
+    
+  }
+}

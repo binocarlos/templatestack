@@ -1,0 +1,16 @@
+{
+  "name": "templateapp-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "api",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.3",
+    "check-options": "^1.1.0",
+    "template-api": "file:../template-api"
+  },
+  "devDependencies": {}
+}

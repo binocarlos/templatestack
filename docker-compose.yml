@@ -1,0 +1,60 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6.1
+    container_name: templateapp_postgres
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=templateapp
+      - POSTGRES_PASSWORD=templateapp
+      - POSTGRES_DB=templateapp
+  redis:
+    image: redis
+    container_name: templateapp_redis
+    volumes:
+      - ./.data/redis:/data
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+    container_name: templateapp_frontend
+    environment:
+      - MANUALRUN
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules/
+    entrypoint:
+      - "bash"
+      - "run.sh"
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile.api
+    ports:
+      - "80:80"
+    container_name: templateapp_api
+    depends_on:
+      - postgres
+      - redis
+      - frontend
+    links:
+      - postgres:postgres
+      - redis:redis
+      - frontend:frontend
+    environment:
+      - MANUALRUN
+      - FRONTEND_PROXY=frontend
+      - POSTGRES_SERVICE_USER=templateapp
+      - POSTGRES_SERVICE_PASSWORD=templateapp
+      - POSTGRES_SERVICE_DATABASE=templateapp
+      - COOKIE_SECRET=apples
+    volumes:
+      - ./api:/app/api
+      - ./frontend/www:/app/frontend/www
+      - /app/api/node_modules/
+      - ./template-api:/app/api/node_modules/template-api
+      - ./template-tools:/app/api/node_modules/template-tools
+    entrypoint:
+      - "bash"
+      - "run.sh"
