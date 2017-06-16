@@ -2,6 +2,7 @@ const processOptions = require('template-tools/src/processOptions')
 const ExpressSession = require('express-session')
 const RedisStore = require('connect-redis')(ExpressSession)
 
+// use redis to serialize sessions
 const REQUIRED = [
   'secret',
   'redis'

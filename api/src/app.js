@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 
 const RedisSession = require('template-api/src/auth/redis_session')
 const Passport = require('template-api/src/auth/passport')
+const PassportJSON = require('template-api/src/auth/passport_json')
 const WebserverTools = require('template-api/src/webserver/tools')
 
 const Routes = require('./routes')
@@ -13,9 +14,13 @@ const App = (settings, databases, controllers) => {
     secret: settings.cookie_secret,
     redis: databases.redis
   })
+  const passportJSON = PassportJSON({
+    authenticateUser: controllers.user.authenticate
+  })
   const passport = Passport({
     loadUser: controllers.user.load
   })
+  passport.use(passportJSON)
   const routes = Routes(settings, databases, controllers)
   app.use(bodyParser.json())
   app.use(cookieParser())

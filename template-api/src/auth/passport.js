@@ -5,6 +5,9 @@ const REQUIRED = [
   'loadUser'
 ]
 
+// loadUser(id, done)
+// extractUserId(user)
+
 const Passport = (opts) => {
   opts = processOptions(opts, {
     required: REQUIRED,
@@ -18,6 +21,7 @@ const Passport = (opts) => {
     done(null, id)
   })
 
+  // the backend handler should not expose sensitive data
   passport.deserializeUser((req, id, done) => {
     opts.loadUser(id, done)
   })
