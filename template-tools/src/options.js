@@ -46,7 +46,7 @@ const getErrorFields = (data, opts) => {
     })
 }
 
-const processOptions = (data, opts) => {
+const processor = (data, opts) => {
   throwErrorFields(data, opts)
   return getDefaultData(data, opts)
 }
@@ -55,5 +55,5 @@ module.exports = {
   getDefaultData,
   throwErrorFields,
   getErrorFields,
-  processOptions
+  processor
 }

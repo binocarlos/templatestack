@@ -1,12 +1,12 @@
 const tape = require('tape')
-const processOptions = require('../src/processOptions')
+const options = require('../src/options')
 
 tape('required options', (t) => {
   const required = [
     'width',
     'height'
   ]
-  const errorFields = processOptions.getErrorFields({
+  const errorFields = options.getErrorFields({
     width: 5
   }, {
     required
@@ -28,7 +28,7 @@ tape('type options', (t) => {
     'width:number',
     'height:function'
   ]
-  const errorFields = processOptions.getErrorFields({
+  const errorFields = options.getErrorFields({
     width: 'hello',
     height: () => {}
   }, {
@@ -57,7 +57,7 @@ tape('defaults', (t) => {
     width: 20,
     height: 10
   }
-  const data = processOptions.getDefaultData({
+  const data = options.getDefaultData({
     
   }, {
     required,
@@ -78,7 +78,7 @@ tape('throw errors', (t) => {
     'height'
   ]
   t.throws(() => {
-    processOptions.throwErrorFields({
+    options.throwErrorFields({
       width: 'hello'
     }, {
       required
@@ -88,14 +88,14 @@ tape('throw errors', (t) => {
   t.end()
 })
 
-tape('processOptions throws', (t) => {
+tape('processor throws', (t) => {
   const required = [
     'width:number',
     'height'
   ]
 
   t.throws(() => {
-    const opts = processOptions.processOptions({
+    const opts = options.processor({
       width: 'hello'
     }, {
       required
@@ -105,7 +105,7 @@ tape('processOptions throws', (t) => {
   t.end()
 })
 
-tape('processOptions defaults', (t) => {
+tape('processor defaults', (t) => {
   const required = [
     'width:number',
     'height:number'
@@ -113,7 +113,7 @@ tape('processOptions defaults', (t) => {
   const defaults = {
     height: 5
   }
-  const data = processOptions.processOptions({
+  const data = options.processor({
     width: 4
   }, {
     required,
