@@ -14,6 +14,9 @@ services:
     container_name: templateapp_redis
     volumes:
       - ./.data/redis:/data
+  nats:
+    image: nats
+    container_name: templateapp_nats
   frontend:
     build:
       context: ./
@@ -37,10 +40,12 @@ services:
     depends_on:
       - postgres
       - redis
+      - nats
       - frontend
     links:
       - postgres:postgres
       - redis:redis
+      - nats:nats
       - frontend:frontend
     environment:
       - MANUALRUN

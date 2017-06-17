@@ -1,4 +1,6 @@
-const processOptions = require('template-tools/src/processOptions')
+'use strict'
+
+const options = require('template-tools/src/options')
 const pg = require('pg')
 
 const REQUIRED = [
@@ -13,7 +15,7 @@ const DEFAULTS = {
 }
 
 const Pool = (opts) => {
-  opts = processOptions(opts, {
+  opts = options.process(opts, {
     required: REQUIRED,
     defaults: DEFAULTS,
     throwError: true

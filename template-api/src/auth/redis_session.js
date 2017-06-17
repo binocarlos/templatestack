@@ -1,4 +1,6 @@
-const processOptions = require('template-tools/src/processOptions')
+'use strict'
+
+const options = require('template-tools/src/options')
 const ExpressSession = require('express-session')
 const RedisStore = require('connect-redis')(ExpressSession)
 
@@ -9,7 +11,7 @@ const REQUIRED = [
 ]
 
 function RedisSession(opts) {
-  opts = processOptions(opts, {
+  opts = options.process(opts, {
     required: REQUIRED,
     throwError: true
   })

@@ -1,17 +1,18 @@
-const processOptions = require('template-tools/src/processOptions')
+'use strict'
+
+const options = require('template-tools/src/options')
 const passport = require('passport')
 
 const REQUIRED = [
-  'loadUser'
+  'loadUser:function'
 ]
 
 // loadUser(id, done)
 // extractUserId(user)
 
-const Passport = (opts) => {
-  opts = processOptions(opts, {
-    required: REQUIRED,
-    throwError: true
+const Passport = (transports, opts) => {
+  opts = options.process(opts, {
+    required: REQUIRED
   })
 
   passport.serializeUser((req, user, done) => {
@@ -23,7 +24,11 @@ const Passport = (opts) => {
 
   // the backend handler should not expose sensitive data
   passport.deserializeUser((req, id, done) => {
-    opts.loadUser(id, done)
+    transport.act({
+      topic: 'auth',
+      cmd: 'load',
+      id
+    }, done)
   })
     
   return passport
