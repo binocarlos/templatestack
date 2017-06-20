@@ -36,7 +36,7 @@ const wrapResult = (done) => (err, res, body) => {
 const register = (user, next) => {
   const req = {
     method: 'POST',
-    url: url('/api/v1/register'),
+    url: url('/api/v1/auth/register'),
     headers: headers(),
     json: user
   }
@@ -50,7 +50,7 @@ const register = (user, next) => {
 const login = (user, next) => {
   const req = {
     method: 'POST',
-    url: url('/api/v1/login'),
+    url: url('/api/v1/auth/login'),
     headers: headers(),
     json: user
   }
@@ -64,7 +64,7 @@ const login = (user, next) => {
 const logout = (next) => {
   const req = {
     method: 'GET',
-    url: url('/api/v1/logout'),
+    url: url('/api/v1/auth/logout'),
     headers: headers(),
     followAllRedirects: true
   }
@@ -78,7 +78,7 @@ const logout = (next) => {
 const status = (next) => {
   const req = {
     method: 'GET',
-    url: url('/api/v1/status'),
+    url: url('/api/v1/auth/status'),
     headers: headers(),
     json: true
   }

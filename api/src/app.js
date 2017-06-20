@@ -11,7 +11,7 @@ const WebserverTools = require('template-api/src/webserver/tools')
 
 const Routes = require('./routes')
 
-const App = (settings, databases, transport) => {
+const App = (settings, transport, databases) => {
 
   const app = express()
 

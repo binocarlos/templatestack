@@ -1,10 +1,12 @@
 'use strict'
 
-const Auth = require('./auth')
+const AuthBackend = require('./auth')
+const SystemBackend = require('./system')
 
-const Backend = (settings, databases, transport) => {
+const Backend = (settings, transport, databases) => {
   transport.ready(() => {
-    Auth(settings, databases, transport)  
+    AuthBackend(settings, transport, databases)  
+    SystemBackend(settings, transport, databases)
   })
 }
 

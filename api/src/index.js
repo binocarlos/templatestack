@@ -9,6 +9,6 @@ const App = require('./app')
 const databases = Databases(settings)
 const transport = Transport(settings, databases)
 
-const backend = Backend(settings, databases, transport)
-const app = App(settings, databases, transport)
+const backend = Backend(settings, transport, databases)
+const app = App(settings, transport, databases)
 app.listen(settings.port)
