@@ -23,6 +23,7 @@
     "template-tools": "file:../template-tools"
   },
   "devDependencies": {
+    "request": "^2.81.0",
     "tape": "^4.6.3"
   }
 }

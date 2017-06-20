@@ -1,6 +1,7 @@
 'use strict'
 
 const express = require('express')
+const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
@@ -23,6 +24,7 @@ const App = (settings, databases, transport) => {
   
   const passport = Passport(transport)
   
+  app.use(morgan('tiny'))
   app.use(bodyParser.json())
   app.use(cookieParser())
   app.use(session)

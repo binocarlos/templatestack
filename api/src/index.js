@@ -10,6 +10,5 @@ const databases = Databases(settings)
 const transport = Transport(settings, databases)
 
 const backend = Backend(settings, databases, transport)
-//const app = App(settings, databases, transport)
-
-//app.listen(settings.port)
+const app = App(settings, databases, transport)
+app.listen(settings.port)
