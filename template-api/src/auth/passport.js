@@ -4,11 +4,8 @@ const options = require('template-tools/src/options')
 const passport = require('passport')
 
 const REQUIRED = [
-  'loadUser:function'
-]
 
-// loadUser(id, done)
-// extractUserId(user)
+]
 
 const Passport = (transports, opts) => {
   opts = options.processor(opts, {

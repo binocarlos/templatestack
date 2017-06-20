@@ -1,11 +1,14 @@
 'use strict'
 
+const HemeraTransport = require('template-api/src/transport/hemera')
 const HemeraJoi = require('hemera-joi')
 const HemeraSql = require('hemera-sql-store')
-const Hemera = require('./hemera')
 
-const ServerTransport = (settings, databases) => {
-  const hemera = Hemera(settings)
+const Transport = (settings, databases) => {
+  const hemera = HemeraTransport({
+    host: settings.natshost,
+    port: settings.natsport
+  })
   const knex = databases.knex
   hemera.use(HemeraJoi)
   hemera.use(HemeraSql, {
@@ -16,4 +19,4 @@ const ServerTransport = (settings, databases) => {
   return hemera
 }
 
-module.exports = ServerTransport
+module.exports = Transport

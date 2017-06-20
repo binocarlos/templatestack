@@ -19,9 +19,6 @@ const HemeraFactory = (opts) => {
     defaults: DEFAULTS,
     throwError: true
   })
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log(opts)
   const nats = Nats.connect(`nats://${opts.host}:${opts.port}`)
   return new Hemera(nats, {
     logLevel: opts.logLevel

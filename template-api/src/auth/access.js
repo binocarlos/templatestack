@@ -18,7 +18,7 @@ const Access = (opts) => {
     defaults: DEFAULTS
   })
 
-  const loggedIn = (req, res, next) => {
+  const loggedIn = () => (req, res, next) => {
     if(!req.user) return webserverTools.errorReply(next, res, 'access denied', 403)
     next()
   }

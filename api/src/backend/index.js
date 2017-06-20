@@ -1,11 +1,11 @@
 'use strict'
 
 const Auth = require('./auth')
-const SQLUserStorage = require('template-api/src/auth/sql_user_storage')
 
 const Backend = (settings, databases, transport) => {
-  SQLUserStorage(transport)
-  Auth(transport, databases)
+  transport.ready(() => {
+    Auth(settings, databases, transport)  
+  })
 }
 
 module.exports = Backend

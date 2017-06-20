@@ -1,5 +1,6 @@
 'use strict'
-
+  
+// a bridge between the generic auth frontend and actual sql backend storage
 const options = require('template-tools/src/options')
 
 const REQUIRED = [
@@ -23,84 +24,82 @@ const SQLUserStorage = (hemera, opts) => {
     defaults: DEFAULTS
   })
 
-  hemera.ready(() => {
-    let Joi = hemera.exposition['hemera-joi'].joi
+  let Joi = hemera.exposition['hemera-joi'].joi
 
-    /*
+  /*
+  
+    loadById
     
-      loadById
-      
-    */
-    hemera.add({
-      topic: 'user',
-      cmd: 'loadById',
-      id: Joi.number().required()
-    }, (req, done) => {
-      hemera.act({
-        topic: 'sql-store',
-        cmd: 'findById',
-        collection: opts.table,
-        id: req.id
-      }, done)
-    })
+  */
+  hemera.add({
+    topic: 'user',
+    cmd: 'loadById',
+    id: Joi.number().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'findById',
+      collection: opts.table,
+      id: req.id
+    }, done)
+  })
 
-    /*
+  /*
+  
+    loadByUsername
     
-      loadByUsername
-      
-    */
-    hemera.add({
-      topic: 'user',
-      cmd: 'loadByUsername',
-      username: Joi.string().required()
-    }, (req, done) => {
-      hemera.act({
-        topic: 'sql-store',
-        cmd: 'findById',
-        collection: opts.table,
-        query: {
-          [opts.usernameField]: req.username
-        }
-      }, done)
-    })
+  */
+  hemera.add({
+    topic: 'user',
+    cmd: 'loadByUsername',
+    username: Joi.string().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'findById',
+      collection: opts.table,
+      query: {
+        [opts.usernameField]: req.username
+      }
+    }, done)
+  })
 
-    /*
+  /*
+  
+    create
     
-      create
-      
-    */
-    hemera.add({
-      topic: 'user',
+  */
+  hemera.add({
+    topic: 'user',
+    cmd: 'create',
+    data: Joi.object().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'sql-store',
       cmd: 'create',
-      data: Joi.object().required()
-    }, (req, done) => {
-      hemera.act({
-        topic: 'sql-store',
-        cmd: 'create',
-        collection: opts.table,
-        data: req.data
-      }, done)
-    })
+      collection: opts.table,
+      data: req.data
+    }, done)
+  })
 
-    /*
+  /*
+  
+    update
     
-      update
-      
-    */
-    hemera.add({
-      topic: 'user',
-      cmd: 'update',
-      id: Joi.number().required(),
-      data: Joi.object().required()
-    }, (req, done) => {
-      hemera.act({
-        topic: 'sql-store',
-        cmd: 'updateById',
-        collection: opts.table,
-        id: req.id,
-        data: req.data
-      }, done)
-    })
+  */
+  hemera.add({
+    topic: 'user',
+    cmd: 'update',
+    id: Joi.number().required(),
+    data: Joi.object().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'updateById',
+      collection: opts.table,
+      id: req.id,
+      data: req.data
+    }, done)
   })
 }
 

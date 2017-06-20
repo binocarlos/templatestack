@@ -33,105 +33,105 @@ const AuthBackend = (hemera, opts) => {
     defaults: DEFAULTS
   })
 
-  hemera.ready(() => {
-    const Joi = hemera.exposition['hemera-joi'].joi
+  const Joi = hemera.exposition['hemera-joi'].joi
 
+
+  /*
   
-    /*
+    load
     
-      load
-      
-    */
-    hemera.add({
-      topic: 'auth',
-      cmd: 'load',
-      id: Joi.number().required()
-    }, (req, done) => {
+  */
+  hemera.add({
+    topic: 'auth',
+    cmd: 'load',
+    id: Joi.number().required()
+  }, (req, done) => {
 
-      hemera.act({
-        topic: 'user',
-        cmd: 'loadById',
-        id: req.id
-      }, done)
+    hemera.act({
+      topic: 'user',
+      cmd: 'loadById',
+      id: req.id
+    }, done)
+  })
+
+  /*
+  
+    login
+    
+  */
+  hemera.add({
+    topic: 'auth',
+    cmd: 'login',
+    username: Joi.string().required(),
+    password: Joi.string().required()
+
+  }, (req, done) => {
+
+    hemera.act({
+      topic: 'user',
+      cmd: 'loadByUsername',
+      username: req.username
+    }, (err, user) => {
+      if(err) return done(err)
+      if(!user) return done('incorrect details')
+      if(!opts.checkUserPassword(user, req.password)) return done('incorrect details')
+      done(null, user)
     })
+  })
 
-    /*
+  /*
+  
+    register
     
-      login
-      
-    */
-    hemera.add({
-      topic: 'auth',
-      cmd: 'login',
+  */
+  hemera.add({
+    topic: 'auth',
+    cmd: 'register',
+    data: Joi.object().keys({
       username: Joi.string().required(),
       password: Joi.string().required()
-
-    }, (req, done) => {
-
-      hemera.act({
-        topic: 'user',
-        cmd: 'loadByUsername',
-        username: req.username
-      }, (err, user) => {
-        if(err) return done(err)
-        if(!user) return done('incorrect details')
-        if(!opts.checkUserPassword(user, req.password)) return done('incorrect details')
-        done(null, user)
-      })
     })
+  }, (req, done) => {
 
-    /*
-    
-      register
-      
-    */
-    hemera.add({
-      topic: 'auth',
-      cmd: 'register',
-      data: Joi.object().keys({
-        username: Joi.string().required(),
-        password: Joi.string().required()
-      })
-    }, (req, done) => {
+    hemera.act({
+      topic: 'user',
+      cmd: 'loadByUsername',
+      username: req.data.username
+    }, (err, user) => {
+      if(err) return next(err)
+      if(user) return next(req.username + ' already exists')
+      const userData = opts.processNewUser(req.data)
 
       hemera.act({
         topic: 'user',
-        cmd: 'loadByUsername',
-        username: req.data.username
-      }, (err, user) => {
-        if(err) return next(err)
-        if(user) return next(req.username + ' already exists')
-        const userData = opts.processNewUser(req.data)
-
-        hemera.act({
-          topic: 'user',
-          cmd: 'create',
-          data: userData
-        }, done)
-
-      })
-    })
-
-    /*
-    
-      update
-      
-    */
-    hemera.add({
-      topic: 'auth',
-      cmd: 'update',
-      id: Joi.number().required(),
-      data: Joi.object()
-    }, (req, done) => {
-
-      hemera.act({
-        topic: 'user',
-        cmd: 'update',
-        id: req.id,
-        data: req.data
+        cmd: 'create',
+        data: userData
       }, done)
-
 
     })
   })
+
+  /*
+  
+    update
+    
+  */
+  hemera.add({
+    topic: 'auth',
+    cmd: 'update',
+    id: Joi.number().required(),
+    data: Joi.object()
+  }, (req, done) => {
+
+    hemera.act({
+      topic: 'user',
+      cmd: 'update',
+      id: req.id,
+      data: req.data
+    }, done)
+
+
+  })
 }
+
+module.exports = AuthBackend

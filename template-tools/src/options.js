@@ -15,7 +15,7 @@ const getDefaultData = (data, opts) => {
       all[key] = opts.defaults[key]
     }
     return all
-  }, data)
+  }, data || {})
 }
 
 const throwErrorFields = (data, opts) => {
@@ -32,6 +32,8 @@ const throwErrorFields = (data, opts) => {
 }
 
 const getErrorFields = (data, opts) => {
+  data = data || {}
+  opts = opts || {}
   const required = opts.required || []
   const defaults = opts.defaults || []
   return required
