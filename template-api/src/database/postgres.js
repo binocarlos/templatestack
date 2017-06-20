@@ -15,7 +15,7 @@ const DEFAULTS = {
 }
 
 const Pool = (opts) => {
-  opts = options.process(opts, {
+  opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS,
     throwError: true

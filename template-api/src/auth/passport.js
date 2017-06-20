@@ -11,7 +11,7 @@ const REQUIRED = [
 // extractUserId(user)
 
 const Passport = (transports, opts) => {
-  opts = options.process(opts, {
+  opts = options.processor(opts, {
     required: REQUIRED
   })
 

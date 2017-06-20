@@ -125,3 +125,25 @@ tape('processor defaults', (t) => {
   })
   t.end()
 })
+
+
+tape('processor defaults with null value', (t) => {
+  const required = [
+    'width:number'
+  ]
+  const defaults = {
+    height: 5
+  }
+  const data = options.processor({
+    width: 4,
+    height: undefined
+  }, {
+    required,
+    defaults
+  })
+  t.deepEqual(data, {
+    width: 4,
+    height: 5
+  })
+  t.end()
+})

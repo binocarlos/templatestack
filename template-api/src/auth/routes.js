@@ -17,7 +17,7 @@ const DEFAULTS = {
 
 const AuthRoutes = (transport, opts) => {
 
-  opts = options.process(opts, {
+  opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })

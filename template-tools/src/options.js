@@ -3,9 +3,19 @@ const BLANK_TYPES = {
   null: true
 }
 
+const isBlankValue = (value) => {
+  return BLANK_TYPES[typeof(value)] ?
+    true :
+    false
+}
+
 const getDefaultData = (data, opts) => {
-  const defaults = opts.defaults || {}
-  return Object.assign({}, defaults, data)
+  return Object.keys(opts.defaults || {}).reduce((all, key) => {
+    if(isBlankValue(all[key])) {
+      all[key] = opts.defaults[key]
+    }
+    return all
+  }, data)
 }
 
 const throwErrorFields = (data, opts) => {
@@ -28,9 +38,7 @@ const getErrorFields = (data, opts) => {
     .map(fieldDesc => {
       const [field, type] = fieldDesc.split(':')
       const value = data[field] || defaults[field]
-      const isBlank = BLANK_TYPES[typeof(value)] ?
-        true :
-        false
+      const isBlank = isBlankValue(value)
       const incorrectType = type && typeof(value) != type ?
         true :
         false

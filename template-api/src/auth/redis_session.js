@@ -11,7 +11,7 @@ const REQUIRED = [
 ]
 
 function RedisSession(opts) {
-  opts = options.process(opts, {
+  opts = options.processor(opts, {
     required: REQUIRED,
     throwError: true
   })

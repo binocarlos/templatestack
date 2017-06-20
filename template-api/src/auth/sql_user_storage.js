@@ -7,7 +7,8 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  table: 'user'
+  table: 'useraccount',
+  usernameField: 'username'
 }
 
 
@@ -17,7 +18,7 @@ const DEFAULTS = {
   
 */
 const SQLUserStorage = (hemera, opts) => {
-  opts = options.process(opts, {
+  opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
@@ -58,9 +59,49 @@ const SQLUserStorage = (hemera, opts) => {
         cmd: 'findById',
         collection: opts.table,
         query: {
-          username: req.username
+          [opts.usernameField]: req.username
         }
+      }, done)
+    })
+
+    /*
+    
+      create
+      
+    */
+    hemera.add({
+      topic: 'user',
+      cmd: 'create',
+      data: Joi.object().required()
+    }, (req, done) => {
+      hemera.act({
+        topic: 'sql-store',
+        cmd: 'create',
+        collection: opts.table,
+        data: req.data
+      }, done)
+    })
+
+    /*
+    
+      update
+      
+    */
+    hemera.add({
+      topic: 'user',
+      cmd: 'update',
+      id: Joi.number().required(),
+      data: Joi.object().required()
+    }, (req, done) => {
+      hemera.act({
+        topic: 'sql-store',
+        cmd: 'updateById',
+        collection: opts.table,
+        id: req.id,
+        data: req.data
       }, done)
     })
   })
 }
+
+module.exports = SQLUserStorage

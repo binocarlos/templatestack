@@ -13,7 +13,21 @@ const Routes = (app, transport, settings) => {
   app.post(basePath('/register'), auth.register)
   app.put(basePath('/update'), access.loggedIn(), auth.update)
   app.get(basePath('/logout'), auth.logout)
-  
+
+  const adminApp = (req, res) => {
+    res.render('app', { 
+      title: 'App Admin',
+      stylesheets: [
+        '/admin.css'
+      ],
+      scripts: [
+        '/admin.js'
+      ]
+    })
+  }
+
+  app.get('/admin*', adminApp)
+  app.get('/admin', adminApp)
 }
 
 module.exports = Routes

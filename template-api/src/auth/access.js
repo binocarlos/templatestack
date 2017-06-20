@@ -13,7 +13,7 @@ const DEFAULTS = {
 
 const Access = (opts) => {
 
-  opts = options.process(opts, {
+  opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })

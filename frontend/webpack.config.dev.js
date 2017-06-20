@@ -20,6 +20,9 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
+    alias: {
+      'template-ui/lib': 'template-ui/src'
+    },
     extensions: ['', '.scss', '.css', '.js'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     modulesDirectories: [
@@ -31,7 +34,10 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        include: [path.resolve(__dirname, './src')],
+        include: [
+          path.resolve(__dirname, './src'),
+          path.resolve(__dirname, '..', 'template-ui', 'src')
+        ],
         loader: 'babel'
       }, {
         test: /\.json$/,

@@ -10,12 +10,12 @@ const WebserverTools = require('template-api/src/webserver/tools')
 
 const Routes = require('./routes')
 
-const App = (settings, databases, transportFactory) => {
-  
-  // build a client with no plugins
-  const transport = transportFactory()
-  
+const App = (settings, databases, transport) => {
+
   const app = express()
+
+  app.set('view engine', 'ejs')
+  
   const session = RedisSession({
     secret: settings.cookie_secret,
     redis: databases.redis
