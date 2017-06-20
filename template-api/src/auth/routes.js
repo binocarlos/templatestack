@@ -40,7 +40,7 @@ const AuthRoutes = (transport, opts) => {
     const password = opts.extractPassword(req)
 
     if(!username) return webserverTools.errorReply(next, res, 'no username given', 400)
-    if(!password) return webserverTools.errorReply(next, res, 'no username given', 400)
+    if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
 
     transport.act({
       topic: 'auth',
@@ -58,6 +58,12 @@ const AuthRoutes = (transport, opts) => {
 
   const register = (req, res, next) => {
     const data = req.body || {}
+
+    const username = opts.extractUsername(req)
+    const password = opts.extractPassword(req)
+
+    if(!username) return webserverTools.errorReply(next, res, 'no username given', 400)
+    if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
     
     transport.act({
       topic: 'auth',

@@ -46,7 +46,13 @@ const errorHandler = (err, req, res, next) => {
   if (res.headersSent) {
     return next(err)
   }
-  htmlError(res, err)
+
+  if(req.headers['accept'] == 'application/json') {
+    jsonError(res, err)
+  }
+  else {
+    htmlError(res, err)
+  }
 }
 
 const errorReply = (next, res, err, code) => {

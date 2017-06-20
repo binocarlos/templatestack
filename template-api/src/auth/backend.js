@@ -98,8 +98,9 @@ const AuthBackend = (hemera, opts) => {
       cmd: 'loadByUsername',
       username: req.data.username
     }, (err, user) => {
-      if(err) return next(err)
-      if(user) return next(req.username + ' already exists')
+
+      if(err) return done(err)
+      if(user) return done(req.username + ' already exists')
       const userData = opts.processNewUser(req.data)
 
       hemera.act({

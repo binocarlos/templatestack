@@ -20,7 +20,7 @@ const UserData = (count) => {
   count = count || ''
   const ts = new Date().getTime()
   return {
-    email: 'user' + ts + count + '@test.com',
+    username: 'user' + ts + count + '@test.com',
     password: 'apples'
   }
 }

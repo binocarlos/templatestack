@@ -12,6 +12,15 @@ const DEFAULTS = {
   usernameField: 'username'
 }
 
+const singleExtractor = (done) => (err, raw) => {
+  if(err) return done(err)
+  if(!raw) return done(null, null)
+  console.log('-------------------------------------------');
+console.log('-------------------------------------------');
+console.dir(raw)
+  if(raw.result) raw = raw.result[0]
+  done(null, raw)
+}
 
 /*
 
@@ -41,7 +50,7 @@ const SQLUserStorage = (hemera, opts) => {
       cmd: 'findById',
       collection: opts.table,
       id: req.id
-    }, done)
+    }, singleExtractor(done))
   })
 
   /*
@@ -56,12 +65,13 @@ const SQLUserStorage = (hemera, opts) => {
   }, (req, done) => {
     hemera.act({
       topic: 'sql-store',
-      cmd: 'findById',
+      cmd: 'find',
       collection: opts.table,
       query: {
         [opts.usernameField]: req.username
-      }
-    }, done)
+      },
+      options: {}
+    }, singleExtractor(done))
   })
 
   /*
@@ -79,7 +89,7 @@ const SQLUserStorage = (hemera, opts) => {
       cmd: 'create',
       collection: opts.table,
       data: req.data
-    }, done)
+    }, singleExtractor(done))
   })
 
   /*
@@ -99,7 +109,7 @@ const SQLUserStorage = (hemera, opts) => {
       collection: opts.table,
       id: req.id,
       data: req.data
-    }, done)
+    }, singleExtractor(done))
   })
 }
 
