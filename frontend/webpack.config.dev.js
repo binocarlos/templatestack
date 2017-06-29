@@ -21,14 +21,14 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'template-ui/lib': path.join(__dirname, 'src', 'ui')
+      'template-ui': path.resolve(__dirname, 'src', 'template-ui')
     },
     extensions: ['', '.scss', '.css', '.js'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     modulesDirectories: [
-      'node_modules',
-      path.resolve(__dirname, './node_modules')
-    ]
+      path.resolve(__dirname, 'node_modules')
+    ],
+    root: path.resolve(__dirname, 'src')
   },
   module: {
     loaders: [
@@ -40,7 +40,7 @@ module.exports = {
         loader: 'babel'
       }, {
         test: /\.json$/,
-        include: [path.resolve(__dirname, './src')],
+        include: [path.resolve(__dirname, 'src')],
         loader: 'json-loader'
       }, {
         test: /\.css$/,
@@ -51,9 +51,9 @@ module.exports = {
   postcss (webpackInstance) {
     return [
       require('postcss-import')({
-        root: path.join(__dirname, './'),
+        root: __dirname,
         path: [
-          path.join(__dirname, './src')
+          path.join(__dirname, 'src')
         ]
       }),
       require('postcss-mixins')(),

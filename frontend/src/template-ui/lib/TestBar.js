@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 
-class Test extends Component {
+class TestBar extends Component {
 
   render() {
     return (
-      <div>apples</div>
+      <div>APPLES2</div>
     )
   }
 
 }
 
-export default Test
+export default TestBar
