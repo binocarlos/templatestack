@@ -21,7 +21,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'template-ui/lib': 'template-ui/src'
+      'template-ui/lib': path.join(__dirname, 'src', 'ui')
     },
     extensions: ['', '.scss', '.css', '.js'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
@@ -35,8 +35,7 @@ module.exports = {
       {
         test: /\.js$/,
         include: [
-          path.resolve(__dirname, './src'),
-          path.resolve(__dirname, '..', 'template-ui', 'src')
+          path.resolve(__dirname, 'src')
         ],
         loader: 'babel'
       }, {

@@ -1,5 +1,5 @@
 const tape = require('tape')
-const options = require('../src/options')
+const options = require('../../src/options')
 
 tape('required options', (t) => {
   const required = [

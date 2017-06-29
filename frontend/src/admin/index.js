@@ -1,15 +1,19 @@
 import React, { Component, PropTypes } from 'react'
 import ReactDOM from 'react-dom'
 import { fork, put, take, select, call } from 'redux-saga/effects'
-import x from 'template-ui/lib/test'
+import { Button } from 'react-toolbox/lib/button'
+
+import Test from './test'
 
 function* loadConfig() {
   yield put(actions.getConfig.request())
 }
 
 ReactDOM.render(
-  render(
-    <div>hello world</div>
+  (
+    <div>
+      <Button label="Hello World!" />
+    </div>
   ),
   document.getElementById('mount')
 )

@@ -1,8 +1,8 @@
 'use strict'
 
 const HemeraTransport = require('template-api/src/transport/hemera')
-const HemeraJoi = require('hemera-joi')
-const HemeraSql = require('hemera-sql-store')
+const HemeraJoi = require('template-api/src/transport/hemera-joi')
+const HemeraSql = require('template-api/src/transport/hemera-sql-store')
 
 const Transport = (settings, databases) => {
   const hemera = HemeraTransport({

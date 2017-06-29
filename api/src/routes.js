@@ -3,6 +3,7 @@
 const AuthRoutes = require('template-api/src/auth/routes')
 const SystemRoutes = require('template-api/src/system/routes')
 const Access = require('template-api/src/auth/access')
+const path = require('path')
 
 const Routes = (app, transport, settings) => {
   const auth = AuthRoutes(transport)
@@ -19,9 +20,14 @@ const Routes = (app, transport, settings) => {
   app.put(basePath('/auth/update'), access.loggedIn(), auth.update)
   app.get(basePath('/auth/logout'), auth.logout)
 
+  app.set('views', path.join(__dirname, 'views'))
+
   const adminApp = (req, res) => {
     res.render('app', { 
-      title: 'App Admin',
+      page: {
+        title: 'App Admin',
+        description: 'Admin Panel'
+      },
       stylesheets: [
         '/admin.css'
       ],
@@ -31,7 +37,8 @@ const Routes = (app, transport, settings) => {
     })
   }
 
-  app.get('/admin*', adminApp)
+  app.get('/admin/*', adminApp)
+  app.get('/admin/', adminApp)
   app.get('/admin', adminApp)
 }
 

@@ -1,7 +1,7 @@
 'use strict'
   
 // a bridge between the generic auth frontend and actual sql backend storage
-const options = require('template-tools/src/options')
+const options = require('../utils/options')
 
 const REQUIRED = [
   

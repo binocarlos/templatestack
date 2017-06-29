@@ -2,7 +2,6 @@ FROM node:7.10.0
 MAINTAINER kaiyadavenport@gmail.com
 WORKDIR /app/api
 COPY ./template-api /app/template-api
-COPY ./template-tools /app/template-tools
 COPY ./api/package.json /app/api/package.json
 RUN npm install
 COPY ./api /app/api

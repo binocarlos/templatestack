@@ -1,6 +1,6 @@
 'use strict'
 
-const options = require('template-tools/src/options')
+const options = require('../utils/options')
 const ExpressSession = require('express-session')
 const RedisStore = require('connect-redis')(ExpressSession)
 
