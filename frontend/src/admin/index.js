@@ -1,20 +1,13 @@
-import React, { Component, PropTypes } from 'react'
-import ReactDOM from 'react-dom'
-import { fork, put, take, select, call } from 'redux-saga/effects'
-import { Button } from 'react-toolbox/lib/button'
-import Widget from './widget'
+import React from 'react'
+import { render } from 'react-dom'
+import Root from './containers/Root'
+import configureStore from './store/configureStore'
+import rootSaga from './sagas'
 
+const store = configureStore(window.__INITIAL_STATE__)
+store.runSaga(rootSaga)
 
-function* loadConfig() {
-  yield put(actions.getConfig.request())
-}
-
-ReactDOM.render(
-  (
-    <div>
-      <Button label="Hello World!" />
-      <Widget />
-    </div>
-  ),
+render(
+  <Root store={store} />,
   document.getElementById('mount')
 )

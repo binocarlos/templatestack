@@ -1,44 +1,39 @@
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware, { END } from 'redux-saga'
+import { routerForBrowser } from 'redux-little-router'
+import routes from '../routes'
+import rootReducers from '../reducers'
 
-const configureStore = (opts = {}) => {
-  if(!opts.reducer) throw new Error('reducer required')
-  const middleware = opts.middleware || []
-  const routes = opts.routes || {}
-  const appReducers = opts.reducer
-  const initialState = opts.initialState
-  const extraComposeArgs = opts.extraComposeArgs || []
+export default function configureStore(initialState) {
   const sagaMiddleware = createSagaMiddleware()
-
   const littleRouter = routerForBrowser({
     routes
   })
-
-  const finalMiddleware = [
-    littleRouter.middleware,
-    sagaMiddleware
-  ].concat(middleware)
-
   const store = createStore(
     combineReducers({
       router: littleRouter.reducer,
-      ...appReducers
+      ...rootReducers
     }),
     initialState,
-    compose.apply(null, [
+    compose(
       littleRouter.enhancer,
-      applyMiddleware.apply(null, finalMiddleware)
-    ].concat(extraComposeArgs))
+      applyMiddleware(
+        sagaMiddleware
+      )
+    )
   )
 
+  /*
+  
+    
   const initialLocation = store.getState().router
   if (initialLocation) {
     store.dispatch(initializeCurrentLocation(initialLocation))  
   }
+    
+  */
 
   store.runSaga = sagaMiddleware.run
   store.close = () => store.dispatch(END)
   return store
 }
-
-export default configureStore
