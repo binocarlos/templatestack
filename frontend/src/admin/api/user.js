@@ -1,17 +1,17 @@
 import 'isomorphic-fetch'
 
-export const load = (payload) => {  
+export const status = (payload) => {  
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve({
-        hello: 10
+        loggedIn: false
       })  
     }, 100)
   })
 }
 
-const configApi = {
-  load
+const userApi = {
+  status
 }
 
-export default configApi
+export default userApi

@@ -1,7 +1,9 @@
 import config from './config'
+import user from './user'
 
 const apis = {
-  config
+  config,
+  user
 }
 
 export default apis

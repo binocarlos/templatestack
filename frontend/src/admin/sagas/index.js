@@ -12,20 +12,23 @@ import * as selectors from '../selectors'
   
 */
 function* loadConfig() {
-
   const { result, error } = yield call(apiResolveSaga, {
-    actions: actions.api.config.get,
-    api: api.config.get,
-    payload: {q:4}
+    actions: actions.api.config.load,
+    api: api.config.load
   })
+  if(error) throw new Error(error)
+  yield put(actions.value.set('config', result))
+  return result
+}
 
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.dir('result')
-  console.dir(result)
-  console.dir('error')
-  console.dir(error)
-
+function* loadUserStatus() {
+  const { result, error } = yield call(apiResolveSaga, {
+    actions: actions.api.user.status,
+    api: api.user.status
+  })
+  if(error) throw new Error(error)
+  yield put(actions.value.set('user', result))
+  return result
 }
 
 /*
@@ -35,7 +38,11 @@ function* loadConfig() {
 */
 
 function* initialize() {
-  yield call(loadConfig)
+  yield all([
+    call(loadConfig),
+    call(loadUserStatus)
+  ])
+  yield put(actions.value.set('initialized', true))
 }
 
 export default function* root() {

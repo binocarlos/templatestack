@@ -5,14 +5,13 @@ import ApiActions from 'template-ui/lib/plugins/api/actions'
 export const value = ValueActions()
 export const api = {
   config: {
-    get: ApiActions({
-      name: 'getConfig',
-      keepPayload: true
+    load: ApiActions({
+      name: 'config:load'
     })
   },
   user: {
-    get: ApiActions({
-      name: 'getUser'
+    status: ApiActions({
+      name: 'user:status'
     })
   }
 }

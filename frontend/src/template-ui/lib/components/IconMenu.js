@@ -29,8 +29,6 @@ export class ListMenu extends Component {
   }
 
   render () {
-    console.log('-------------------------------------------');
-    console.dir(whiteIconMenuTheme)
     return (
       <IconMenu 
         icon={ this.props.icon || 'more_vert' } 
