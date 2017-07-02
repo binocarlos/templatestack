@@ -7,28 +7,26 @@ class Application extends Component {
     return (
       <Layout>
         <NavDrawer
-          active={ false }
+          active={ this.props.menuOpen }
+          onOverlayClick={ this.props.toggleMenu }
           clipped={ false }
           pinned={ false }
         >
-          <p>I'm a NavDrawer content.</p>
+          { this.props.menu }
         </NavDrawer>
-
         <AppBar
           fixed
-          rightIcon='more'
-          leftIcon='menu'
-          title="Super Layout with a large text to be covered!"
-        />
-
+          leftIcon={ this.props.leftIcon || 'menu' }
+          onLeftIconClick={ this.props.toggleMenu }
+          title={ this.props.title }
+        >
+          { this.props.appbar }
+        </AppBar>
         <Panel>
-          <section style={{ margin: '1.8rem'}}>
-            Hello World
-          </section>
-        </Panel>
-
+          { this.props.children }
+        </Panel>        
       </Layout>
-    );
+    )
   }
 }
 

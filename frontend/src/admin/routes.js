@@ -16,9 +16,9 @@ export const routes = (
   <div>
     <Application>
       <Route home>
-        <section style={{ margin: '1.8rem'}}>
+        <div>
           hello world2
-        </section>
+        </div>
       </Route>
 
       <Route path='/help'>
