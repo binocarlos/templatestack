@@ -1,19 +1,18 @@
 import update from 'immutability-helper'
 import { createReducer } from 'redux-act'
+import { genericActions } from './actions'
 
-const ValueReducer = (opts = {}) => {
-  if(!opts.actions) throw new Error('actions required')
-  const actions = opts.actions
+const ApiStatusReducer = (opts = {}) => {
   const defaultState = opts.defaultState || {}
   return createReducer({
-    [actions.setValue]: (state, payload) => {
+    [genericActions.status]: (state, payload) => {
       return update(state, {
         [payload.name]: {
-          $set: payload.value
+          $set: payload
         }
       })
     }
   }, defaultState)
 }
 
-export default ValueReducer
+export default ApiStatusReducer

@@ -2,7 +2,6 @@ import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import createLogger from 'redux-logger'
 import createSagaMiddleware, { END } from 'redux-saga'
 import { routerForBrowser } from 'redux-little-router'
-import DevTools from '../containers/DevTools'
 import routes from '../routes'
 import rootReducers from '../reducers'
 
@@ -25,7 +24,6 @@ export default function configureStore(initialState) {
           collapsed:true
         })
       ),
-      DevTools.instrument(),
       window.devToolsExtension ? window.devToolsExtension() : f => f
     )
   )

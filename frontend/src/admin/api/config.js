@@ -1,6 +1,6 @@
 import 'isomorphic-fetch'
 
-const loadConfig = () => {
+export const getConfig = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve({
@@ -10,4 +10,8 @@ const loadConfig = () => {
   })
 }
 
-export default loadConfig
+const configApi = {
+  get: getConfig
+}
+
+export default configApi

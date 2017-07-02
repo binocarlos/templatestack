@@ -1,10 +1,11 @@
 import React from 'react'
 
-export const routes = {
-  '': {},
+const routes = {
   '/': {},
   '/help': {},
   '/about': {},
   '/login': {},
   '/register': {}
 }
+
+export default routes

@@ -1,15 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import Route from 'template-ui/lib/containers/Route'
-import config from '../config'
+import { getRoute } from '../config'
 
 class RouteWrapper extends Component {
   render() {
     const props = {
       ...this.props,
-      basepath: config.basepath
+      path: getRoute(this.props.path)
     }
     return (
-      <Fragment {...props} />
+      <Route {...props} />
     )
   }
 }
