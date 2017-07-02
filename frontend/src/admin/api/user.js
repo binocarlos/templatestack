@@ -5,7 +5,7 @@ export const status = (payload) => {
     setTimeout(() => {
       resolve({
         loggedIn: false
-      })  
+      })
     }, 100)
   })
 }

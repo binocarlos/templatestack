@@ -24,11 +24,13 @@ class ApplicationContainer extends Component {
       menu: (
         <ListMenu
           options={ menuOptions }
+          onClick={ this.props.onMenuClick }
         />
       ),
       appbar: (
         <IconMenu
           options={ menuOptions }
+          onClick={ this.props.onOptionClick }
         />
       )
     }
@@ -49,7 +51,13 @@ export default connect(
   (dispatch) => {
     return {
       toggleMenu: () => dispatch(actions.value.toggle('menuOpen')),
-      onMenuClick: (id) => dispatch(actions.application.menuClick(id))
+      onMenuClick: (id) => {
+        dispatch(actions.value.set('menuOpen', false))
+        dispatch(actions.application.menuClick(id))
+      },
+      onOptionClick: (id) => {
+        dispatch(actions.application.menuClick(id))
+      }
     }
   }
 )(ApplicationContainer)

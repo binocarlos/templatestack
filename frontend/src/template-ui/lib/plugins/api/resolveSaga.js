@@ -25,7 +25,7 @@ function* ApiResolverSaga(opts = {}) {
   }
 
   return {
-    result: apiResult,
+    answer: apiResult,
     error: apiError
   }
 }

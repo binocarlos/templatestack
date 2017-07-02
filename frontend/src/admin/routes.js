@@ -3,6 +3,8 @@ import React, { Component, PropTypes } from 'react'
 import Application from './containers/Application'
 import Route from './containers/Route'
 
+import Home from './components/Home'
+
 
 export const routeConfig = {
   '/': {},
@@ -16,9 +18,7 @@ export const routes = (
   <div>
     <Application>
       <Route home>
-        <div>
-          hello world2
-        </div>
+        <Home />
       </Route>
 
       <Route path='/help'>
