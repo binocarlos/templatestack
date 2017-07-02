@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-class Fragment extends Component {
+class Route extends Component {
   render() {
     return this.props.visible ? this.props.children : null
   }
@@ -9,11 +9,25 @@ class Fragment extends Component {
 
 export default connect(
   (state, ownProps) => {
-    const forRoute = ownProps.forRoute || ''
-    const currentRoute = state.router.route
+    
+    const ownPath = ownProps.path || ''
+    const exact = ownProps.exact || false
+
+    const basePath = (ownProps.basepath || '').replace(/\/^/, '')
+    const routerPath = (state.router.pathname || '').replace(/\/^/, '')
+
     let visible = false
-    if(ownProps.exact && forRoute == currentRoute) visible = true
-    if(!ownProps.exact && currentRoute.indexOf(forRoute) == 0) visible = true
+
+    if(ownProps.path) {
+      visible = exact ?
+        routerPath == basePath + ownPath :
+        routerPath.indexOf(basePath + ownPath) == 0
+    }
+
+    if(ownProps.home) {
+      visible = routerPath == basePath
+    }
+
     return {
       visible
     }
@@ -21,4 +35,4 @@ export default connect(
   (dispatch) => {
     return {}
   }
-)(Fragment)
+)(Route)

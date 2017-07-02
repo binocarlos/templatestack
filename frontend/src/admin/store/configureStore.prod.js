@@ -1,13 +1,13 @@
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware, { END } from 'redux-saga'
 import { routerForBrowser } from 'redux-little-router'
-import routes from '../routes'
+import { routeConfig } from '../routes'
 import rootReducers from '../reducers'
 
 export default function configureStore(initialState) {
   const sagaMiddleware = createSagaMiddleware()
   const littleRouter = routerForBrowser({
-    routes
+    routes: routeConfig
   })
   const store = createStore(
     combineReducers({

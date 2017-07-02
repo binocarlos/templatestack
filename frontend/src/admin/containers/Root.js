@@ -1,7 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { Provider } from 'react-redux'
 import { RouterProvider } from 'redux-little-router'
-import Routes from './Routes'
+import { routes } from '../routes'
+
+class Router extends Component {
+  render() {
+    return routes
+  }
+}
 
 export default class Root extends Component {
   render() {
@@ -10,7 +16,7 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <RouterProvider store={store}>
-          <Routes />
+          <Router />
         </RouterProvider>
       </Provider>
     )

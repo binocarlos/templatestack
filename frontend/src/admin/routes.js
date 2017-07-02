@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { Component, PropTypes } from 'react'
+import Route from './containers/Route'
 
-const routes = {
+export const routeConfig = {
   '/': {},
   '/help': {},
   '/about': {},
@@ -8,4 +9,18 @@ const routes = {
   '/register': {}
 }
 
-export default routes
+export const routes = (
+  <div id='routeWrapper'>
+    <Route home>
+      <div>
+        Home page
+      </div>
+    </Route>
+
+    <Route path='/help'>
+      <div>
+        Help
+      </div>
+    </Route>
+  </div>
+)

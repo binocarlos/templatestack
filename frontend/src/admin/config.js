@@ -3,6 +3,4 @@ const config = {
   basepath:'/admin'
 }
 
-export const getRoute = (path = '') => CORE.basepath + path
-
 export default config
