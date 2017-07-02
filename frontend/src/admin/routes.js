@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
-import ApplicationLayout from 'template-ui/lib/components/layout/Application'
+
+import Application from './containers/Application'
 import Route from './containers/Route'
+
 
 export const routeConfig = {
   '/': {},
@@ -11,19 +13,19 @@ export const routeConfig = {
 }
 
 export const routes = (
-  <div id='routeWrapper'>
-    <Route home>
-      <ApplicationLayout>
-        <div>
-          Home page
-        </div>
-      </ApplicationLayout>
-    </Route>
+  <div>
+    <Application>
+      <Route home>
+        <section style={{ margin: '1.8rem'}}>
+          hello world2
+        </section>
+      </Route>
 
-    <Route path='/help'>
-      <div>
-        Help
-      </div>
-    </Route>
+      <Route path='/help'>
+        <div>
+          Help
+        </div>
+      </Route>
+    </Application>
   </div>
 )

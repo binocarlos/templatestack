@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Layout, NavDrawer, Sidebar, Panel } from 'react-toolbox/lib/layout'
-import { AppBar } from 'react-toolbox/lib/app_bar';
 
 class Application extends Component {
   render () {
@@ -17,15 +16,7 @@ class Application extends Component {
           ) : null
         }
         
-        { this.props.appbar ? (
-            <AppBar
-              fixed
-              rightIcon='more'
-              leftIcon='menu'
-              title="Super Layout with a large text to be covered!"
-            />
-          ) : null
-        }
+        { this.props.appbar }
 
         <Panel>
           { this.props.children }

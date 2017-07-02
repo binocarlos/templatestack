@@ -1,12 +1,14 @@
 import ValueReducer from 'template-ui/lib/plugins/value/reducer'
-import ApiReducer from 'template-ui/lib/plugins/api/reducer'
+import ApiStatusReducer from 'template-ui/lib/plugins/api/statusReducer'
 import * as actions from '../actions'
+import config from '../config'
 
 const valueReducer = ValueReducer({
-  actions: actions.value
+  actions: actions.value,
+  defaultState: config.defaultValues
 })
 
-const apiReducer = ApiReducer({
+const apiReducer = ApiStatusReducer({
 
 })
 

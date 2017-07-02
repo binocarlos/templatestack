@@ -6,13 +6,24 @@ const ValueReducer = (opts = {}) => {
   const actions = opts.actions
   const defaultState = opts.defaultState || {}
   return createReducer({
-    [actions.setValue]: (state, payload) => {
+
+    [actions.set]: (state, payload) => {
       return update(state, {
         [payload.name]: {
           $set: payload.value
         }
       })
+    },
+
+    [actions.toggle]: (state, payload) => {
+      const existing = state[payload.name] || false
+      return update(state, {
+        [payload.name]: {
+          $set: !existing
+        }
+      })
     }
+
   }, defaultState)
 }
 

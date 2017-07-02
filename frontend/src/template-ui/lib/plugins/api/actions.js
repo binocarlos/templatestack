@@ -1,19 +1,22 @@
-import { createAction } from 'redux-act'
-
-// used to keep track of any api request
-// the name and status are passed
-export const genericActions = {
-  status: createAction(`api status`, (name, status, data) => {name,status,data})
+export const TYPES = {
+  request: 'API_REQUEST',
+  response: 'API_RESPONSE',
+  error: 'API_ERROR'
 }
 
-const ApiActions = (opts = {}) => {
-  if(!opts.name) throw new Error('name required for api actions')
-  const NAME = opts.name
+const actionFactory = (type, meta) => (payload) => ({
+  type,
+  name: meta.name,
+  payload,
+  meta
+})
+
+const ApiActions = (meta = {}) => {
+  if(!meta.name) throw new Error('name required for api actions')
   return {
-    request: createAction(`api request: ${NAME}`),
-    ok: createAction(`api ok: ${NAME}`),
-    error: createAction(`api error: ${NAME}`),
-    reset: createAction(`api reset: ${NAME}`)
+    request: actionFactory(TYPES.request, meta),
+    response: actionFactory(TYPES.response, meta),
+    error: actionFactory(TYPES.error, meta)
   }  
 }
 

@@ -1,6 +1,10 @@
 import 'isomorphic-fetch'
 
-export const getConfig = () => {
+export const getConfig = (payload) => {
+  console.log('-------------------------------------------');
+  console.log('-------------------------------------------');
+  console.log('config api')
+  console.dir(payload)
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve({

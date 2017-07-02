@@ -3,7 +3,8 @@ import { createAction } from 'redux-act'
 const ValueActions = (opts = {}) => {
   const NAME = opts.name || 'value actions'
   return {
-    setValue: createAction(`${NAME}: set value`, (name, value) => ({name,value}))
+    set: createAction(`${NAME}: set value`, (name, value) => ({name,value})),
+    toggle: createAction(`${NAME}: toggle value`, (name) => ({name}))
   }
 }
 
