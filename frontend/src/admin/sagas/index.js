@@ -22,8 +22,13 @@ function* watchLoadConfig() {
   yield takeLatest(actions.api.config.request.getType(), loadConfig)
 }
 
+function* initialize() {
+  yield put(actions.api.config.request())
+}
+
 export default function* root() {
   yield all([
-    fork(watchLoadConfig)
+    fork(watchLoadConfig),
+    fork(initialize)
   ])
 }
