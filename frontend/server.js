@@ -58,7 +58,9 @@ if (isDevelopment) {
       colors: true
     }
   }))
-  app.use(require('webpack-hot-middleware')(compiler))
+  app.use(require('webpack-hot-middleware')(compiler, {
+    log: console.log
+  }))
 }
 // production setup - serve from dist
 else {

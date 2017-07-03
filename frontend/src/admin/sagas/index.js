@@ -8,7 +8,7 @@ import * as selectors from '../selectors'
 
 /*
 
-  WORKERS
+  DATA LOADERS
   
 */
 function* loadConfig() {

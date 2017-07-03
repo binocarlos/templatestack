@@ -16,7 +16,7 @@ const isExternalModule = (module) => {
     return false
   }
   return userRequest.indexOf('node_modules') >= 0
-} 
+}
 
 const devPlugins = () => {
   return [

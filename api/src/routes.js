@@ -21,25 +21,6 @@ const Routes = (app, transport, settings) => {
   app.get(basePath('/auth/logout'), auth.logout)
 
   app.set('views', path.join(__dirname, 'views'))
-
-  const adminApp = (req, res) => {
-    res.render('app', { 
-      page: {
-        title: 'App Admin',
-        description: 'Admin Panel'
-      },
-      stylesheets: [
-        '/admin.css'
-      ],
-      scripts: [
-        '/admin.js'
-      ]
-    })
-  }
-
-  app.get('/admin/*', adminApp)
-  app.get('/admin/', adminApp)
-  app.get('/admin', adminApp)
 }
 
 module.exports = Routes

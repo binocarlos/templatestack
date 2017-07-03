@@ -16,8 +16,8 @@ const singleExtractor = (done) => (err, raw) => {
   if(err) return done(err)
   if(!raw) return done(null, null)
   console.log('-------------------------------------------');
-console.log('-------------------------------------------');
-console.dir(raw)
+  console.log('-------------------------------------------');
+  console.dir(raw)
   if(raw.result) raw = raw.result[0]
   done(null, raw)
 }
