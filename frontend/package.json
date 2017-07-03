@@ -25,6 +25,7 @@
     "redux-little-router": "^13.2.0",
     "redux-logger": "^2.7.4",
     "redux-saga": "^0.15.4",
+    "reselect": "^3.0.1",
     "webpack-isomorphic-tools": "^3.0.3"
   },
   "devDependencies": {

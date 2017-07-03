@@ -1,16 +1,23 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { routerForBrowser } from 'redux-little-router'
-import Root from './containers/Root'
-import configureStore from './store/configureStore'
+import RootFactory from 'template-ui/lib/containers/Root'
+import configureStore from 'template-ui/lib/store/configureStore'
 import rootSaga from './sagas'
-import { routeConfig } from './routes'
+import { routeConfig, routes } from './routes'
+import reducers from './reducers'
 
 const router = routerForBrowser({
   routes: routeConfig
 })
+const Root = RootFactory(routes)
 
-const store = configureStore(router, window.__INITIAL_STATE__)
+const store = configureStore({
+  router,
+  reducers,
+  initialState: window.__INITIAL_STATE__
+})
+
 store.runSaga(rootSaga)
 
 render(

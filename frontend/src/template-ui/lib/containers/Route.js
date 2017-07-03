@@ -7,32 +7,36 @@ class Route extends Component {
   }
 }
 
-export default connect(
-  (state, ownProps) => {
-    
-    const ownPath = ownProps.path || ''
-    const exact = ownProps.exact || false
+const RouteFactory = (basepath) => {
+  return connect(
+    (state, ownProps) => {
+      
+      const ownPath = ownProps.path || ''
+      const exact = ownProps.exact || false
 
-    const basePath = (ownProps.basepath || '').replace(/\/^/, '')
-    const routerPath = (state.router.pathname || '').replace(/\/^/, '')
+      basepath = (basepath || '').replace(/\/^/, '')
+      const routerPath = (state.router.pathname || '').replace(/\/^/, '')
 
-    let visible = false
+      let visible = false
 
-    if(ownProps.path) {
-      visible = exact ?
-        routerPath == basePath + ownPath :
-        routerPath.indexOf(basePath + ownPath) == 0
+      if(ownProps.path) {
+        visible = exact ?
+          routerPath == basepath + ownPath :
+          routerPath.indexOf(basepath + ownPath) == 0
+      }
+
+      if(ownProps.home) {
+        visible = routerPath == basepath
+      }
+
+      return {
+        visible
+      }
+    },
+    (dispatch) => {
+      return {}
     }
+  )(Route)
+}
 
-    if(ownProps.home) {
-      visible = routerPath == basePath
-    }
-
-    return {
-      visible
-    }
-  },
-  (dispatch) => {
-    return {}
-  }
-)(Route)
+export default RouteFactory

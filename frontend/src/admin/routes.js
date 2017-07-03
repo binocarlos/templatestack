@@ -1,9 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 
-import Application from './containers/Application'
-import Route from './containers/Route'
+import RouteFactory from 'template-ui/lib/containers/Route'
 
+import config from './config'
+
+import Application from './containers/Application'
 import Home from './components/Home'
+
+const Route = RouteFactory(config.basepath)
 
 export const routeConfig = {
   '/': {},
