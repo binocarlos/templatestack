@@ -102,7 +102,7 @@ const getAliases = () => {
 module.exports = {
   _apps: APPS,
   context: __dirname,
-  devtool: 'inline-source-map',
+  devtool: isDevelopment ? 'inline-source-map' : null,
   entry: getEntryPoints(),
   output: {
     path: path.join(__dirname, 'dist'),
@@ -110,6 +110,7 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
+    alias: getAliases(),
     extensions: ['', '.scss', '.css', '.js'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     modulesDirectories: [
