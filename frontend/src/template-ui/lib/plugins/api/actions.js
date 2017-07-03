@@ -1,24 +1,38 @@
+import { ActionFactory } from '../../utils/action'
+
+const payloadMap = payload => ({ payload })
+
+const ACTIONS = {
+  request: payloadMap,
+  response: payloadMap,
+  error: payloadMap
+}
+/*
 export const TYPES = {
   request: 'API_REQUEST',
   response: 'API_RESPONSE',
   error: 'API_ERROR'
 }
 
-const actionType = (type, name) => `${type}_${name.toUpperCase()}`
-const actionFactory = (type, name) => (payload) => ({
-  type: actionType(type, name),
-  api_type: type,
-  name,
-  payload
-})
+const handler = (type, name, action) => (payload) => {
 
-const ApiActions = (name) => {
+}
+*/
+const ApiActions = ActionFactory('api', ACTIONS)
+
+
+/*
+(name) => {
   if(!name) throw new Error('name required for api actions')
+
+  return ActionFactory(name, ACTIONS)
+
   return {
-    request: actionFactory(TYPES.request, name),
-    response: actionFactory(TYPES.response, name),
-    error: actionFactory(TYPES.error, name)
+    request: (payload) => actionFactory(TYPES.request, name, { payload }),
+    response: (payload) => actionFactory(TYPES.response, name, { payload }),
+    error: (payload) => actionFactory(TYPES.error, name, { payload })
   }  
 }
+*/
 
 export default ApiActions
