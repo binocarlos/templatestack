@@ -1,5 +1,3 @@
-import 'isomorphic-fetch'
-
 export const status = (payload) => {  
   return new Promise((resolve, reject) => {
     setTimeout(() => {

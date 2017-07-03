@@ -1,5 +1,3 @@
-import 'isomorphic-fetch'
-
 export const load = (payload) => {  
   return new Promise((resolve, reject) => {
     setTimeout(() => {
