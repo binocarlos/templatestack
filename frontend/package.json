@@ -48,8 +48,6 @@
     "css-loader": "^0.26.1",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
-    "html-webpack-harddisk-plugin": "^0.1.0",
-    "html-webpack-plugin": "^2.29.0",
     "js-yaml": "^3.8.2",
     "json-loader": "^0.5.4",
     "postcss-cssnext": "^2.9.0",
