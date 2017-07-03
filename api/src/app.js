@@ -33,14 +33,6 @@ const App = (settings, transport, databases) => {
 
   Routes(app, transport, settings)
 
-  if(settings.frontend_www) {
-    app.use(WebserverTools.staticServer(settings.frontend_www))
-  }
-
-  if(settings.frontend_proxy) {
-    app.use(WebserverTools.proxyServer(settings.frontend_proxy))
-  }
-
   app.use(WebserverTools.errorLogger)
   app.use(WebserverTools.clientErrorHandler)
   app.use(WebserverTools.errorHandler)

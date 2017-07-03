@@ -1,53 +1,60 @@
-const path = require('path');
-const express = require('express');
-const webpack = require('webpack');
-const fs = require('fs');
-const config = require('./webpack.config.dev');
+const path = require('path')
+const express = require('express')
+const webpack = require('webpack')
+const fs = require('fs')
+const httpProxy = require('http-proxy')
+const config = require('./webpack.config.dev')
+const packageJSON = require('./package.json')
 
-const app = express();
-const compiler = webpack(config);
+const app = express()
+const compiler = webpack(config)
 
-const APPS = ['admin']
+const isDevelopment = process.env.NODE_ENV !== "production"
+const APPS = packageJSON.template_apps
+const DIST_DIR = path.join(__dirname, "dist")
+const API_PATH = process.env.API_PATH || '/api/v1'
+const API_SERVICE_HOST = process.env.API_SERVICE_HOST || 'api'
+const API_SERVICE_PORT = process.env.API_SERVICE_PORT || 80
 
-// folders we serve static content from - in order of preference
-const STATICS = [
-  path.join(__dirname, 'www'),
-  path.join(__dirname, '..', 'muse', 'build', 'barn')
-]
-
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath,
-  stats: {
-    colors: true
+const proxyServer = (backend) => {
+  const proxy = httpProxy.createProxyServer()
+  proxy.on('error', function(e) {
+    console.error('Could not connect to proxy, please try again...');
+  });
+  return (req, res) => {
+    proxy.web(req, res, {
+      target: {
+        host: API_SERVICE_HOST,
+        port: API_SERVICE_PORT,
+        path: API_PATH
+      }
+    })
   }
-}));
+}
 
-app.use(require('webpack-hot-middleware')(compiler))
+if (isDevelopment) {
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPath,
+    stats: {
+      colors: true
+    }
+  }))
+  app.use(require('webpack-hot-middleware')(compiler))
+}
+else {
+  app.use(express.static(DIST_DIR))
+}
 
-// serve an apps index.html for any path below the app (so we get HTML5 routing)
-app.use(function(req, res, next){
-  const foundapp = APPS.filter(function(app){
-    return (req.url == '/' + app) || (req.url.indexOf('/' + app + '/') == 0)
-  })[0]
-  if(!foundapp) return next()
-  res.sendFile(path.join(__dirname, './www/' + foundapp + '/index.html'));
+APPS.forEach(appname => {
+  const appHandler = (req, res) => {
+    res.end(appname)
+  }
+  app.get(`/${appname}`, appHandler)
+  app.get(`/${appname}*`, appHandler)
 })
 
-// serve a merged copy of STATICS
-app.use(function(req, res, next){
-  const url = (req.url.match(/\.\w+/) ? req.url : req.url + '/index.html').replace(/\/+/g, '/').replace(/\?.*$/, '')
-  const servePath = STATICS
-    .map(base => path.join(base, decodeURIComponent(url)))
-    .filter(filepath => fs.existsSync(filepath))[0]
-  if(!servePath) return next()
-  res.sendFile(servePath)
-})
-
-app.use(function(req, res) {
-  res.status(404)
-  res.end('not found')
-})
+app.use(API_PATH, proxyServer(API_SERVICE_HOST))
 
 app.listen(process.env.PORT || 80, '0.0.0.0', function (err) {
   if (err) {

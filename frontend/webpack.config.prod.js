@@ -2,8 +2,10 @@ const path = require('path')
 const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const TransferWebpackPlugin = require('transfer-webpack-plugin')
-const toolboxVariables = require('./toolbox-variables');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const toolboxVariables = require('./toolbox-variables')
+
+const APPS = packageJSON.template_apps
 
 function isExternal(module) {
   var userRequest = module.userRequest
@@ -15,9 +17,10 @@ function isExternal(module) {
 
 module.exports = {
   context: __dirname,
-  entry: {
-    admin: './src/admin/index.js'
-  },
+  entry: APPS.reduce((all, app) => {
+    all[app] = `./src/${app}/index.js`
+    return all
+  }, {}),
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
@@ -26,14 +29,15 @@ module.exports = {
   resolve: {
     alias: {
       'react': 'react-lite',
-      'react-dom': 'react-lite'
+      'react-dom': 'react-lite',
+      'template-ui': path.resolve(__dirname, 'src', 'template-ui')
     },
     extensions: ['', '.scss', '.css', '.js'],
     packageMains: ['browser', 'web', 'browserify', 'main', 'style'],
     modulesDirectories: [
-      'node_modules',
-      path.resolve(__dirname, './node_modules')
-    ]
+      path.resolve(__dirname, 'node_modules')
+    ],
+    root: path.resolve(__dirname, 'src')
   },
   module: {
     loaders: [
@@ -47,16 +51,22 @@ module.exports = {
         loader: 'json-loader'
       }, {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?sourceMap&sourceComments')
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss?sourceMap&sourceComments'),
+        exclude: /flexboxgrid/
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader?modules',
+        include: /flexboxgrid/
       }
     ]
   },
   postcss (webpackInstance) {
     return [
       require('postcss-import')({
-        root: path.join(__dirname, './'),
+        root: __dirname,
         path: [
-          path.join(__dirname, './src')
+          path.join(__dirname, 'src')
         ]
       }),
       require('postcss-mixins')(),
@@ -99,9 +109,9 @@ module.exports = {
       },
       exclude: [/\.min\.js$/gi] // skip pre-minified libs
     }),
-    new TransferWebpackPlugin([{
+    new CopyWebpackPlugin([{
       from: 'www',
       to: ''
-    }], path.resolve(__dirname, './'))
+    }])
   ]
 };

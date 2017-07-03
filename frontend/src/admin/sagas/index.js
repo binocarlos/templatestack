@@ -52,3 +52,15 @@ export default function* root() {
     fork(initialize)
   ])
 }
+
+
+
+  /*
+  
+    
+  const initialLocation = store.getState().router
+  if (initialLocation) {
+    store.dispatch(initializeCurrentLocation(initialLocation))  
+  }
+    
+  */

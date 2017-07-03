@@ -5,7 +5,6 @@ import Route from './containers/Route'
 
 import Home from './components/Home'
 
-
 export const routeConfig = {
   '/': {},
   '/help': {},

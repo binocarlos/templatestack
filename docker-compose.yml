@@ -21,14 +21,14 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
     container_name: templateapp_frontend
     environment:
       - MANUALRUN
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules/
-      - ./template-ui:/app/frontend/node_modules/template-ui
-      - ./template-tools:/app/frontend/node_modules/template-tools
     entrypoint:
       - "bash"
       - "run.sh"
@@ -36,22 +36,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.api
-    ports:
-      - "80:80"
     container_name: templateapp_api
-    depends_on:
-      - postgres
-      - redis
-      - nats
-      - frontend
-    links:
-      - postgres:postgres
-      - redis:redis
-      - nats:nats
-      - frontend:frontend
     environment:
       - MANUALRUN
-      - FRONTEND_PROXY=frontend
       - POSTGRES_SERVICE_USER=templateapp
       - POSTGRES_SERVICE_PASSWORD=templateapp
       - POSTGRES_SERVICE_DATABASE=templateapp
@@ -61,7 +48,6 @@ services:
       - ./frontend/www:/app/frontend/www
       - /app/api/node_modules/
       - ./template-api:/app/api/node_modules/template-api
-      - ./template-tools:/app/api/node_modules/template-tools
     entrypoint:
       - "bash"
       - "run.sh"

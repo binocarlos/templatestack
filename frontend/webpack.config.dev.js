@@ -2,18 +2,23 @@ const path = require('path')
 const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const TransferWebpackPlugin = require('transfer-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const toolboxVariables = require('./toolbox-variables');
+const packageJSON = require('./package.json')
+
+const APPS = packageJSON.template_apps
 
 module.exports = {
+  _apps: APPS,
   context: __dirname,
   devtool: 'inline-source-map',
-  entry: {
-    admin: [
+  entry: APPS.reduce((all, app) => {
+    all[app] = [
       'webpack-hot-middleware/client',
-      './src/admin/index.js'
+      `./src/${app}/index.js`
     ]
-  },
+    return all
+  }, {}),
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
@@ -80,6 +85,10 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development')
-    })
+    }),
+    new CopyWebpackPlugin([{
+      from: 'www',
+      to: ''
+    }])
   ]
 };

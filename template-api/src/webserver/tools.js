@@ -8,6 +8,9 @@ const getQueryString = (req) => urlparse(req.url, true).query
 const staticServer = (dir) => express.static(dir)
 const proxyServer = (backend) => {
   const proxy = httpProxy.createProxyServer()
+  proxy.on('error', function(e) {
+    console.error('Could not connect to proxy, please try again...');
+  });
   return (req, res) => {
     proxy.web(req, res, {
       target: `http://${backend}`

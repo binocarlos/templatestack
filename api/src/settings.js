@@ -14,10 +14,7 @@ const args = require('minimist')(process.argv, {
     natshost: process.env.NATS_SERVICE_HOST || 'nats',
     natsport: process.env.NATS_SERVICE_PORT,
     cookie_secret: process.env.COOKIE_SECRET,
-    // this is production and we are serving the build
-    frontend_www: process.env.FRONTEND_WWW,
-    // this is development and we are proxying back to webpack-hot-reload thingy
-    frontend_proxy: process.env.FRONTEND_PROXY
+    frontend_proxy: process.env.FRONTEND_PROXY || 'frontend'
   }
 })
 
