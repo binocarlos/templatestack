@@ -27,12 +27,14 @@ const config = {
   title:'Example Admin Panel',
   basepath:'/admin',
   // the default state for the value reducer
-  defaultValues: {
-    config: {},
-    initialized: false,
-    user: null,
-    menuOpen: false
-  },
+  initialState: {
+    value: {
+      config: {},
+      initialized: false,
+      user: null,
+      menuOpen: false
+    }
+  },  
   menu: {
     guest: [
       ['/login', 'Login', icons.login],

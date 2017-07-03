@@ -4,8 +4,7 @@ import * as actions from '../actions'
 import config from '../config'
 
 const valueReducer = ValueReducer({
-  actions: actions.value,
-  defaultState: config.defaultValues
+  initialState: config.initialState
 })
 
 const apiReducer = ApiStatusReducer({

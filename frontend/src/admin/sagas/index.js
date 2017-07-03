@@ -17,7 +17,7 @@ function* loadConfig() {
     api: api.config.load
   })
   if(error) throw new Error(error)
-  yield put(actions.value.set('config', answer))
+  yield put(actions.value.config.set(answer))
   return answer
 }
 
@@ -29,7 +29,7 @@ function* loadUserStatus() {
   if(error) throw new Error(error)
   const loggedIn = answer.loggedIn ? true : false
   const user = loggedIn ? answer.user : null
-  yield put(actions.value.set('user', user))
+  yield put(actions.value.user.set(user))
   return answer
 }
 
@@ -44,7 +44,7 @@ function* initialize() {
     call(loadConfig),
     call(loadUserStatus)
   ])
-  yield put(actions.value.set('initialized', true))
+  yield put(actions.value.initialized.set(true))
 }
 
 export default function* root() {

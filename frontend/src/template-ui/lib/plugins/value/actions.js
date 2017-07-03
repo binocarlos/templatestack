@@ -1,11 +1,21 @@
-import { createAction } from 'redux-act'
+export const TYPES = {
+  set: 'VALUE_SET',
+  toggle: 'VALUE_TOGGLE'
+}
 
-const ValueActions = (opts = {}) => {
-  const NAME = opts.name || 'value actions'
+const actionType = (type, name) => `${type}_${name.toUpperCase()}`
+const actionFactory = (type, name) => (payload) => ({
+  type: actionType(type, name),
+  value_type: type,
+  name,
+  payload
+})
+
+const ValueActions = (name) => {
   return {
-    set: createAction(`${NAME}: set value`, (name, value) => ({name,value})),
-    toggle: createAction(`${NAME}: toggle value`, (name) => ({name}))
-  }
+    set: actionFactory(TYPES.set, name),
+    toggle: actionFactory(TYPES.toggle, name)
+  }  
 }
 
 export default ValueActions

@@ -1,30 +1,29 @@
 import update from 'immutability-helper'
-import { createReducer } from 'redux-act'
+import { TYPES } from './actions'
 
-const ValueReducer = (opts = {}) => {
-  if(!opts.actions) throw new Error('actions required')
-  const actions = opts.actions
-  const defaultState = opts.defaultState || {}
-  return createReducer({
+const INITIAL_STATE = {}
 
-    [actions.set]: (state, payload) => {
+const ValueReducer = (opts = {}) => (state = opts.initialState || INITIAL_STATE, action) => {
+  switch (action.value_type) {
+
+    case TYPES.set:
       return update(state, {
-        [payload.name]: {
-          $set: payload.value
+        [action.name]: {
+          $set: action.payload
         }
       })
-    },
 
-    [actions.toggle]: (state, payload) => {
-      const existing = state[payload.name] || false
+    case TYPES.toggle:
+      const existing = state[action.name] || false
       return update(state, {
-        [payload.name]: {
+        [action.name]: {
           $set: !existing
         }
       })
-    }
 
-  }, defaultState)
+    default:
+      return state
+  }
 }
 
 export default ValueReducer

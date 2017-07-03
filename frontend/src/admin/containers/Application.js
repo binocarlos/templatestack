@@ -9,7 +9,7 @@ import config from '../config'
 import * as actions from '../actions'
 
 import {
-  valueSelectors
+  valueSelector
 } from '../selectors'
 
 class ApplicationContainer extends Component {
@@ -44,15 +44,15 @@ export default connect(
   (state, ownProps) => {
     return {
       title: config.title,
-      menuOpen: valueSelectors.menuOpen(state),
-      user: valueSelectors.user(state)
+      menuOpen: valueSelector(state, 'menuOpen'),
+      user: valueSelector(state, 'user')
     }
   },
   (dispatch) => {
     return {
-      toggleMenu: () => dispatch(actions.value.toggle('menuOpen')),
+      toggleMenu: () => dispatch(actions.value.menuOpen.toggle()),
       onMenuClick: (id) => {
-        dispatch(actions.value.set('menuOpen', false))
+        dispatch(actions.value.menuOpen.set(false))
         dispatch(actions.application.menuClick(id))
       },
       onOptionClick: (id) => {

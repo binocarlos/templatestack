@@ -2,17 +2,19 @@ import { createAction } from 'redux-act'
 import ValueActions from 'template-ui/lib/plugins/value/actions'
 import ApiActions from 'template-ui/lib/plugins/api/actions'
 
-export const value = ValueActions()
+export const value = {
+  config: ValueActions('config'),
+  initialized: ValueActions('initialized'),
+  user: ValueActions('user'),
+  menuOpen: ValueActions('menuOpen')
+}
+
 export const api = {
   config: {
-    load: ApiActions({
-      name: 'config:load'
-    })
+    load: ApiActions('config_load')
   },
   user: {
-    status: ApiActions({
-      name: 'user:status'
-    })
+    status: ApiActions('user_status')
   }
 }
 

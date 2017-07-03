@@ -1,52 +1,51 @@
 import update from 'immutability-helper'
-import { createReducer } from 'redux-act'
 import { TYPES } from './actions'
 
-const ApiStatusReducer = (opts = {}) => {
-  const defaultState = opts.defaultState || {}
-  return createReducer({
+const INITIAL_STATE = {}
 
-    [TYPES.request]: (state, payload, meta) => {
-      let newData = {
+const ApiStatusReducer = (opts = {}) => (state = opts.initialState || INITIAL_STATE, action) => {
+  switch (action.api_type) {
+
+    case TYPES.request:
+      let requestStatus = {
         phase: 'loading',
         error: null
       }
-      if(meta.keepPayload) {
-        newData.question = payload
+      if(action.keepPayload) {
+        requestStatus.payload_request = action.payload
       }
       return update(state, {
-        [meta.name]: {
-          $set: newData
+        [action.name]: {
+          $set: requestStatus
         }
       })
-    },
 
-    [TYPES.response]: (state, payload, meta) => {
-      let newData = {
+    case TYPES.response:
+      let responseStatus = {
         phase: 'loaded'
       }
-      if(meta.keepPayload) {
-        newData.answer = payload
+      if(action.keepPayload) {
+        responseStatus.payload_response = action.payload
       }
       return update(state, {
-        [meta.name]: {
-          $set: newData
+        [action.name]: {
+          $set: responseStatus
         }
       })
-    },
 
-    [TYPES.error]: (state, payload, meta) => {
+    case TYPES.error:
       return update(state, {
-        [meta.name]: {
+        [action.name]: {
           $set: {
             phase: 'error',
-            error: payload
+            error: action.payload
           }
         }
       })
-    }
 
-  }, defaultState)
+    default:
+      return state
+  }
 }
 
 export default ApiStatusReducer

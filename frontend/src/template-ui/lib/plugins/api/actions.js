@@ -4,19 +4,20 @@ export const TYPES = {
   error: 'API_ERROR'
 }
 
-const actionFactory = (type, meta) => (payload) => ({
-  type,
-  name: meta.name,
-  payload,
-  meta
+const actionType = (type, name) => `${type}_${name.toUpperCase()}`
+const actionFactory = (type, name) => (payload) => ({
+  type: actionType(type, name),
+  api_type: type,
+  name,
+  payload
 })
 
-const ApiActions = (meta = {}) => {
-  if(!meta.name) throw new Error('name required for api actions')
+const ApiActions = (name) => {
+  if(!name) throw new Error('name required for api actions')
   return {
-    request: actionFactory(TYPES.request, meta),
-    response: actionFactory(TYPES.response, meta),
-    error: actionFactory(TYPES.error, meta)
+    request: actionFactory(TYPES.request, name),
+    response: actionFactory(TYPES.response, name),
+    error: actionFactory(TYPES.error, name)
   }  
 }
 
