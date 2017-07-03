@@ -13,9 +13,9 @@ module.exports = {
   context: __dirname,
   devtool: 'inline-source-map',
   entry: APPS.reduce((all, app) => {
-    all[app] = [
+    all[app.name] = [
       'webpack-hot-middleware/client',
-      `./src/${app}/index.js`
+      `./src/${app.name}/index.js`
     ]
     return all
   }, {}),

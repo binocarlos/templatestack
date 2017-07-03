@@ -1,8 +1,9 @@
-FROM node:7.10.0
+FROM binocarlos/yarn-base
 MAINTAINER kaiyadavenport@gmail.com
 WORKDIR /app/frontend
 COPY ./frontend/package.json /app/frontend/package.json
-RUN npm install
+COPY ./frontend/yarn.lock /app/frontend/yarn.lock
+RUN yarn install
 COPY ./frontend /app/frontend
-ENTRYPOINT ["npm", "run"]
+ENTRYPOINT ["yarn", "run"]
 CMD ["watch"]

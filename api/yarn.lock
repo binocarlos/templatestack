@@ -59,8 +59,8 @@ assert-plus@^0.2.0:
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-0.2.0.tgz#d74e1b87e7affc0db8aadb7021f3fe48101ab234"
 
 async@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/async/-/async-2.4.1.tgz#62a56b279c98a11d0987096a01cc3eeb8eb7bbd7"
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.5.0.tgz#843190fd6b7357a0b9e1c956edddd5ec8462b54d"
   dependencies:
     lodash "^4.14.0"
 
@@ -86,6 +86,10 @@ babel-runtime@^6.11.6:
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+
+basic-auth@~1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/basic-auth/-/basic-auth-1.1.0.tgz#45221ee429f7ee1e5035be3f51533f1cdfd29884"
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.1"
@@ -193,10 +197,8 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
     delayed-stream "~1.0.0"
 
 commander@^2.2.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.9.0.tgz#9c99094176e12240cb22d6c5146098400fe0f7d4"
-  dependencies:
-    graceful-readlink ">= 1.0.0"
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -256,9 +258,15 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-debug@2.6.7, debug@^2.1.3, debug@^2.2.0:
+debug@2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.7.tgz#92bad1f6d05bbb6bba22cca88bcd0ec894c2861e"
+  dependencies:
+    ms "2.0.0"
+
+debug@2.6.8, debug@^2.1.3, debug@^2.2.0:
+  version "2.6.8"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
     ms "2.0.0"
 
@@ -546,9 +554,13 @@ function-bind@^1.0.2, function-bind@^1.1.0, function-bind@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.0.tgz#16176714c801798e4e8f2cf7f7529467bb4a5771"
 
-generic-pool@2.4.3, generic-pool@^2.4.2:
+generic-pool@2.4.3:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.3.tgz#780c36f69dfad05a5a045dd37be7adca11a4f6ff"
+
+generic-pool@^2.4.2:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.5.4.tgz#38c6188513e14030948ec6e5cf65523d9779299b"
 
 getpass@^0.1.1:
   version "0.1.7"
@@ -569,7 +581,7 @@ glob-parent@^2.0.0:
   dependencies:
     is-glob "^2.0.0"
 
-glob@~7.1.1:
+glob@~7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
   dependencies:
@@ -595,10 +607,6 @@ global-prefix@^0.1.4:
     ini "^1.3.4"
     is-windows "^0.2.0"
     which "^1.2.12"
-
-"graceful-readlink@>= 1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
 har-schema@^1.0.5:
   version "1.0.5"
@@ -640,35 +648,35 @@ heavy@4.0.x:
     hoek "4.x.x"
     joi "10.x.x"
 
-hemera-joi@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/hemera-joi/-/hemera-joi-1.1.4.tgz#41290f789731162f28c13fd26a42a116c9de3dd1"
+hemera-joi@^1.1.4, hemera-joi@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/hemera-joi/-/hemera-joi-1.1.9.tgz#bb87537d76fd7c9e6fc0bb3f688746cbbc9e228d"
   dependencies:
-    hemera-plugin "^0.0.3"
+    hemera-plugin "^0.0.8"
     joi "10.5.x"
 
-hemera-plugin@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/hemera-plugin/-/hemera-plugin-0.0.3.tgz#589e8dc0549e8f109dd2c6edf1413550697de720"
+hemera-plugin@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/hemera-plugin/-/hemera-plugin-0.0.8.tgz#1c3a2738a1b3b7849056f55775021f5f6138d8f8"
   dependencies:
     semver "5.3.x"
 
 hemera-sql-store@^1.0.24:
-  version "1.0.24"
-  resolved "https://registry.yarnpkg.com/hemera-sql-store/-/hemera-sql-store-1.0.24.tgz#c8ea234c290a30eda5c22b4fbd77b455c8586da4"
+  version "1.0.29"
+  resolved "https://registry.yarnpkg.com/hemera-sql-store/-/hemera-sql-store-1.0.29.tgz#e93ffb3fc5ca2230c97c7484d8e29b30e3c779e2"
   dependencies:
-    hemera-joi "^1.1.4"
-    hemera-plugin "^0.0.3"
-    hemera-store "1.1.x"
+    hemera-joi "^1.1.9"
+    hemera-plugin "^0.0.8"
+    hemera-store "^1.1.11"
     hoek "4.1.x"
     knex "0.13.x"
     mysql "2.13.x"
     pg "6.1.x"
     pg-hstore "2.3.x"
 
-hemera-store@1.1.x:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/hemera-store/-/hemera-store-1.1.10.tgz#d789f7f3bb9d3fba36308086b8e7af3177b55571"
+hemera-store@^1.1.11:
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/hemera-store/-/hemera-store-1.1.11.tgz#06b966495f43a654f3d6665d159a0f08f8fe374f"
   dependencies:
     joi "10.4.x"
 
@@ -1024,6 +1032,16 @@ mkdirp@^0.5.0:
   dependencies:
     minimist "0.0.8"
 
+morgan@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.8.2.tgz#784ac7734e4a453a9c6e6e8680a9329275c8b687"
+  dependencies:
+    basic-auth "~1.1.0"
+    debug "2.6.8"
+    depd "~1.1.0"
+    on-finished "~2.3.0"
+    on-headers "~1.0.1"
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -1037,8 +1055,8 @@ mysql@2.13.x:
     sqlstring "2.2.0"
 
 nats-hemera@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/nats-hemera/-/nats-hemera-1.3.2.tgz#a651b90943032ac272348a7c1e1d3d97a697a168"
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/nats-hemera/-/nats-hemera-1.3.7.tgz#8c5bf1429ff7efc1b6c2deacca9f4ebfc22adc52"
   dependencies:
     bloomrun "3.0.x"
     co "4.6.x"
@@ -1080,7 +1098,7 @@ object-assign@4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
 
-object-inspect@~1.2.1:
+object-inspect@~1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.2.2.tgz#c82115e4fcc888aea14d64c22e4f17f6a70d5e5a"
 
@@ -1182,8 +1200,8 @@ pg-hstore@2.3.x:
     underscore "^1.7.0"
 
 pg-pool@1.*:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-1.7.1.tgz#421105cb7469979dcc48d6fc4fe3fe4659437437"
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-1.8.0.tgz#f7ec73824c37a03f076f51bfdf70e340147c4f37"
   dependencies:
     generic-pool "2.4.3"
     object-assign "4.1.0"
@@ -1211,8 +1229,8 @@ pg@6.1.x:
     semver "4.3.2"
 
 pg@^6.1.2:
-  version "6.2.4"
-  resolved "https://registry.yarnpkg.com/pg/-/pg-6.2.4.tgz#4f7ede70241e97506627d5d6078360701a647c45"
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/pg/-/pg-6.4.0.tgz#cb76ba2e7c2eab89fc64bf7a9fe648ced72436dc"
   dependencies:
     buffer-writer "1.0.1"
     packet-reader "0.3.1"
@@ -1331,15 +1349,15 @@ readable-stream@1.1.14, readable-stream@^1.1.12:
     string_decoder "~0.10.x"
 
 readable-stream@^2.1.5:
-  version "2.2.11"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.2.11.tgz#0796b31f8d7688007ff0b93a8088d34aa17c0f72"
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.3.tgz#368f2512d79f9d46fdfc71349ae7878bbc1eb95c"
   dependencies:
     core-util-is "~1.0.0"
-    inherits "~2.0.1"
+    inherits "~2.0.3"
     isarray "~1.0.0"
     process-nextick-args "~1.0.6"
-    safe-buffer "~5.0.1"
-    string_decoder "~1.0.0"
+    safe-buffer "~5.1.1"
+    string_decoder "~1.0.3"
     util-deprecate "~1.0.1"
 
 rechoir@^0.6.2:
@@ -1429,15 +1447,11 @@ resolve-dir@^0.1.0:
     expand-tilde "^1.2.2"
     global-modules "^0.2.3"
 
-resolve@^1.1.6, resolve@^1.1.7:
+resolve@^1.1.6, resolve@^1.1.7, resolve@~1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.3.3.tgz#655907c3469a8680dc2de3a275a8fdd69691f0e5"
   dependencies:
     path-parse "^1.0.5"
-
-resolve@~1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
 resumer@~0.0.0:
   version "0.0.0"
@@ -1445,13 +1459,9 @@ resumer@~0.0.0:
   dependencies:
     through "~2.3.4"
 
-safe-buffer@^5.0.1:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.0.tgz#fe4c8460397f9eaaaa58e73be46273408a45e223"
-
-safe-buffer@~5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
+safe-buffer@^5.0.1, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
 semver@4.3.2:
   version "4.3.2"
@@ -1552,11 +1562,11 @@ string_decoder@~0.10.x:
   version "0.10.31"
   resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-0.10.31.tgz#62e203bc41766c6c28c9fc84301dab1c5310fa94"
 
-string_decoder@~1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.0.2.tgz#b29e1f4e1125fa97a10382b8a533737b7491e179"
+string_decoder@~1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/string_decoder/-/string_decoder-1.0.3.tgz#0fc67d7c141825de94282dd536bec6b9bce860ab"
   dependencies:
-    safe-buffer "~5.0.1"
+    safe-buffer "~5.1.0"
 
 stringstream@~0.0.4:
   version "0.0.5"
@@ -1577,19 +1587,19 @@ supports-color@^2.0.0:
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
 
 tape@^4.6.3:
-  version "4.6.3"
-  resolved "https://registry.yarnpkg.com/tape/-/tape-4.6.3.tgz#637e77581e9ab2ce17577e9bd4ce4f575806d8b6"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/tape/-/tape-4.7.0.tgz#f3ebb214fef3d6907e5a57dbaafe3bd8a7cbed88"
   dependencies:
     deep-equal "~1.0.1"
     defined "~1.0.0"
     for-each "~0.3.2"
     function-bind "~1.1.0"
-    glob "~7.1.1"
+    glob "~7.1.2"
     has "~1.0.1"
     inherits "~2.0.3"
     minimist "~1.2.0"
-    object-inspect "~1.2.1"
-    resolve "~1.1.7"
+    object-inspect "~1.2.2"
+    resolve "~1.3.3"
     resumer "~0.0.0"
     string.prototype.trim "~1.1.2"
     through "~2.3.8"
@@ -1611,9 +1621,6 @@ tape@^4.6.3:
     passport "^0.3.2"
     pg "^6.1.2"
     template-tools "file:../template-tools"
-
-"template-tools@file:../template-tools":
-  version "1.0.0"
 
 through2@^2.0.2:
   version "2.0.3"

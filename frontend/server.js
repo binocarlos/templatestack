@@ -33,6 +33,7 @@ const proxyServer = (backend) => {
 }
 
 if (isDevelopment) {
+  console.log(`using development tools`)
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: config.output.publicPath,
@@ -46,14 +47,17 @@ else {
   app.use(express.static(DIST_DIR))
 }
 
-APPS.forEach(appname => {
-  const appHandler = (req, res) => {
-    res.end(appname)
-  }
-  app.get(`/${appname}`, appHandler)
+// loop over the app config in package.json and create a react server-side
+// handler for each of them - each app defines it's own handler as server.js
+APPS.forEach(appOptions => {
+  const appname = appOptions.name
+  console.log(`mounting ${appname} handler`)
+  const appHandler = require(`./src/${appname}/server`)
   app.get(`/${appname}*`, appHandler)
 })
 
+// a proxy back to /api/v1
+// this will be handled by ingress in production
 app.use(API_PATH, proxyServer(API_SERVICE_HOST))
 
 app.listen(process.env.PORT || 80, '0.0.0.0', function (err) {

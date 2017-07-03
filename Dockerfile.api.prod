@@ -1,9 +1,0 @@
-FROM node:7.10.0
-MAINTAINER kaiyadavenport@gmail.com
-WORKDIR /app/api
-COPY ./api/package.json /app/api/package.json
-RUN npm install
-COPY ./api /app/api
-COPY ./frontend/dist /app/www
-ENV FRONTEND_WWW=/app/www
-ENTRYPOINT ["node", "src/index.js"]

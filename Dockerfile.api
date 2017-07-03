@@ -1,9 +1,9 @@
-FROM node:7.10.0
+FROM binocarlos/yarn-base
 MAINTAINER kaiyadavenport@gmail.com
 WORKDIR /app/api
 COPY ./template-api /app/template-api
 COPY ./api/package.json /app/api/package.json
-RUN npm install
+COPY ./api/yarn.lock /app/api/yarn.lock
+RUN yarn install
 COPY ./api /app/api
-COPY ./frontend/www /app/frontend/www
 ENTRYPOINT ["node", "src/index.js"]

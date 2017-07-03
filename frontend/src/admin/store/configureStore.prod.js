@@ -13,7 +13,8 @@ export default function configureStore(router, initialState) {
     compose(
       router.enhancer,
       applyMiddleware(
-        sagaMiddleware
+        sagaMiddleware,
+        router.middleware
       )
     )
   )

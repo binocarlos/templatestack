@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "description": "the frontend for the template app",
   "main": "./src",
-  "template_apps": [
-    "admin"
-  ],
+  "template_apps": [{
+    "name": "admin",
+    "title": "Admin Panel"
+  }],
   "scripts": {
     "release": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --config ./webpack.config.prod --colors --profile --progress",
     "watch": "NODE_ENV=development UV_THREADPOOL_SIZE=100 node ./server",
@@ -14,6 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "http-proxy": "^1.16.2",
     "immutability-helper": "^2.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -25,8 +27,7 @@
     "redux-act": "^1.3.0",
     "redux-little-router": "^13.2.0",
     "redux-logger": "^2.7.4",
-    "redux-saga": "^0.15.4",
-    "http-proxy": "^1.16.2"
+    "redux-saga": "^0.15.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
@@ -39,6 +40,8 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-2": "^6.13.0",
+    "babel-register": "^6.24.1",
+    "babel-polyfill": "^6.3.14",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
     "express": "^4.13.4",
@@ -51,7 +54,6 @@
     "postcss-loader": "^1.3.3",
     "postcss-mixins": "^5.4.1",
     "postcss-reporter": "^3.0.0",
-    "react-toolbox-themr": "^1.0.2",
     "react-transform-catch-errors": "^1.0.2",
     "react-transform-hmr": "^1.0.4",
     "redbox-react": "^1.3.3",

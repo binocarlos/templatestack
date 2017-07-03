@@ -18,7 +18,7 @@ function isExternal(module) {
 module.exports = {
   context: __dirname,
   entry: APPS.reduce((all, app) => {
-    all[app] = `./src/${app}/index.js`
+    all[app.name] = `./src/${app.name}/index.js`
     return all
   }, {}),
   output: {

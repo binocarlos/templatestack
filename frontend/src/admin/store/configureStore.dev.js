@@ -15,6 +15,7 @@ export default function configureStore(router, initialState) {
       router.enhancer,
       applyMiddleware(
         sagaMiddleware,
+        router.middleware,
         createLogger({
           collapsed:true
         })
