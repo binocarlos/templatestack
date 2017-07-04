@@ -3,21 +3,24 @@ import ValueActions from 'template-ui/lib/plugins/value/actions'
 import ApiActions from 'template-ui/lib/plugins/api/actions'
 import RouterActions from 'template-ui/lib/plugins/router/actions'
 
+const valueActions = ValueActions()
+const apiActions = ApiActions()
+
 // generic state store (set/toggle)
 export const value = {
-  config: ValueActions('config'),
-  initialized: ValueActions('initialized'),
-  user: ValueActions('user'),
-  menuOpen: ValueActions('menuOpen')
+  config: valueActions('config'),
+  initialized: valueActions('initialized'),
+  user: valueActions('user'),
+  menuOpen: valueActions('menuOpen')
 }
 
 // generic api actions (request -> response || error)
 export const api = {
   config: {
-    load: ApiActions('config_load')
+    load: apiActions('config_load', {keepPayload:true})
   },
   user: {
-    status: ApiActions('user_status')
+    status: apiActions('user_status', {keepPayload:true})
   }
 }
 
