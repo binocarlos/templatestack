@@ -50,6 +50,20 @@ tape('ActionFactory -> inject', (t) => {
   t.end()
 })
 
+tape('ActionFactory -> types', (t) => {
+  const ACTIONS = {
+    set: null
+  }
+  const SimpleActions = ActionFactory('simple', ACTIONS)
+  const testA = SimpleActions('A', {extra:10})
+  
+  t.deepEqual(testA._types, {
+    set: 'SIMPLE_A_SET'
+  }, 'types are correct')
+  
+  t.end()
+})
+
 tape('TypeFactory', (t) => {
   const ACTIONS = {
     apples: (size, color) => ({ size, color}),

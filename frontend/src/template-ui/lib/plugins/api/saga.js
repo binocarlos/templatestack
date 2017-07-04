@@ -1,5 +1,4 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
-import { TYPES } from './actions'
 
 function* ApiResolverSaga(opts = {}) {
   if(!opts.actions) throw new Error('actions needed for ApiResolverSaga')

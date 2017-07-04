@@ -24,7 +24,14 @@ export const ActionFactory = (id, actions) => {
             })
           }
         })
-      }, {})
+      }, {
+        _types: Object
+          .keys(actions)
+          .reduce((all, actionName) => {
+            all[actionName] = getActionName([ id, name, actionName ])
+            return all
+          }, {})
+      })
   }
 }
 
