@@ -17,10 +17,6 @@ export const routeConfig = {
   '/register': {}
 }
 
-export const redirectHandlers = {
-  'logout': () => document.location = '/api/v1/logout'
-}
-
 export const routes = (
   <div>
     <Application>

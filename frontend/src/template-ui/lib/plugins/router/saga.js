@@ -1,29 +1,36 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
-import { TYPES } from './actions'
+import { ForkListeners } from '../../utils/saga'
+import actions, { TYPES } from './actions'
 
 const RouterSaga = (opts = {}) => {
   if(!opts.redirects) throw new Error('redirects needed for RouterSaga')
-  const { redirects } = opts
+  if(!opts.loaders) throw new Error('loaders needed for RouterSaga')
 
-  function* redirect() {
+  const { redirects, loaders } = opts
 
+  function* redirect(action) {
+    if(!action.name) return
+    if(action.name.indexOf('/') == 0) {
+      yield put(actions.push(action.name))
+    }
+    else {
+      const redirectHandler = redirects[action.name]
+      if(!redirectHandler) return
+      yield call(redirectHandler, action.payload)
+    }
   }
 
-  function* listenRedirect() {
-    yield takeLatest(TYPES.redirect, redirect)
+  function* changed(action) {
+    console.log('-------------------------------------------');
+    console.dir('changed')
+    console.dir(action)
   }
 
-  return function* routerSaga() {
-    yield all([
-      fork(listenRedirect)
-    ])
-  }
-
-  console.log('-------------------------------------------');
-  console.dir(redirects)
-
-
+  return ForkListeners([
+    [TYPES.redirect, redirect],
+    [TYPES.changed, changed]
+  ])
 }
 
 export default RouterSaga
