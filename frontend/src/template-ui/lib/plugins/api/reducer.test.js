@@ -11,12 +11,13 @@ const runTests = (expectPayloads) => {
   const getTitle = (title) => title + ' - ' + (expectPayloads ? ' with payloads' : ' without payloads')
   
   tape(getTitle('ApiReducer'), (t) => {
-    const actions = ApiActions('fruit', { keepPayload: expectPayloads })
-    const defaultState = ApiReducer()
+    const actions = ApiActions()('fruit', { keepPayload: expectPayloads })
+    const reducer = ApiReducer()
+    const defaultState = reducer()
 
     t.deepEqual(defaultState, {}, getTitle('default state'))
 
-    const requestState = ApiReducer(defaultState, actions.request(payloads.request))
+    const requestState = reducer(defaultState, actions.request(payloads.request))
 
     t.deepEqual(requestState, { 
       fruit: { 
@@ -27,7 +28,7 @@ const runTests = (expectPayloads) => {
       }
     }, getTitle('request status'))
 
-    const responseState = ApiReducer(requestState, actions.response(payloads.response))
+    const responseState = reducer(requestState, actions.response(payloads.response))
 
     t.deepEqual(responseState, { 
       fruit: { 
@@ -38,7 +39,7 @@ const runTests = (expectPayloads) => {
       }
     }, getTitle('response status'))
 
-    const errorState = ApiReducer(requestState, actions.error(payloads.error))
+    const errorState = reducer(requestState, actions.error(payloads.error))
 
     t.deepEqual(errorState, { 
       fruit: { 

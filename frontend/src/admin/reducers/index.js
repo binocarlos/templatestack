@@ -11,9 +11,9 @@ const apiReducer = ApiStatusReducer({
 
 })
 
-const rootReducers = {
+const reducers = {
   value: valueReducer,
   api: apiReducer
 }
 
-export default rootReducers
+export default reducers

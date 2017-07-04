@@ -7,7 +7,7 @@ tape('api saga: response', (t) => {
   const NAME = 'fruit'
   const REQUEST = 6
   const RESPONSE = 10
-  const actions = ApiActions(NAME)
+  const actions = ApiActions()(NAME)
   const opts = {
     actions,
     payload: REQUEST,
@@ -41,7 +41,7 @@ tape('api saga: error', (t) => {
   const NAME = 'fruit'
   const REQUEST = 6
   const ERROR = 'hello world'
-  const actions = ApiActions(NAME)
+  const actions = ApiActions()(NAME)
   const opts = {
     actions,
     payload: REQUEST,

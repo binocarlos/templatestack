@@ -6,7 +6,7 @@ const ACTIONS = {
   toggle: null
 }
 
-export const TYPES = TypeFactory(ID, ACTIONS)
-const ValueActions = ActionFactory(ID, ACTIONS)
+export const GetTypes = (id = ID) => TypeFactory(id, ACTIONS)
+const ValueActions = (id = ID) => ActionFactory(id, ACTIONS)
 
 export default ValueActions

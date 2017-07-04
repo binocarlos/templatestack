@@ -7,7 +7,7 @@ const ACTIONS = {
   error: null
 }
 
-export const TYPES = TypeFactory(ID, ACTIONS)
-const ApiActions = ActionFactory(ID, ACTIONS)
+export const GetTypes = (id = ID) => TypeFactory(id, ACTIONS)
+const ApiActions = (id = ID) => ActionFactory(id, ACTIONS)
 
 export default ApiActions
