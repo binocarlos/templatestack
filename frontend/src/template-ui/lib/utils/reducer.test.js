@@ -61,3 +61,45 @@ tape('ReducerFactory (basic)', (t) => {
 
   t.end()
 })
+
+tape('ReducerFactory (namespaces)', (t) => {
+
+  const INITIAL_STATE = {
+    
+  }
+
+  const ID = 'value'
+  const NAME_FIELD = `name_${ID}`
+  const ACTIONS = {
+    set: null
+  }
+
+  const HANDLERS = {
+    set: (state, action) => update(state, {
+      [action[NAME_FIELD]]: {
+        $set: action.payload
+      }
+    })
+  }
+
+  const ValueActions = ActionFactory(ID, ACTIONS)
+  const ValueTypes = TypeFactory(ID, ACTIONS)
+  const ValueReducer = ReducerFactory({
+    id: ID,
+    handlers: HANDLERS,
+    types: ValueTypes,
+    initialState: INITIAL_STATE
+  })
+
+  const size = ValueActions('size')
+  const color = ValueActions('color')
+
+  const defaultState = ValueReducer()
+
+  t.deepEqual(defaultState, INITIAL_STATE, 'defaultState = INITIAL_STATE')
+  
+  t.deepEqual(ValueReducer(defaultState, size.set(10)), {size:10}, 'size set from default')
+  t.deepEqual(ValueReducer({size:5}, color.set('red')), {size:5,color:'red'}, 'color set from previous')
+
+  t.end()
+})
