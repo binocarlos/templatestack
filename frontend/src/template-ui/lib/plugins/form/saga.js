@@ -1,13 +1,14 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
-function* ApiSaga(opts = {}) {
-  if(!opts.actions) throw new Error('actions needed for ApiResolverSaga')
-  if(!opts.api) throw new Error('actions needed for ApiResolverSaga')
-  if(!opts.actions.request || !opts.actions.response || !opts.actions.error) throw new Error('request, response and error actions needed')
-  
+import actionFactory, { ID } from './actions'
+
+function* FormSaga(opts = {}) {
+  if(!opts.actions) throw new Error('actions needed for FormSaga')
+  if(!opts.getSchema) throw new Error('getSchema needed for FormSaga')
+
   const actions = opts.actions
-  const api = opts.api
-  const payload = opts.payload
+  const getSchema = opts.getSchema
+  const id = opts.id || ID
 
   yield put(actions.request(payload))
 
@@ -31,4 +32,4 @@ function* ApiSaga(opts = {}) {
   return ret
 }
 
-export default ApiSaga
+export default FormSaga

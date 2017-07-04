@@ -75,3 +75,16 @@ tape('ActionFactory -> types', (t) => {
   
   t.end()
 })
+
+tape('ActionFactory -> generic types', (t) => {
+  const ACTIONS = {
+    set: null
+  }
+  const SimpleActions = ActionFactory('simple', ACTIONS)
+  
+  t.deepEqual(SimpleActions._genericTypes, {
+    set: 'SIMPLE_SET'
+  }, 'generic types are correct')
+  
+  t.end()
+})

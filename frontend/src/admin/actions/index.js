@@ -1,31 +1,40 @@
 import { createAction } from 'redux-act'
 import ValueActions from 'template-ui/lib/plugins/value/actions'
 import ApiActions from 'template-ui/lib/plugins/api/actions'
+import FormActions from 'template-ui/lib/plugins/form/actions'
 import RouterActions from 'template-ui/lib/plugins/router/actions'
 
-const valueActions = ValueActions()
-const apiActions = ApiActions()
-
-// generic state store (set/toggle)
-export const value = {
-  config: valueActions('config'),
-  initialized: valueActions('initialized'),
-  user: valueActions('user'),
-  menuOpen: valueActions('menuOpen'),
-  test: valueActions('test')
+export base = {
+  value: ValueActions(),
+  api: ApiActions(),
+  form: FormActions()
 }
 
-// generic api actions (request -> response || error)
+export const value = {
+  _types: base.value._genericTypes,
+  config: base.value('config'),
+  initialized: base.value('initialized'),
+  user: base.value('user'),
+  menuOpen: base.value('menuOpen'),
+  test: base.value('test')
+}
+
 export const api = {
+  _types: base.api._genericTypes,
   config: {
-    load: apiActions('config_load', {keepPayload:true})
+    load: base.api('config_load', {keepPayload:true})
   },
   user: {
-    status: apiActions('user_status', {keepPayload:true})
+    status: base.api('user_status', {keepPayload:true})
   }
 }
 
-// trigger actions (we use the createAction tool for these)
+export const form = {
+  _types: base.form._genericTypes,
+  login: base.form('login'),
+  register: base.form('register')
+}
+
 export const events = {
   menuClick: createAction('menu click')
 }

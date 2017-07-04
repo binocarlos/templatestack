@@ -1,7 +1,7 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
 import RouterSaga from 'template-ui/lib/plugins/router/saga'
-import apiSaga from 'template-ui/lib/plugins/api/saga'
+import FormSaga from 'template-ui/lib/plugins/api/saga'
 
 import config from '../config'
 import api from '../api'
@@ -28,6 +28,12 @@ export default function* root() {
       redirects,
       loaders,
       basepath: config.basepath
+    })),
+    fork(FormSaga({
+      types: actions.form._types,
+      getSchema: (name, data) => {
+        return {}
+      }
     }))
   ])
 }

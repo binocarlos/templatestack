@@ -17,7 +17,7 @@ export const BaseAction = (id, name, actionName) => {
 
 export const ActionFactory = (id, actions) => {
   ensureArgs(id, actions)
-  return (name, inject = {}) => {
+  const actionFactory = (name, inject = {}) => {
     return Object.keys(actions)
       .reduce((all, actionName) => {
         all[actionName] = (...args) => {
@@ -32,6 +32,14 @@ export const ActionFactory = (id, actions) => {
         _types: {}
       })
   }
+
+  actionFactory._genericTypes = Object.keys(actions)
+    .reduce((all, actionName) => {
+      all[actionName] = getActionName([ id, actionName ])
+      return all
+    }, {})
+    
+  return actionFactory
 }
 
 export default ActionFactory
