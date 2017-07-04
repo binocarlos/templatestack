@@ -1,29 +1,23 @@
 const getActionName = (parts) => parts.map(s => s.toUpperCase()).join('_')
-
-export const ActionFactory = (id, actions) => (name, overrideActions) => {
-  const finalActions = Object.assign({}, actions, overrideActions)
-  return Object
-    .keys(finalActions)
-    .reduce((all, actionName) => {
-      const baseActionName = getActionName([ id, actionName ])
-      const fullActionName = getActionName([ id, name, actionName ])
-      const argMapper = finalActions[actionName]
-
-      all[actionName] = (...args) => {
-        const actionData = argMapper.apply(null, args)
-        return Object.assign({}, actionData, {
-          type: baseActionName,
-          [`type_${id}`]: fullActionName
+const payloadMapper = (payload) => ({payload})
+export const ActionFactory = (id, actions) => {
+  if(!id) throw new Error('id required for ActionFactory')
+  if(!actions) throw new Error('actions required for ActionFactory')
+  return (name) => {
+    return Object
+      .keys(actions)
+      .reduce((all, actionName) => {
+        const baseActionName = getActionName([ id, actionName ])
+        const fullActionName = getActionName([ id, name, actionName ])
+        const argMapper = actions[actionName] || payloadMapper
+        return Object.assign({}, all, {
+          [actionName]: (...args) => {
+            return Object.assign({}, argMapper.apply(null, args), {
+              type: fullActionName,
+              [`type_${id}`]: baseActionName
+            })
+          }
         })
-      }
-
-    ])
-
-    [${id.toUpperCase(), name.toUpperCase()}_${actionName.toUpperCase()}`
-  }, {})
-
-  return Object.assign({}, action, {
-    type: `${type}_${name.toUpperCase()}`,
-    [`type_${id}`]: type
-  })
-})
+      }, {})
+  }
+}
