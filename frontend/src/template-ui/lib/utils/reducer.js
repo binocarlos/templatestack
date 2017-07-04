@@ -11,18 +11,11 @@ const ensureArgs = (opts = {}) => {
 
 export const ReducerFactory = (opts = {}) => {
   const { id, handlers, types, initialState, autoUpdate } = ensureArgs(opts)
-  const HANDLERS = Object.keys(handlers || {}).reduce((all, handlerName) => {
-    const handler = handlers[handlerName]
-    const actionType = types[handlerName]
-    all[actionType] = handler
-    return all
-  }, {})
   return (state = initialState, action = {}) => {
-    const actionType = action[`type_${id}`]
-    const actionName = action[`name_${id}`]
-    const handler = HANDLERS[actionType]
+    if(action._genericid != id) return state
+    const handler = handlers[action._genericaction]
     return handler ?
-      handler(state, action, actionName) :
+      handler(state, action, action._genericname) :
       state
   }
 }

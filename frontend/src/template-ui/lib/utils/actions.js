@@ -6,24 +6,28 @@ const ensureArgs = (id, actions) => {
   if(!actions) throw new Error('actions required for ActionFactory')
 }
 
+export const BaseAction = (id, name, actionName) => {
+  return {
+    type: getActionName([ id, name, actionName ]),
+    _genericid: id,
+    _genericname: name,
+    _genericaction: actionName
+  }
+}
+
 export const ActionFactory = (id, actions) => {
   ensureArgs(id, actions)
   return (name, inject = {}) => {
     return Object
       .keys(actions)
       .reduce((all, actionName) => {
-        const baseActionName = getActionName([ id, actionName ])
-        const fullActionName = getActionName([ id, name, actionName ])
-        const argMapper = actions[actionName] || payloadMapper
-        return Object.assign({}, all, {
-          [actionName]: (...args) => {
-            return Object.assign({}, argMapper.apply(null, args), inject, {
-              type: fullActionName,
-              [`name_${id}`]: name,
-              [`type_${id}`]: baseActionName
-            })
-          }
-        })
+        all[actionName] = (...args) => {
+          const handler = actions[actionName] || payloadMapper
+          const actionProps = handler.apply(null, args)
+          const baseActionProps = BaseAction(id, name, actionName)
+          return Object.assign({}, actionProps, inject, baseActionProps)
+        }
+        return all
       }, {
         _types: Object
           .keys(actions)

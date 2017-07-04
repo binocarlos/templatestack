@@ -1,6 +1,7 @@
 import { createAction } from 'redux-act'
 import ValueActions from 'template-ui/lib/plugins/value/actions'
 import ApiActions from 'template-ui/lib/plugins/api/actions'
+import RouterActions from 'template-ui/lib/plugins/router/actions'
 
 // generic state store (set/toggle)
 export const value = {
@@ -24,3 +25,5 @@ export const api = {
 export const events = {
   menuClick: createAction('menu click')
 }
+
+export const router = RouterActions

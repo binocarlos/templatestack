@@ -4,10 +4,10 @@ import ApiActions, { TYPES } from './actions'
 import ApiSaga from './saga'
 
 tape('api saga: response', (t) => {
-  const ID = 'fruit'
+  const NAME = 'fruit'
   const REQUEST = 6
   const RESPONSE = 10
-  const actions = ApiActions(ID)
+  const actions = ApiActions(NAME)
   const opts = {
     actions,
     payload: REQUEST,
@@ -18,8 +18,9 @@ tape('api saga: response', (t) => {
   const getAction = (type, action) => {
     return Object.assign({}, action, {
       type: actions._types[type],
-      type_api: TYPES[type],
-      name_api: ID
+      _genericid: 'api',
+      _genericname: NAME,
+      _genericaction: type
     })
   }
   return expectSaga(ApiSaga, opts)
@@ -31,15 +32,16 @@ tape('api saga: response', (t) => {
     })
     .run()
     .then((result) => {
+      t.ok('saga has passed')
       t.end()
     })
 })
 
 tape('api saga: error', (t) => {
-  const ID = 'fruit'
+  const NAME = 'fruit'
   const REQUEST = 6
   const ERROR = 'hello world'
-  const actions = ApiActions(ID)
+  const actions = ApiActions(NAME)
   const opts = {
     actions,
     payload: REQUEST,
@@ -50,8 +52,9 @@ tape('api saga: error', (t) => {
   const getAction = (type, action) => {
     return Object.assign({}, action, {
       type: actions._types[type],
-      type_api: TYPES[type],
-      name_api: ID
+      _genericid: 'api',
+      _genericname: NAME,
+      _genericaction: type
     })
   }
   return expectSaga(ApiSaga, opts)
@@ -63,6 +66,7 @@ tape('api saga: error', (t) => {
     })
     .run()
     .then((result) => {
+      t.ok('saga has passed')
       t.end()
     })
 })

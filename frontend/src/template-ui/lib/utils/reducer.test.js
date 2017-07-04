@@ -32,11 +32,13 @@ tape('ReducerFactory (basic)', (t) => {
         $set: action.color
       }
     }),
-    oranges: (state, action) => update(state, {
-      height: {
-        $set: action.height
-      }
-    })
+    oranges: (state, action) => {
+      return update(state, {
+        height: {
+          $set: action.height
+        }
+      })
+    }
   }
 
   const FruitActions = ActionFactory(ID, ACTIONS)

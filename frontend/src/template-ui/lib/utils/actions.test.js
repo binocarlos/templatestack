@@ -1,8 +1,19 @@
 import tape from 'tape'
 import {
   ActionFactory,
-  TypeFactory
+  TypeFactory,
+  BaseAction
 } from './actions'
+
+tape('BaseAction', (t) => {
+  t.deepEqual(BaseAction('apples', 'A', 'set'), {
+    type: 'APPLES_A_SET',
+    _genericid: 'apples',
+    _genericname: 'A',
+    _genericaction: 'set'
+  }, 'base action is correct')
+  t.end()
+})
 
 tape('ActionFactory', (t) => {
   const ACTIONS = {
@@ -21,15 +32,17 @@ tape('ActionFactory', (t) => {
     size: 10,
     color: 'red',
     type: 'FRUIT_A_APPLES',
-    name_fruit: 'A',
-    type_fruit: 'FRUIT_APPLES'
+    _genericid: 'fruit',
+    _genericname: 'A',
+    _genericaction: 'apples'
   }, 'apples A action is correct')
 
   t.deepEqual(actionsB.oranges(20), {
     height: 20,
     type: 'FRUIT_B_ORANGES',
-    name_fruit: 'B',
-    type_fruit: 'FRUIT_ORANGES'
+    _genericid: 'fruit',
+    _genericname: 'B',
+    _genericaction: 'oranges'
   }, 'oranges B action is correct')
 
   t.end()

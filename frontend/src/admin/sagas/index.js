@@ -1,18 +1,21 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
-import apiResolveSaga from 'template-ui/lib/plugins/api/resolveSaga'
+import RouterSaga from 'template-ui/lib/plugins/router/saga'
+import apiSaga from 'template-ui/lib/plugins/api/saga'
 
 import api from '../api'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
+import { redirectHandlers } from '../routes'
 
 /*
 
   DATA LOADERS
   
 */
+
 function* loadConfig() {
-  const { answer, error } = yield call(apiResolveSaga, {
+  const { answer, error } = yield call(apiSaga, {
     actions: actions.api.config.load,
     api: api.config.load
   })
@@ -22,7 +25,7 @@ function* loadConfig() {
 }
 
 function* loadUserStatus() {
-  const { answer, error } = yield call(apiResolveSaga, {
+  const { answer, error } = yield call(apiSaga, {
     actions: actions.api.user.status,
     api: api.user.status
   })
@@ -49,7 +52,10 @@ function* initialize() {
 
 export default function* root() {
   yield all([
-    fork(initialize)
+    fork(initialize),
+    fork(RouterSaga({
+      
+    }))
   ])
 }
 

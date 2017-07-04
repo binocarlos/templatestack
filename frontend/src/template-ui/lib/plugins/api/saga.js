@@ -23,10 +23,12 @@ function* ApiResolverSaga(opts = {}) {
     apiError = error
   }
 
-  return {
+  const ret = {
     answer: apiResult,
     error: apiError
   }
+
+  return ret
 }
 
 export default ApiResolverSaga
