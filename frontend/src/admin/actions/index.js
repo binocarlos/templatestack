@@ -11,7 +11,8 @@ export const value = {
   config: valueActions('config'),
   initialized: valueActions('initialized'),
   user: valueActions('user'),
-  menuOpen: valueActions('menuOpen')
+  menuOpen: valueActions('menuOpen'),
+  test: valueActions('test')
 }
 
 // generic api actions (request -> response || error)

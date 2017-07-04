@@ -27,19 +27,7 @@ export default function* root() {
     fork(RouterSaga({
       redirects,
       loaders,
-      getRoute: (path) => config.basepath + path
+      basepath: config.basepath
     }))
   ])
 }
-
-
-
-  /*
-  
-    
-  const initialLocation = store.getState().router
-  if (initialLocation) {
-    store.dispatch(initializeCurrentLocation(initialLocation))  
-  }
-    
-  */

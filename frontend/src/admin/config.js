@@ -32,7 +32,8 @@ const config = {
       config: {},
       initialized: false,
       user: null,
-      menuOpen: false
+      menuOpen: false,
+      test: 10
     }
   },  
   menu: {

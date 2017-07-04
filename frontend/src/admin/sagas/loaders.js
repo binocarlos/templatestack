@@ -11,22 +11,20 @@ import * as actions from '../actions'
   
 */
 
-function* config(payload) {
+function* config(action = {}) {
   const { answer, error } = yield call(apiSaga, {
     actions: actions.api.config.load,
-    api: api.config.load,
-    payload
+    api: api.config.load
   })
   if(error) throw new Error(error)
   yield put(actions.value.config.set(answer))
   return answer
 }
 
-function* userStatus(payload) {
+function* userStatus(action = {}) {
   const { answer, error } = yield call(apiSaga, {
     actions: actions.api.user.status,
-    api: api.user.status,
-    payload
+    api: api.user.status
   })
   if(error) throw new Error(error)
   const loggedIn = answer.loggedIn ? true : false
@@ -35,9 +33,15 @@ function* userStatus(payload) {
   return answer
 }
 
+function* example(action = {}) {
+  const routeInfo = yield select(state => state.router.result)
+  yield put(actions.value.test.set(routeInfo.payload))
+}
+
 const loaders = {
   config,
-  userStatus
+  userStatus,
+  example
 }
 
 export default loaders
