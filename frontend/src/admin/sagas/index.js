@@ -3,12 +3,15 @@ import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux
 import RouterSaga from 'template-ui/lib/plugins/router/saga'
 import apiSaga from 'template-ui/lib/plugins/api/saga'
 
+import config from '../config'
 import api from '../api'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 
 import redirects from './redirects'
 import loaders from './loaders'
+
+import { getRoute } from '../routes'
 
 function* initialize() {
   yield all([
@@ -23,7 +26,8 @@ export default function* root() {
     fork(initialize),
     fork(RouterSaga({
       redirects,
-      loaders
+      loaders,
+      getRoute: (path) => config.basepath + path
     }))
   ])
 }

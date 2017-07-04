@@ -1,6 +1,6 @@
 import tape from 'tape'
 import { expectSaga } from 'redux-saga-test-plan';
-import ApiActions, { TYPES } from './actions'
+import ApiActions from './actions'
 import ApiSaga from './saga'
 
 tape('api saga: response', (t) => {

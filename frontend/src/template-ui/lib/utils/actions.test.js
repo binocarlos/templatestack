@@ -1,13 +1,12 @@
 import tape from 'tape'
 import {
   ActionFactory,
-  TypeFactory,
   BaseAction
 } from './actions'
 
 tape('BaseAction', (t) => {
   t.deepEqual(BaseAction('apples', 'A', 'set'), {
-    type: 'APPLES_A_SET',
+    type: 'APPLES_SET_A',
     _genericid: 'apples',
     _genericname: 'A',
     _genericaction: 'set'
@@ -31,7 +30,7 @@ tape('ActionFactory', (t) => {
   t.deepEqual(actionsA.apples(10, 'red'), {
     size: 10,
     color: 'red',
-    type: 'FRUIT_A_APPLES',
+    type: 'FRUIT_APPLES_A',
     _genericid: 'fruit',
     _genericname: 'A',
     _genericaction: 'apples'
@@ -39,7 +38,7 @@ tape('ActionFactory', (t) => {
 
   t.deepEqual(actionsB.oranges(20), {
     height: 20,
-    type: 'FRUIT_B_ORANGES',
+    type: 'FRUIT_ORANGES_B',
     _genericid: 'fruit',
     _genericname: 'B',
     _genericaction: 'oranges'
@@ -71,24 +70,8 @@ tape('ActionFactory -> types', (t) => {
   const testA = SimpleActions('A', {extra:10})
   
   t.deepEqual(testA._types, {
-    set: 'SIMPLE_A_SET'
+    set: 'SIMPLE_SET_A'
   }, 'types are correct')
   
-  t.end()
-})
-
-tape('TypeFactory', (t) => {
-  const ACTIONS = {
-    apples: (size, color) => ({ size, color}),
-    oranges: (height) => ({ height })
-  }
-
-  const types = TypeFactory('fruit', ACTIONS)
-  
-  t.deepEqual(types, {
-    apples: 'FRUIT_APPLES',
-    oranges: 'FRUIT_ORANGES'
-  }, 'types equal')
-
   t.end()
 })

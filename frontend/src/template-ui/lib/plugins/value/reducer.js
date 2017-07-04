@@ -1,6 +1,6 @@
 import update from 'immutability-helper'
-import { ReducerFactory } from '../../utils/reducer'
-import { ID, GetTypes } from './actions'
+import ReducerFactory from '../../utils/reducer'
+import { ID } from './actions'
 
 const INITIAL_STATE = {}
 
@@ -22,10 +22,8 @@ const HANDLERS = {
 }
 
 const ValueReducer = (id = ID, initialState = INITIAL_STATE) => {
-  const types = GetTypes(id)
   return ReducerFactory({
     id,
-    types,
     initialState,
     handlers: HANDLERS
   })

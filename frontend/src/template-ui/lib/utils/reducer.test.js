@@ -1,13 +1,7 @@
 import update from 'immutability-helper'
 import tape from 'tape'
-import {
-  ActionFactory,
-  TypeFactory
-} from './actions'
-import {
-  ReducerFactory,
-  UpdateHelper
-} from './reducer'
+import ActionFactory from './actions'
+import ReducerFactory from './reducer'
 
 tape('ReducerFactory (basic)', (t) => {
 
@@ -42,11 +36,9 @@ tape('ReducerFactory (basic)', (t) => {
   }
 
   const FruitActions = ActionFactory(ID, ACTIONS)
-  const FruitTypes = TypeFactory(ID, ACTIONS)
   const FruitReducer = ReducerFactory({
     id: ID,
     handlers: HANDLERS,
-    types: FruitTypes,
     initialState: INITIAL_STATE
   })
   const actionsA = FruitActions('A')
@@ -85,12 +77,10 @@ tape('ReducerFactory (namespaces)', (t) => {
     })
   }
 
-  const ValueActions = ActionFactory(ID, ACTIONS)
-  const ValueTypes = TypeFactory(ID, ACTIONS)
+  const ValueActions = ActionFactory(ID, ACTIONS)  
   const ValueReducer = ReducerFactory({
     id: ID,
     handlers: HANDLERS,
-    types: ValueTypes,
     initialState: INITIAL_STATE
   })
 

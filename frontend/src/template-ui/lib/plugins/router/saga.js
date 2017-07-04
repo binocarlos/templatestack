@@ -6,13 +6,14 @@ import actions, { TYPES } from './actions'
 const RouterSaga = (opts = {}) => {
   if(!opts.redirects) throw new Error('redirects needed for RouterSaga')
   if(!opts.loaders) throw new Error('loaders needed for RouterSaga')
+  if(!opts.getRoute) throw new Error('getRoute needed for RouterSaga')
 
-  const { redirects, loaders } = opts
+  const { redirects, loaders, getRoute } = opts
 
   function* redirect(action) {
     if(!action.name) return
     if(action.name.indexOf('/') == 0) {
-      yield put(actions.push(action.name))
+      yield put(actions.push(getRoute(action.name)))
     }
     else {
       const redirectHandler = redirects[action.name]

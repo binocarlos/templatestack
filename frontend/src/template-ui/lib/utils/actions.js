@@ -8,7 +8,7 @@ const ensureArgs = (id, actions) => {
 
 export const BaseAction = (id, name, actionName) => {
   return {
-    type: getActionName([ id, name, actionName ]),
+    type: getActionName([ id, actionName, name ]),
     _genericid: id,
     _genericname: name,
     _genericaction: actionName
@@ -18,8 +18,7 @@ export const BaseAction = (id, name, actionName) => {
 export const ActionFactory = (id, actions) => {
   ensureArgs(id, actions)
   return (name, inject = {}) => {
-    return Object
-      .keys(actions)
+    return Object.keys(actions)
       .reduce((all, actionName) => {
         all[actionName] = (...args) => {
           const handler = actions[actionName] || payloadMapper
@@ -27,27 +26,12 @@ export const ActionFactory = (id, actions) => {
           const baseActionProps = BaseAction(id, name, actionName)
           return Object.assign({}, actionProps, inject, baseActionProps)
         }
+        all._types[actionName] = getActionName([ id, actionName, name ])
         return all
       }, {
-        _types: Object
-          .keys(actions)
-          .reduce((all, actionName) => {
-            all[actionName] = getActionName([ id, name, actionName ])
-            return all
-          }, {})
+        _types: {}
       })
   }
-}
-
-export const TypeFactory = (id, actions) => {
-  ensureArgs(id, actions)
-  return Object
-    .keys(actions)
-    .reduce((all, actionName) => {
-      return Object.assign({}, all, {
-        [actionName]: getActionName([ id, actionName ])
-      })
-    }, {})
 }
 
 export default ActionFactory
