@@ -1,8 +1,13 @@
 const getActionName = (parts) => parts.map(s => s.toUpperCase()).join('_')
 const payloadMapper = (payload) => ({payload})
-export const ActionFactory = (id, actions) => {
+
+const ensureArgs = (id, actions) => {
   if(!id) throw new Error('id required for ActionFactory')
   if(!actions) throw new Error('actions required for ActionFactory')
+}
+
+export const ActionFactory = (id, actions) => {
+  ensureArgs(id, actions)
   return (name) => {
     return Object
       .keys(actions)
@@ -14,10 +19,22 @@ export const ActionFactory = (id, actions) => {
           [actionName]: (...args) => {
             return Object.assign({}, argMapper.apply(null, args), {
               type: fullActionName,
+              [`name_${id}`]: name,
               [`type_${id}`]: baseActionName
             })
           }
         })
       }, {})
   }
+}
+
+export const TypeFactory = (id, actions) => {
+  ensureArgs(id, actions)
+  return Object
+    .keys(actions)
+    .reduce((all, actionName) => {
+      return Object.assign({}, all, {
+        [actionName]: getActionName([ id, actionName ])
+      })
+    }, {})
 }

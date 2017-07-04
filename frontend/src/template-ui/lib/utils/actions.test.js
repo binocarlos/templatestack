@@ -1,5 +1,8 @@
 import tape from 'tape'
-import { ActionFactory } from './actions'
+import {
+  ActionFactory,
+  TypeFactory
+} from './actions'
 
 tape('ActionFactory', (t) => {
   const ACTIONS = {
@@ -18,14 +21,32 @@ tape('ActionFactory', (t) => {
     size: 10,
     color: 'red',
     type: 'FRUIT_A_APPLES',
+    name_fruit: 'A',
     type_fruit: 'FRUIT_APPLES'
   }, 'apples A action is correct')
 
   t.deepEqual(actionsB.oranges(20), {
     height: 20,
     type: 'FRUIT_B_ORANGES',
+    name_fruit: 'B',
     type_fruit: 'FRUIT_ORANGES'
   }, 'oranges B action is correct')
+
+  t.end()
+})
+
+tape('TypeFactory', (t) => {
+  const ACTIONS = {
+    apples: (size, color) => ({ size, color}),
+    oranges: (height) => ({ height })
+  }
+
+  const types = TypeFactory('fruit', ACTIONS)
+  
+  t.deepEqual(types, {
+    apples: 'FRUIT_APPLES',
+    oranges: 'FRUIT_ORANGES'
+  }, 'types equal')
 
   t.end()
 })
