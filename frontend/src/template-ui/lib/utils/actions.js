@@ -38,3 +38,5 @@ export const TypeFactory = (id, actions) => {
       })
     }, {})
 }
+
+export default ActionFactory

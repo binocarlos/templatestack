@@ -1,6 +1,6 @@
 import { ActionFactory, TypeFactory } from '../../utils/action'
 
-const ID = 'value'
+export const ID = 'value'
 const ACTIONS = {
   set: null,
   toggle: null

@@ -1,3 +1,5 @@
+import update from 'immutability-helper'
+
 const ensureArgs = (opts = {}) => {
   const { id, handlers, types, initialState } = opts
   if(!id) throw new Error('id required for ReducerFactory')
@@ -8,7 +10,7 @@ const ensureArgs = (opts = {}) => {
 }
 
 export const ReducerFactory = (opts = {}) => {
-  const { id, handlers, types, initialState } = ensureArgs(opts)
+  const { id, handlers, types, initialState, autoUpdate } = ensureArgs(opts)
   const HANDLERS = Object.keys(handlers || {}).reduce((all, handlerName) => {
     const handler = handlers[handlerName]
     const actionType = types[handlerName]
@@ -17,9 +19,10 @@ export const ReducerFactory = (opts = {}) => {
   }, {})
   return (state = initialState, action = {}) => {
     const actionType = action[`type_${id}`]
+    const actionName = action[`name_${id}`]
     const handler = HANDLERS[actionType]
     return handler ?
-      handler(state, action) :
+      handler(state, action, actionName) :
       state
   }
 }

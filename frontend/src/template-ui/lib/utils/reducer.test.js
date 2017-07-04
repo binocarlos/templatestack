@@ -5,7 +5,8 @@ import {
   TypeFactory
 } from './actions'
 import {
-  ReducerFactory
+  ReducerFactory,
+  UpdateHelper
 } from './reducer'
 
 tape('ReducerFactory (basic)', (t) => {
@@ -75,8 +76,8 @@ tape('ReducerFactory (namespaces)', (t) => {
   }
 
   const HANDLERS = {
-    set: (state, action) => update(state, {
-      [action[NAME_FIELD]]: {
+    set: (state, action, id) => update(state, {
+      [id]: {
         $set: action.payload
       }
     })

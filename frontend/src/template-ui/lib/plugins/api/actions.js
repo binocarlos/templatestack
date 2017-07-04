@@ -1,4 +1,4 @@
-import { ActionFactory, TypeFactory } from '../../utils/action'
+import { ActionFactory, TypeFactory } from '../../utils/actions'
 
 export const ID = 'api'
 const ACTIONS = {
