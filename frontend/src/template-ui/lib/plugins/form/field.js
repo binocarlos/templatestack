@@ -2,16 +2,22 @@ import dotty from 'dotty'
 
 const GetValue = (name) => (data) => dotty.get(data, name)
 const SetValue = (name) => (data, value) => dotty.put(data, name, value)
+const noopValidate = (value, data) => null
+const noopDefault = (data) => null
 
 const Field = (opts = {}) => {
   if(!opts.name) throw new Error('name required for Field')
   const name = opts.name
-  const get = opts.get ? opts.get : GetValue(name)
-  const set = opts.set ? opts.set : SetValue(name)
+  const get = opts.get || GetValue(name)
+  const set = opts.set || SetValue(name)
+  const validate = opts.validate || noopValidate
+  const getDefault = opts.getDefault || noopDefault
   return {
     name,
     get,
-    set 
+    set,
+    validate,
+    getDefault
   }
 }
 

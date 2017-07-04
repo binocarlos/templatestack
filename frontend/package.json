@@ -8,8 +8,8 @@
     "release": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack --colors --profile --progress",
     "watch": "NODE_ENV=development UV_THREADPOOL_SIZE=100 node --require babel-register ./server",
     "analyze": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack  --json | webpack-bundle-size-analyzer",
-    "test": "tape -r babel-register src/**/*.test.js",
-    "test2": "tape -r babel-register src/template-ui/lib/plugins/api/saga.test.js"
+    "test2": "tape -r babel-register src/**/*.test.js",
+    "test": "tape -r babel-register src/template-ui/lib/plugins/form/saga.test.js"
   },
   "dependencies": {
     "axios": "^0.15.3",

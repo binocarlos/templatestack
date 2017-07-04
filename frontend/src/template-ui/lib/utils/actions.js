@@ -9,6 +9,7 @@ const ensureArgs = (id, actions) => {
 export const BaseAction = (id, name, actionName) => {
   return {
     type: getActionName([ id, actionName, name ]),
+    _generictype: getActionName([ id, actionName ]),
     _genericid: id,
     _genericname: name,
     _genericaction: actionName
@@ -33,6 +34,7 @@ export const ActionFactory = (id, actions) => {
       })
   }
 
+  actionFactory._id = id
   actionFactory._genericTypes = Object.keys(actions)
     .reduce((all, actionName) => {
       all[actionName] = getActionName([ id, actionName ])
@@ -41,5 +43,12 @@ export const ActionFactory = (id, actions) => {
     
   return actionFactory
 }
+
+export const actionInfo = (action) => ({
+  type: action._generictype,
+  id: action._genericid,
+  name: action._genericname,
+  action: action._genericaction
+})
 
 export default ActionFactory

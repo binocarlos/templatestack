@@ -4,7 +4,7 @@ import ApiActions from 'template-ui/lib/plugins/api/actions'
 import FormActions from 'template-ui/lib/plugins/form/actions'
 import RouterActions from 'template-ui/lib/plugins/router/actions'
 
-export base = {
+export const base = {
   value: ValueActions(),
   api: ApiActions(),
   form: FormActions()

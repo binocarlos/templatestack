@@ -1,35 +1,51 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
-import actionFactory, { ID } from './actions'
+import { ID } from './actions'
+import { actionInfo } from '../../utils/actions'
+import { PatternHandlers } from '../../utils/saga'
+import { getInitialData } from './utils'
 
-function* FormSaga(opts = {}) {
-  if(!opts.actions) throw new Error('actions needed for FormSaga')
-  if(!opts.getSchema) throw new Error('getSchema needed for FormSaga')
+const FormSaga = (opts = {}) => {
+  if(!opts.forms) throw new Error('forms needed for FormSaga')
 
-  const actions = opts.actions
-  const getSchema = opts.getSchema
   const id = opts.id || ID
+  const forms = opts.forms
 
-  yield put(actions.request(payload))
-
-  let apiResult = null, apiError = null
-
-  try {
-    const data = yield call(api, payload)
-    yield put(actions.response(data))
-    apiResult = data
-  }
-  catch(error) {
-    yield put(actions.error(error))
-    apiError = error
+  const getSchema = (name, data) => {
+    const form = forms[name]
+    if(!form) throw new Error(`no form found: ${name}`)
+    return form(data)
   }
 
-  const ret = {
-    answer: apiResult,
-    error: apiError
+  function* initialize(action) {
+    const model = action.model
+    const info = actionInfo(action)
+
+    console.log('-------------------------------------------');
+    console.dir(info)
+
+    const schema = getSchema(info.name)
+
+    console.log('-------------------------------------------');
+    console.log('schema')
+    console.dir(schema)
   }
 
-  return ret
+  function* changed(action) {
+    console.log('-------------------------------------------');
+    console.log('changed')
+    console.dir(action)
+  }
+
+  const handlers = PatternHandlers({
+    id,
+    handlers: {
+      initialize,
+      changed  
+    }
+  })
+
+  return handlers
 }
 
 export default FormSaga

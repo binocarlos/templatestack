@@ -3,15 +3,16 @@ import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux
 import RouterSaga from 'template-ui/lib/plugins/router/saga'
 import FormSaga from 'template-ui/lib/plugins/api/saga'
 
+import Field from 'template-ui/lib/plugins/form/field'
+
 import config from '../config'
+import forms from '../forms'
 import api from '../api'
 import * as actions from '../actions'
 import * as selectors from '../selectors'
 
 import redirects from './redirects'
 import loaders from './loaders'
-
-import { getRoute } from '../routes'
 
 function* initialize() {
   yield all([
@@ -22,18 +23,17 @@ function* initialize() {
 }
 
 export default function* root() {
-  yield all([
-    fork(initialize),
-    fork(RouterSaga({
+  const handlers = [
+    initialize,
+    RouterSaga({
       redirects,
       loaders,
       basepath: config.basepath
-    })),
-    fork(FormSaga({
+    }),
+    FormSaga({
       types: actions.form._types,
-      getSchema: (name, data) => {
-        return {}
-      }
-    }))
-  ])
+      forms: forms
+    })
+  ]
+  yield all(handlers.map(fork))
 }

@@ -1,5 +1,5 @@
 import tape from 'tape'
-import { expectSaga } from 'redux-saga-test-plan';
+import { expectSaga } from 'redux-saga-test-plan'
 import ApiActions from './actions'
 import ApiSaga from './saga'
 
