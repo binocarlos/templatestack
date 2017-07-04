@@ -11,7 +11,7 @@ function* ApiResolverSaga(opts = {}) {
 
   yield put(actions.request(payload))
 
-  let apiResult, apiError = null
+  let apiResult = null, apiError = null
 
   try {
     const data = yield call(api, payload)
