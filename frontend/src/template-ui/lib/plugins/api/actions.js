@@ -1,6 +1,6 @@
 import { ActionFactory, TypeFactory } from '../../utils/action'
 
-const ID = 'api'
+export const ID = 'api'
 const ACTIONS = {
   request: null,
   response: null,

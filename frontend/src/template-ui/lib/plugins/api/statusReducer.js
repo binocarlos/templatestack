@@ -1,8 +1,7 @@
 import update from 'immutability-helper'
 import { ReducerFactory } from '../../utils/reducer'
-import { TYPES } from './actions'
+import { ID, TYPES } from './actions'
 
-const ID = 'api'
 const INITIAL_STATE = {}
 
 const HANDLERS = {

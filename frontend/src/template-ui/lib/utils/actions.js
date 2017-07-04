@@ -8,7 +8,7 @@ const ensureArgs = (id, actions) => {
 
 export const ActionFactory = (id, actions) => {
   ensureArgs(id, actions)
-  return (name) => {
+  return (name, inject = {}) => {
     return Object
       .keys(actions)
       .reduce((all, actionName) => {
@@ -17,7 +17,7 @@ export const ActionFactory = (id, actions) => {
         const argMapper = actions[actionName] || payloadMapper
         return Object.assign({}, all, {
           [actionName]: (...args) => {
-            return Object.assign({}, argMapper.apply(null, args), {
+            return Object.assign({}, argMapper.apply(null, args), inject, {
               type: fullActionName,
               [`name_${id}`]: name,
               [`type_${id}`]: baseActionName

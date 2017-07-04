@@ -35,6 +35,21 @@ tape('ActionFactory', (t) => {
   t.end()
 })
 
+tape('ActionFactory -> inject', (t) => {
+  const ACTIONS = {
+    set: null
+  }
+  const SimpleActions = ActionFactory('simple', ACTIONS)
+  const testA = SimpleActions('A', {extra:10})
+  
+  const action = testA.set(5)
+
+  t.equal(action.payload, 5, 'payload is 5')
+  t.equal(action.extra, 10, 'extra is 10')
+  
+  t.end()
+})
+
 tape('TypeFactory', (t) => {
   const ACTIONS = {
     apples: (size, color) => ({ size, color}),

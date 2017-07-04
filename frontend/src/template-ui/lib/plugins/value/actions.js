@@ -1,21 +1,12 @@
-export const TYPES = {
-  set: 'VALUE_SET',
-  toggle: 'VALUE_TOGGLE'
+import { ActionFactory, TypeFactory } from '../../utils/action'
+
+const ID = 'value'
+const ACTIONS = {
+  set: null,
+  toggle: null
 }
 
-const actionType = (type, name) => `${type}_${name.toUpperCase()}`
-const actionFactory = (type, name) => (payload) => ({
-  type: actionType(type, name),
-  value_type: type,
-  name,
-  payload
-})
-
-const ValueActions = (name) => {
-  return {
-    set: actionFactory(TYPES.set, name),
-    toggle: actionFactory(TYPES.toggle, name)
-  }  
-}
+export const TYPES = TypeFactory(ID, ACTIONS)
+const ValueActions = ActionFactory(ID, ACTIONS)
 
 export default ValueActions
