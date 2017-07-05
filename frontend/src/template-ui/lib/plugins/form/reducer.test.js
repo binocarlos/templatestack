@@ -22,11 +22,19 @@ tape('FormReducer', (t) => {
     }
   }, 'initializeState')
 
+  const OVERWRITE = {
+    model: {b:5},
+    form: {b:5},
+    meta: {}
+  }
+
   const writeMeta1 = reducer(initializeState, actions.write('meta', {a:10}))
   const writeMeta2 = reducer(writeMeta1, actions.write('meta', {b:5}))
-
+  const setdata = reducer(writeMeta2, actions.set(OVERWRITE))
+    
   t.deepEqual(writeMeta1.login.meta, {a:10}, 'write meta 1')
   t.deepEqual(writeMeta2.login.meta, {a:10,b:5}, 'write meta 2')
+  t.deepEqual(setdata.login, OVERWRITE, 'set data is OVERWRITE')
 
   t.end()
 })

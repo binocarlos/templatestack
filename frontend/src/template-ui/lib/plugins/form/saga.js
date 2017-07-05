@@ -3,35 +3,49 @@ import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux
 import { ID } from './actions'
 import { actionInfo } from '../../utils/actions'
 import { PatternHandlers } from '../../utils/saga'
-import { processSchema, getInitialData } from './utils'
+import { 
+  processSchema,
+  getModelData,
+  getFormData,
+  getMetaData
+} from './utils'
 
 const FormSaga = (opts = {}) => {
-  if(!opts.forms) throw new Error('forms needed for FormSaga')
+  if(!opts.getSchema) throw new Error('getSchema needed for FormSaga')
+  if(!opts.getActions) throw new Error('getActions needed for FormSaga')
 
   const id = opts.id || ID
   const forms = opts.forms
 
+  // get the schema for the 'login' form
   const getSchema = (name, model) => {
-    const form = forms[name]
-    if(!form) throw new Error(`no form found: ${name}`)
-    return processSchema(form(model))
+    const rawSchema = opts.getSchema(name, model)
+    if(!rawSchema) throw new Error(`no schema found: ${name}`)
+    return processSchema(rawSchema(model))
+  }
+
+  // get the actions for the 'login form'
+  const getActions = (name) => {
+    const actions = opts.getActions(name)
+    if(!actions) throw new Error(`no actions found: ${name}`)
+    return actions
   }
 
   function* initialize(action) {
-    const model = action.model
+    const rawmodel = action.model
     const info = actionInfo(action)
+    const schema = getSchema(info.name, rawmodel)
+    const actions = getActions(info.name)
 
-    console.log('-------------------------------------------');
-    console.dir(info)
+    const model = getModelData(schema, rawmodel)
+    const form = getFormData(schema, model)
+    const meta = getMetaData(schema, model)
 
-    const schema = getSchema(info.name, model)
-    const initialData = getInitialData(schema, model)
-
-    yield put()
-
-    console.log('-------------------------------------------');
-    console.log('schema')
-    console.dir(schema)
+    yield put(actions.set({
+      model,
+      form,
+      meta
+    }))
   }
 
   function* changed(action) {

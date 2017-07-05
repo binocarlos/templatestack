@@ -9,8 +9,11 @@ const CustomSetValue = (fn) => (data, value) => {
   fn(data, value)
   return data
 }
-const noopValidate = (value, data) => null
+const noopValidate = (data, value) => null
 const noopDefault = (data) => null
+
+const noopToForm = (value) => value
+const noopFromForm = (value) => value
 
 const Field = (opts = {}) => {
   if(!opts.name) throw new Error('name required for Field')
@@ -19,10 +22,14 @@ const Field = (opts = {}) => {
   const set = opts.set ? CustomSetValue(opts.set) : SetValue(name)
   const validate = opts.validate || noopValidate
   const getDefault = opts.getDefault || noopDefault
+  const toForm = opts.toForm || noopToForm
+  const fromForm = opts.fromForm || noopFromForm
   return {
     name,
     get,
     set,
+    toForm,
+    fromForm,
     validate,
     getDefault
   }

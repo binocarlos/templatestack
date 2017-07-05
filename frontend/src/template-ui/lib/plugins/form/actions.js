@@ -5,7 +5,8 @@ export const ID = 'form'
 const ACTIONS = {
   initialize: (model = {}) => ({ model }),
   changed: (name, value) => ({ name, value }),
-  write: (section, values) => ({ section, values })
+  write: (section, values) => ({ section, values }),
+  set: (values) => ({ values })
 }
 
 const FormActions = (id = ID) => ActionFactory(id, ACTIONS)

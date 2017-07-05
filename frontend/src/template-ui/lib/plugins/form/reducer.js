@@ -26,6 +26,13 @@ const HANDLERS = {
         }
       }
     })
+  },
+  set: (state, action, id) => {
+    return update(state, {
+      [id]: {
+        $set: action.values
+      }
+    })
   }
 }
 
