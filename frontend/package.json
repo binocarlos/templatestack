@@ -9,7 +9,8 @@
     "watch": "NODE_ENV=development UV_THREADPOOL_SIZE=100 node --require babel-register ./server",
     "analyze": "NODE_ENV=production UV_THREADPOOL_SIZE=100 webpack  --json | webpack-bundle-size-analyzer",
     "test2": "tape -r babel-register src/**/*.test.js",
-    "test": "tape -r babel-register src/template-ui/lib/plugins/form/field.test.js"
+    "test3": "tape -r babel-register src/template-ui/lib/plugins/form/saga.test.js",
+    "test": "tape -r babel-register src/template-ui/lib/utils/actions.test.js"
   },
   "dependencies": {
     "axios": "^0.15.3",

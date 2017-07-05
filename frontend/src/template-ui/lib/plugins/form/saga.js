@@ -11,10 +11,10 @@ const FormSaga = (opts = {}) => {
   const id = opts.id || ID
   const forms = opts.forms
 
-  const getSchema = (name, data) => {
+  const getSchema = (name, model) => {
     const form = forms[name]
     if(!form) throw new Error(`no form found: ${name}`)
-    return processSchema(form(data))
+    return processSchema(form(model))
   }
 
   function* initialize(action) {
@@ -24,7 +24,10 @@ const FormSaga = (opts = {}) => {
     console.log('-------------------------------------------');
     console.dir(info)
 
-    const schema = getSchema(info.name)
+    const schema = getSchema(info.name, model)
+    const initialData = getInitialData(schema, model)
+
+    yield put()
 
     console.log('-------------------------------------------');
     console.log('schema')

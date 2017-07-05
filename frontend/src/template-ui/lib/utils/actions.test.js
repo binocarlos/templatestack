@@ -7,6 +7,7 @@ import {
 tape('BaseAction', (t) => {
   t.deepEqual(BaseAction('apples', 'A', 'set'), {
     type: 'APPLES_SET_A',
+    _generictype: 'APPLES_SET',
     _genericid: 'apples',
     _genericname: 'A',
     _genericaction: 'set'
@@ -33,7 +34,8 @@ tape('ActionFactory', (t) => {
     type: 'FRUIT_APPLES_A',
     _genericid: 'fruit',
     _genericname: 'A',
-    _genericaction: 'apples'
+    _genericaction: 'apples',
+    _generictype: 'FRUIT_APPLES'
   }, 'apples A action is correct')
 
   t.deepEqual(actionsB.oranges(20), {
@@ -41,7 +43,8 @@ tape('ActionFactory', (t) => {
     type: 'FRUIT_ORANGES_B',
     _genericid: 'fruit',
     _genericname: 'B',
-    _genericaction: 'oranges'
+    _genericaction: 'oranges',
+    _generictype: 'FRUIT_ORANGES'
   }, 'oranges B action is correct')
 
   t.end()
@@ -83,6 +86,20 @@ tape('ActionFactory -> generic types', (t) => {
   const SimpleActions = ActionFactory('simple', ACTIONS)
   
   t.deepEqual(SimpleActions._genericTypes, {
+    set: 'SIMPLE_SET'
+  }, 'generic types are correct')
+  
+  t.end()
+})
+
+tape('ActionFactory -> base types', (t) => {
+  const ACTIONS = {
+    set: null
+  }
+  const SimpleActions = ActionFactory('simple', ACTIONS)
+  const baseActions = SimpleActions()
+  
+  t.deepEqual(baseActions._types, {
     set: 'SIMPLE_SET'
   }, 'generic types are correct')
   

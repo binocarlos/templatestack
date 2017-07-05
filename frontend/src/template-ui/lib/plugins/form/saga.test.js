@@ -3,32 +3,41 @@ import { expectSaga } from 'redux-saga-test-plan'
 import FormActions from './actions'
 import FormSaga from './saga'
 
-const login = (data) => {
-  return {
-    username: {
-      
-    },
-    password: {}
-  }
-}
 
-const forms = {
-  login
-}
 
-tape('form saga', (t) => {
+
+
+tape('form saga: initialize', (t) => {
   const NAME = 'login'
-  const INITIAL_DATA = {}
+  const USERNAME = 'bob'
+  const DEFAULT_PASSWORD = 'default_password'
+  const INITIAL_DATA = {
+    username: 'bob'
+  }
   const baseActions = FormActions()
   const actions = {
     [NAME]: baseActions(NAME)
   }
+  const login = (model) => {
+    t.deepEqual(model, {username: USERNAME})
+    return {
+      username: {},
+      password: {
+        getDefault: () => DEFAULT_PASSWORD
+      }
+    }
+  }
+  const forms = {
+    login
+  }
   const saga = FormSaga({
     forms
   })
-  const action = actions.login.initialize({})
+  const action = actions.login.initialize({
+    username: USERNAME
+  })
   return expectSaga(saga)
-    .dispatch(actions.login.initialize({username: 'bob'}))
+    .dispatch(action)
     .run()
     .then((result) => {
       t.ok('saga has passed')

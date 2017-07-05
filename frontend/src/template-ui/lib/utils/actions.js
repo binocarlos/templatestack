@@ -1,4 +1,4 @@
-const getActionName = (parts) => parts.map(s => s.toUpperCase()).join('_')
+const getActionName = (parts) => parts.filter(s => s).map(s => s.toUpperCase()).join('_')
 const payloadMapper = (payload) => ({payload})
 
 const ensureArgs = (id, actions) => {
