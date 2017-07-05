@@ -1,27 +1,47 @@
 import tape from 'tape'
 import { expectSaga } from 'redux-saga-test-plan'
-import FormActions from './actions'
+import { combineReducers } from 'redux'
+import FormActions, { ID } from './actions'
+import FormReducer from './reducer'
 import FormSaga from './saga'
 
-const getSaga = (opts = {}) => {
-  const forms = opts.forms
-  const actions = opts.actions
-  const getSchema = (name, model) => forms[name]
-  const getActions = (name) => actions[name]
-  return FormSaga({
-    getSchema,
-    getActions
+const NAME = 'login'
+const USERNAME = 'bob'
+const DEFAULT_PASSWORD = 'default_password'
+const INITIAL_DATA = {
+  username: 'bob'
+}
+
+const CHECK_META = { valid: true, error: null, touched: false }
+const CHECK_MODEL = { username: 'bob', password: 'default_password' }
+
+const getAction = (action, opts) => {
+  return Object.assign({}, opts, {
+    type: `FORM_${action.toUpperCase()}_${NAME.toUpperCase()}`,
+    _generictype: `FORM_${action.toUpperCase()}`,
+    _genericid: 'form',
+    _genericname: NAME,
+    _genericaction: action
   })
 }
 
-
-tape('form saga: initialize', (t) => {
-  const NAME = 'login'
-  const USERNAME = 'bob'
-  const DEFAULT_PASSWORD = 'default_password'
-  const INITIAL_DATA = {
-    username: 'bob'
+const CHECK_INITIALIZE_VALUES = {
+  model: CHECK_MODEL,
+  form: CHECK_MODEL,
+  meta: { 
+    username: CHECK_META,
+    password: CHECK_META
   }
+}
+
+const getReducer = () => {
+  return combineReducers({
+    [ID]: FormReducer()
+  })
+}
+
+const getSaga = (t) => {
+
   const baseActions = FormActions()
   const actions = {
     [NAME]: baseActions(NAME)
@@ -38,36 +58,84 @@ tape('form saga: initialize', (t) => {
   const forms = {
     login
   }
-  const saga = getSaga({
-    actions,
-    forms
-  })
-  const action = actions.login.initialize({
-    username: USERNAME
+  
+  const getSchema = (name, model) => forms[name]
+  const getActions = (name) => actions[name]
+  const saga = FormSaga({
+    getSchema,
+    getActions
   })
 
-  const CHECK_META = { valid: true, error: null, touched: false, focused: false }
-  const CHECK_MODEL = { username: 'bob', password: 'default_password' }
+  return {
+    saga,
+    actions
+  }
+}
+
+tape('form saga: initialize', (t) => {
+
+  const { saga, actions } = getSaga(t)
+  
   return expectSaga(saga)
-    .put({ 
-      values: { 
-        model: CHECK_MODEL,
-        form: CHECK_MODEL,
-        meta: { 
-          username: CHECK_META,
-          password: CHECK_META
-        }
-      },
-      type: 'FORM_SET_LOGIN',
-      _generictype: 'FORM_SET',
-      _genericid: 'form',
-      _genericname: 'login',
-      _genericaction: 'set'
-    })
-    .dispatch(action)
+    .withReducer(getReducer())
+    .put(getAction('set', {
+      values: CHECK_INITIALIZE_VALUES
+    }))
+    .dispatch(actions.login.initialize({
+      username: USERNAME
+    }))
     .run()
     .then((result) => {
       t.ok('saga has passed')
+      t.end()
+    })
+})
+
+tape('form saga: changed', (t) => {
+  const { saga, actions } = getSaga(t)
+
+  const FIELDNAME = 'username'
+  const NEW_VALUE = 'harry'
+
+  const CHECK_UPDATE_FORM = {
+    [FIELDNAME]: NEW_VALUE
+  }
+  
+  return expectSaga(saga)
+    .withReducer(getReducer())
+    .dispatch(actions.login.initialize({
+      username: USERNAME
+    }))
+    .dispatch(actions.login.changed(FIELDNAME, NEW_VALUE))
+    .run()
+    .then((result) => {
+      t.ok('saga has passed')
+
+      const actions = result.effects.put.map(a => a.PUT.action)
+      const checkActions = [
+        getAction('set', {
+          values: CHECK_INITIALIZE_VALUES
+        }),
+        getAction('write', {
+          section: 'form',
+          values: CHECK_UPDATE_FORM
+        }),
+        getAction('write', {
+          section: 'model',
+          values: CHECK_UPDATE_FORM
+        }),
+        getAction('write', {
+          section: 'meta',
+          values: CHECK_UPDATE_FORM
+        }),
+      ]
+
+      console.log(JSON.stringify(actions, null, 4))
+      console.log(JSON.stringify(checkActions, null, 4))
+
+      t.deepEqual(actions, checkActions, 'actions emitted are correct')
+
+      console.dir()
       t.end()
     })
 })
