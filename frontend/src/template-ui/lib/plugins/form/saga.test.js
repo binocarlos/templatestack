@@ -5,7 +5,9 @@ import FormSaga from './saga'
 
 const login = (data) => {
   return {
-    username: {},
+    username: {
+      
+    },
     password: {}
   }
 }
@@ -25,9 +27,8 @@ tape('form saga', (t) => {
     forms
   })
   const action = actions.login.initialize({})
-  console.dir(action)
   return expectSaga(saga)
-    .dispatch(action)
+    .dispatch(actions.login.initialize({username: 'bob'}))
     .run()
     .then((result) => {
       t.ok('saga has passed')

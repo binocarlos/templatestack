@@ -1,7 +1,10 @@
 import dotty from 'dotty'
 
 const GetValue = (name) => (data) => dotty.get(data, name)
-const SetValue = (name) => (data, value) => dotty.put(data, name, value)
+const SetValue = (name) => (data, value) => {
+  dotty.put(data, name, value)
+  return data
+}
 const noopValidate = (value, data) => null
 const noopDefault = (data) => null
 

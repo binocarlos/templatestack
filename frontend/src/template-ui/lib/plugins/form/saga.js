@@ -3,7 +3,7 @@ import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux
 import { ID } from './actions'
 import { actionInfo } from '../../utils/actions'
 import { PatternHandlers } from '../../utils/saga'
-import { getInitialData } from './utils'
+import { processSchema, getInitialData } from './utils'
 
 const FormSaga = (opts = {}) => {
   if(!opts.forms) throw new Error('forms needed for FormSaga')
@@ -14,7 +14,7 @@ const FormSaga = (opts = {}) => {
   const getSchema = (name, data) => {
     const form = forms[name]
     if(!form) throw new Error(`no form found: ${name}`)
-    return form(data)
+    return processSchema(form(data))
   }
 
   function* initialize(action) {
