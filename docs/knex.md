@@ -44,7 +44,8 @@ exports.up = function(knex, Promise) {
            .inTable('users');
       table.integer('post_id')
            .references('id')
-           .inTable('posts');
+           .inTable('posts')
+           .onDelete('cascade')
       table.dateTime('postDate');
     })
   ])

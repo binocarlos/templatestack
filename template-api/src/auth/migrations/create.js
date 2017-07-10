@@ -1,9 +1,16 @@
 'use strict'
 
+const DEFAULT_OPTS = {
+  tablename: 'useraccount'
+}
+
 const UserMigration = (opts = {}) => {
+
+  opts = Object.assign({}, DEFAULT_OPTS, opts)
+
   const up = (knex, Promise) => {
    return Promise.all([
-      knex.schema.createTable('useraccount', function(table) {
+      knex.schema.createTable(opts.tablename, function(table) {
         table.increments('id').primary()
         table.string('username').unique().notNullable()
         table.string('hashed_password').notNullable()
@@ -15,7 +22,7 @@ const UserMigration = (opts = {}) => {
 
   const down = (knex, Promise) => {
     return Promise.all([
-      knex.schema.dropTable('useraccount')
+      knex.schema.dropTable(opts.tablename)
     ])
   }
 
