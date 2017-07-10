@@ -44,50 +44,69 @@ tape('auth - register', (t) => {
 
   const userData = tools.UserData()
 
+  const checkUser = (name, body) => {
+    t.notOk(body.hashed_password, `${name} hashed_password not present`)
+    t.notOk(body.salt, `${name} salt not present`)
+    t.equal(body.username, userData.username, `${name} username is equal`)
+    t.deepEqual(body.meta, userData.meta, `${name} meta is equal`)
+  }
+
+  const statusCheck = (name, loggedIn) => (body) => {
+    t.equal(body.loggedIn, loggedIn, `${name} loggedIn`)
+
+    if(loggedIn) {
+      checkUser(name, body.data)
+    }
+    else {
+      t.notOk(body.data, `${name} user data not present`)
+    }
+  }
+
+  const EXPECTED = {
+    guestStatus: [200, statusCheck('guestStatus', false)],
+    register: [201, (body) => checkUser('register', body)],
+    registerStatus: [200, statusCheck('registerStatus', true)],
+    logout: [201, statusCheck('logout', false)],
+    logoutStatus: [200, statusCheck('logoutStatus', false)],
+    badLogin: [400, (body) => {
+      t.equal(body.error, 'incorrect details', 'badLogin error')
+    }],
+    login: [200, (body) => checkUser('login', body)],
+    loginStatus: [200, statusCheck('loginStatus', true)]
+  }
+
   async.series({
 
-    register: (next) => tools.register(userData, next)/*,
-    status: (next) => tools.status(next)*/
+    guestStatus: (next) => tools.status(next),
+    register: (next) => tools.register(userData, next),
+    registerStatus: (next) => tools.status(next),
+    logout: (next) => tools.logout(next),
+    logoutStatus: (next) => tools.status(next),
+    badLogin: (next) => {
+      return tools.login(Object.assign({}, userData, {
+        username: userData.username + 'BAD'
+      }), next)
+    },
+    login: (next) => tools.login(userData, next),
+    loginStatus: (next) => tools.status(next)
 
   }, (err, results) => {
 
     if(err) t.error(err)
 
-    console.log('-------------------------------------------');
-  console.dir(results)
-
-    const register = results.register
-    const status = results.status
-
-    const EXPECTED_STATUS = {
-      register: 201
-    }
-
-    const EXPECTED_BODY = {
-      register: { registered: true },
-      status: { loggedIn: true }
-    }
-
-    Object.keys(results).forEach((key) => {
+    Object.keys(EXPECTED || {}).forEach(key => {
+      const info = EXPECTED[key]
       const result = results[key]
-      const expectedStatus = EXPECTED_STATUS[key] || 200
-      t.equal(result.statusCode, expectedStatus, key + ' = ' + expectedStatus + ' status')
+
+      const code = result.statusCode
+      const body = result.body
+
+      const expectedCode = info[0]
+      const checkFn = info[1]
+
+      t.equal(code, expectedCode, `${key} statusCode`)
+      checkFn(body)
     })
-
-    Object.keys(EXPECTED_BODY).forEach((key) => {
-      const result = results[key]
-      const expected = EXPECTED_BODY[key]
-
-      Object.keys(expected).forEach((field) => {
-        t.equal(result.body[field], expected[field], key + ' - body - ' + field + ' = ' + expected[field])
-      })
-    })
-
-    t.equal(register.body.data.email, userData.email, 'register email is correct')
-    t.equal(status.body.data.email, userData.email, 'status email is correct')
-
-    t.equal(register.body.data.hashed_password, undefined, 'no password deets')
-    t.equal(status.body.data.hashed_password, undefined, 'no password deets')
 
     t.end()
   })

@@ -3,6 +3,9 @@
 const HemeraTransport = require('template-api/src/transport/hemera')
 const HemeraJoi = require('template-api/src/transport/hemera-joi')
 const HemeraSql = require('template-api/src/transport/hemera-sql-store')
+const SQLAddons = require('template-api/src/transport/hemera-sql-store-addons')
+
+const Backend = require('./backend')
 
 const Transport = (settings, databases) => {
   const hemera = HemeraTransport({
@@ -16,6 +19,12 @@ const Transport = (settings, databases) => {
       driver: knex
     }
   })
+
+  hemera.ready(() => {
+    SQLAddons(hemera, databases.knex)
+    Backend(settings, hemera, databases)
+  })
+
   return hemera
 }
 

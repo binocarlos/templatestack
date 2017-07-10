@@ -63,6 +63,8 @@ const errorReply = (next, res, err, code) => {
   next(err)
 }
 
+const isJSON = (req) => req.xhr || req.headers['accept'] == 'application/json'
+
 module.exports = {
   getQueryString,
   staticServer,
@@ -72,5 +74,6 @@ module.exports = {
   htmlError,
   clientErrorHandler,
   errorHandler,
-  errorReply
+  errorReply,
+  isJSON
 }

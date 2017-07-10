@@ -12,7 +12,7 @@ const url = (path) => {
 
 const headers = () => {
   return {
-
+   
   }
 }
 
@@ -21,7 +21,10 @@ const UserData = (count) => {
   const ts = new Date().getTime()
   return {
     username: 'user' + ts + count + '@test.com',
-    password: 'apples'
+    password: 'apples',
+    meta: {
+      testmeta: 10
+    }
   }
 }
 
@@ -66,7 +69,7 @@ const logout = (next) => {
     method: 'GET',
     url: url('/auth/logout'),
     headers: headers(),
-    followAllRedirects: true
+    json: true
   }
   if(process.env.TRACE_TEST) {
     console.log('logout')

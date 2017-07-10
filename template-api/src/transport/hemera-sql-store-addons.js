@@ -12,6 +12,18 @@ const HemeraSqlAddons = (transport, database) => {
       .returning('*')
       .asCallback(done)
   })
+
+  transport.add({
+    topic: 'sql-store-addons',
+    cmd: 'update'
+  }, (req, done) => {
+    database(req.collection)
+      .where(req.query)
+      .update(data)
+      .returning('*')
+      .asCallback(done)
+  })
+
 }
 
 module.exports = HemeraSqlAddons

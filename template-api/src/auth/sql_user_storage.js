@@ -80,12 +80,7 @@ const SQLUserStorage = (hemera, opts) => {
       cmd: 'create',
       collection: opts.table,
       data: req.data
-    }, (err, res) => {
-      console.log('-------------------------------------------');
-      console.dir(err)
-      console.dir(res)
-      process.exit()
-    })
+    }, tools.singleExtractor(done))
   })
 
   /*
@@ -101,9 +96,9 @@ const SQLUserStorage = (hemera, opts) => {
   }, (req, done) => {
     hemera.act({
       topic: 'sql-store',
-      cmd: 'updateById',
+      cmd: 'update',
       collection: opts.table,
-      id: req.id,
+      query: { id: req.id },
       data: req.data
     }, tools.singleExtractor(done))
   })

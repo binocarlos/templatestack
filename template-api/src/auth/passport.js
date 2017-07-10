@@ -7,7 +7,7 @@ const REQUIRED = [
 
 ]
 
-const Passport = (transports, opts) => {
+const Passport = (transport, opts) => {
   opts = options.processor(opts, {
     required: REQUIRED
   })

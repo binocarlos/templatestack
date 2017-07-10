@@ -25,7 +25,10 @@ const checkUserPassword = (check_password, hashed_password, salt) => {
 const singleExtractor = (done) => (err, raw) => {
   if(err) return done(err)
   if(!raw) return done(null, null)
-  if(raw.result) raw = raw.result[0]
+  raw = raw.result || raw
+  raw = raw.constructor === Array ?
+    raw[0] :
+    raw
   done(null, raw)
 }
 

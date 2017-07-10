@@ -50,9 +50,21 @@ const AuthRoutes = (transport, opts) => {
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!user) return webserverTools.errorReply(next, res, err, 403)
-      res
-        .status(200)
-        .json(user)
+
+      if(user.error) {
+        res
+          .status(400)
+          .json(user)
+      }
+      else {
+        req.login(user, (err) => {
+          if(err) return webserverTools.errorReply(next, res, err)
+          res
+            .status(200)
+            .json(user)
+        })  
+      }
+      
     })
   }
 
@@ -72,9 +84,19 @@ const AuthRoutes = (transport, opts) => {
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!user) return webserverTools.errorReply(next, res, err, 400)
-      res
-        .status(201)
-        .json(user)
+      if(user.error) {
+        res
+          .status(400)
+          .json(user)
+      }
+      else {
+        req.login(user, (err) => {
+          if(err) return webserverTools.errorReply(next, res, err)
+          res
+            .status(201)
+            .json(user)
+        })
+      }
     })
   }
 
@@ -98,9 +120,19 @@ const AuthRoutes = (transport, opts) => {
   }
 
   const logout = (req, res, next) => {
-    var redirectTo = urlparse(req.url, true).query.redirect || '/'
+    const redirectTo = urlparse(req.url, true).query.redirect || '/'
     req.session.destroy(function () {
-      res.redirect(redirectTo)
+      if(webserverTools.isJSON(req)) {
+        res
+          .status(201)
+          .json({
+            loggedIn: false
+          })
+      }
+      else {
+        res.redirect(redirectTo)  
+      }
+      
     })
   }
 

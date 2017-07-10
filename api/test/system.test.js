@@ -12,7 +12,7 @@ tape('system - version', (t) => {
 
   tools.request({
     method: 'GET',
-    url: tools.url('/api/v1/version'),
+    url: tools.url('/version'),
     json: true
   }, tools.wrapResult((err, result) => {
     if(err) t.error(err)
