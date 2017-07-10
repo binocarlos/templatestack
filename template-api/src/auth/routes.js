@@ -104,7 +104,7 @@ const AuthRoutes = (transport, opts) => {
     if(!req.user) return webserverTools.errorReply(next, res, 'not logged in', 403)
     const id = req.user.id
     const data = req.body || {}
-    
+
     transport.act({
       topic: 'auth',
       cmd: 'update',

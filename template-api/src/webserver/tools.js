@@ -65,6 +65,13 @@ const errorReply = (next, res, err, code) => {
 
 const isJSON = (req) => req.xhr || req.headers['accept'] == 'application/json'
 
+// extract a numeric named path parameter from the route (e.g. /:id)
+const getIdParam = (req, name) => {
+  name = name || 'id'
+  const val = parseInt(req.params[name])
+  return isNaN(val) ? null : val
+}
+
 module.exports = {
   getQueryString,
   staticServer,
@@ -75,5 +82,6 @@ module.exports = {
   clientErrorHandler,
   errorHandler,
   errorReply,
-  isJSON
+  isJSON,
+  getIdParam
 }

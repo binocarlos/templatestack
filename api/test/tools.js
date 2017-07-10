@@ -10,10 +10,14 @@ const url = (path) => {
   return BASE_URL + path
 }
 
-const headers = () => {
-  return {
-   
-  }
+const headers = (existing) => {
+  return Object.assign({}, {}, existing)
+}
+
+const installationHeaders = (i) => {
+  return headers({
+    'x-installation-id': i
+  }) 
 }
 
 const wrapResult = (done) => (err, res, body) => {

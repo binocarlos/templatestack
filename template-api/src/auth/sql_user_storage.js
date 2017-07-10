@@ -96,12 +96,22 @@ const SQLUserStorage = (hemera, opts) => {
     data: Joi.object().required()
   }, (req, done) => {
     hemera.act({
-      topic: 'sql-store-addons',
-      cmd: 'update',
+      topic: 'sql-store',
+      cmd: 'findById',
       collection: opts.table,
-      query: { id: req.id },
-      data: req.data
-    }, tools.singleExtractor(done))
+      id: req.id
+    }, tools.singleExtractor((err, user) => {
+      if(err) return done(err)
+      const meta = Object.assign({}, user.meta, req.data)
+      hemera.act({
+        topic: 'sql-store-addons',
+        cmd: 'update',
+        collection: opts.table,
+        query: { id: req.id },
+        data: { meta }
+      }, tools.singleExtractor(done))
+    }))
+    
   })
 }
 

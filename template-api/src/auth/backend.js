@@ -3,7 +3,7 @@
 const options = require('../utils/options')
 const async = require('async')
 const authTools = require('./tools')
-
+const transportTools = require('../transport/tools')
 const REQUIRED = [
   
 ]
@@ -48,20 +48,19 @@ const AuthBackend = (hemera, opts) => {
     load
     
   */
-  hemera.add({
-    topic: 'auth',
-    cmd: 'load',
-    id: Joi.number().required()
-  }, (req, done) => {
-
-    hemera.act({
+  transportTools.backend(hemera, {
+    inbound: {
+      topic: 'auth',
+      cmd: 'load'
+    },
+    outbound: {
       topic: 'user-storage',
-      cmd: 'loadById',
-      id: req.id
-    }, (err, user) => {
-      if(err) return done(err)
-      done(null, opts.displayUser(user))
-    })
+      cmd: 'loadById'
+    },
+    query: {
+      id: Joi.number().required()
+    },
+    map: opts.displayUser
   })
 
   /*
@@ -137,23 +136,20 @@ const AuthBackend = (hemera, opts) => {
     update
     
   */
-  hemera.add({
-    topic: 'auth',
-    cmd: 'update',
-    id: Joi.number().required(),
-    data: Joi.object()
-  }, (req, done) => {
-
-    hemera.act({
+  transportTools.backend(hemera, {
+    inbound: {
+      topic: 'auth',
+      cmd: 'update'
+    },
+    outbound: {
       topic: 'user-storage',
-      cmd: 'update',
-      id: req.id,
-      data: req.data
-    }, (err, user) => {
-      if(err) return done(err)
-      done(null, opts.displayUser(user))
-    })
-
+      cmd: 'update'
+    },
+    query: {
+      id: Joi.number().required(),
+      data: Joi.object()
+    },
+    map: opts.displayUser
   })
 }
 

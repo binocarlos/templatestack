@@ -10,6 +10,7 @@ const headers = tools.headers
 tape('auth - not logged in status', (t) => {
   queries.status((err, result) => {
     if(err) t.error(err)
+    if(!result) t.error('no result')
     t.equal(result.statusCode, 200, '200 status')
     t.equal(result.body.loggedIn, false, 'not logged in')
     t.end()
@@ -22,6 +23,7 @@ tape('auth - register, no username', (t) => {
     password: 'apples'
   }, (err, result) => {
     if(err) t.error(err)
+    if(!result) t.error('no result')
     t.equal(result.statusCode, 400, '400 status')
     t.equal(result.body.error, 'no username given', 'error correct')
     t.end()
@@ -35,6 +37,7 @@ tape('auth - register, no password', (t) => {
     password: ''
   }, (err, result) => {
     if(err) t.error(err)
+    if(!result) t.error('no result')
     t.equal(result.statusCode, 400, '400 status')
     t.equal(result.body.error, 'no password given', 'error correct')
     t.end()
@@ -50,9 +53,7 @@ tape('auth - cycle', (t) => {
     username: userData.username + 'BAD'
   })
   const updateData = {
-    meta: Object.assign({}, userData.meta, {
-      extraMeta: 10
-    })
+    extraMeta: 20
   }
 
   const checkUser = (name, body, meta) => {
@@ -87,7 +88,7 @@ tape('auth - cycle', (t) => {
     registerExists: [400, (body) => t.equal(body.error, `${userData.username} already exists`, 'registerExists error')],
     login: [200, (body) => checkUser('login', body)],
     loginStatus: [200, statusCheck('loginStatus', true)],
-    update: [200, (body) => checkUser('update', body, updateData.meta)]
+    update: [200, (body) => checkUser('update', body, Object.assign({}, userData.meta, updateData))]
   }
 
   async.series({
@@ -111,12 +112,11 @@ tape('auth - cycle', (t) => {
 
     if(err) t.error(err)
 
-    console.log(JSON.stringify(results.registerNoUsername, null, 4))
-    console.log(JSON.stringify(results.registerNoPassword, null, 4))
-
     Object.keys(EXPECTED || {}).forEach(key => {
       const info = EXPECTED[key]
       const result = results[key]
+
+      if(!result) t.error(`${key}: no result`)
 
       const code = result.statusCode
       const body = result.body
