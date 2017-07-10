@@ -20,6 +20,7 @@ const Routes = (app, transport) => {
   app.post(basePath('/auth/login'), auth.login)
   app.post(basePath('/auth/register'), auth.register)
   app.put(basePath('/auth/update'), access.loggedIn(), auth.update)
+  app.put(basePath('/auth/save'), access.loggedIn(), auth.save)
   app.get(basePath('/auth/logout'), auth.logout)
 
   app.set('views', path.join(__dirname, 'views'))

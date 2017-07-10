@@ -100,6 +100,25 @@ const AuthRoutes = (transport, opts) => {
     })
   }
 
+  const save = (req, res, next) => {
+    if(!req.user) return webserverTools.errorReply(next, res, 'not logged in', 403)
+    const id = req.user.id
+    const data = req.body || {}
+
+    transport.act({
+      topic: 'auth',
+      cmd: 'save',
+      id,
+      data
+    }, (err, user) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      if(!user) return webserverTools.errorReply(next, res, err, 400)
+      res
+        .status(200)
+        .json(user)
+    })
+  }
+
   const update = (req, res, next) => {
     if(!req.user) return webserverTools.errorReply(next, res, 'not logged in', 403)
     const id = req.user.id
@@ -141,6 +160,7 @@ const AuthRoutes = (transport, opts) => {
     login,
     register,
     update,
+    save,
     logout
   }
 }

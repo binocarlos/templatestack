@@ -45,6 +45,16 @@ const update = (data, next) => {
   tools.request(req, tools.wrapResult(next))
 }
 
+const save = (data, next) => {
+  const req = {
+    method: 'PUT',
+    url: tools.url('/auth/save'),
+    headers: tools.headers(),
+    json: data
+  }
+  tools.request(req, tools.wrapResult(next))
+}
+
 const logout = (next) => {
   const req = {
     method: 'GET',
@@ -70,6 +80,7 @@ module.exports = {
   register,
   register,
   update,
+  save,
   login,
   logout,
   status

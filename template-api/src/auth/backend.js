@@ -131,6 +131,28 @@ const AuthBackend = (hemera, opts) => {
     })
   })
 
+
+  /*
+  
+    save
+    
+  */
+  transportTools.backend(hemera, {
+    inbound: {
+      topic: 'auth',
+      cmd: 'save'
+    },
+    outbound: {
+      topic: 'user-storage',
+      cmd: 'save'
+    },
+    query: {
+      id: Joi.number().required(),
+      data: Joi.object()
+    },
+    map: opts.displayUser
+  })
+
   /*
   
     update

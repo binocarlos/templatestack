@@ -9,8 +9,7 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-
-  
+  defaultName: 'default installation'
 }
 
 const InstallationBackend = (hemera, opts) => {
@@ -123,6 +122,49 @@ const InstallationBackend = (hemera, opts) => {
       })
     }
   })
+
+  /*
+  
+    create default
+    
+  */
+  hemera.add({
+    topic: 'installation',
+    cmd: 'createDefault',
+    userid: Joi.number().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'installation',
+      cmd: 'create',
+      userid: req.userid,
+      data: {
+        name: opts.defaultName,
+        meta: {}
+      }
+    }, done)
+  })
+
+  /*
+  
+    activate
+    
+  */
+  hemera.add({
+    topic: 'installation',
+    cmd: 'activate',
+    id: Joi.number().required(),
+    userid: Joi.number().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'auth',
+      cmd: 'update',
+      id: req.userid,
+      data: {
+        activeInstallation: req.id
+      }
+    }, done)
+  })
+
 
 
 

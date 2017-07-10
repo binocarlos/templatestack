@@ -86,6 +86,27 @@ const SQLUserStorage = (hemera, opts) => {
 
   /*
   
+    save
+    
+  */
+  hemera.add({
+    topic: 'user-storage',
+    cmd: 'save',
+    id: Joi.number().required(),
+    data: Joi.object().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'sql-store-addons',
+      cmd: 'update',
+      collection: opts.table,
+      query: { id: req.id },
+      data: req.data
+    }, tools.singleExtractor(done))
+    
+  })
+
+  /*
+  
     update
     
   */

@@ -55,6 +55,9 @@ tape('auth - cycle', (t) => {
   const updateData = {
     extraMeta: 20
   }
+  const saveData = {
+    username: userData.username + '.uk'
+  }
 
   const checkUser = (name, body, meta) => {
     meta = meta || userData.meta
@@ -88,7 +91,8 @@ tape('auth - cycle', (t) => {
     registerExists: [400, (body) => t.equal(body.error, `${userData.username} already exists`, 'registerExists error')],
     login: [200, (body) => checkUser('login', body)],
     loginStatus: [200, statusCheck('loginStatus', true)],
-    update: [200, (body) => checkUser('update', body, Object.assign({}, userData.meta, updateData))]
+    update: [200, (body) => checkUser('update', body, Object.assign({}, userData.meta, updateData))],
+    save: [200, (body) => t.equal(body.username, saveData.username, 'save data username')]
   }
 
   async.series({
@@ -105,7 +109,8 @@ tape('auth - cycle', (t) => {
     registerExists: (next) => queries.register(userData, next),
     login: (next) => queries.login(userData, next),
     loginStatus: (next) => queries.status(next),
-    update: (next) => queries.update(updateData, next)
+    update: (next) => queries.update(updateData, next),
+    save: (next) => queries.save(saveData, next)
 
 
   }, (err, results) => {
