@@ -33,7 +33,7 @@ const RouterSaga = (opts = {}) => {
     const loaderName = routeInfo.loader
     if(!loaderName) return
     if(!loaders[loaderName]) return
-    yield call(loaders[loaderName], action)
+    yield call(loaders[loaderName], action.payload)
     initialRouteLoaded = true
   }
 

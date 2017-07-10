@@ -31,4 +31,4 @@ const validators = {
   phone
 }
 
-export const validators
+export default validators

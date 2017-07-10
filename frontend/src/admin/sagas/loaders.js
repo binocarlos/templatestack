@@ -11,7 +11,7 @@ import * as actions from '../actions'
   
 */
 
-function* config(action = {}) {
+function* config(payload = {}) {
   const { answer, error } = yield call(apiSaga, {
     actions: actions.api.config.load,
     api: api.config.load
@@ -21,7 +21,7 @@ function* config(action = {}) {
   return answer
 }
 
-function* userStatus(action = {}) {
+function* userStatus(payload = {}) {
   const { answer, error } = yield call(apiSaga, {
     actions: actions.api.user.status,
     api: api.user.status
@@ -33,15 +33,9 @@ function* userStatus(action = {}) {
   return answer
 }
 
-function* example(action = {}) {
-  const routeInfo = yield select(state => state.router.result)
-  yield put(actions.value.test.set(routeInfo.payload))
-}
-
 const loaders = {
   config,
-  userStatus,
-  example
+  userStatus
 }
 
 export default loaders

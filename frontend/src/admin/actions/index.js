@@ -14,7 +14,8 @@ export const value = {
   initialized: base.value('initialized'),
   user: base.value('user'),
   menuOpen: base.value('menuOpen'),
-  test: base.value('test')
+  loginError: base.value('loginError'),
+  registerError: base.value('registerError')
 }
 
 export const api = {
@@ -23,7 +24,9 @@ export const api = {
     load: base.api('config_load', {keepPayload:true})
   },
   user: {
-    status: base.api('user_status', {keepPayload:true})
+    status: base.api('user_status', {keepPayload:true}),
+    login: base.api('login', {keepPayload:true}),
+    register: base.api('register', {keepPayload:true})
   }
 }
 

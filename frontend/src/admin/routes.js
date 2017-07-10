@@ -9,6 +9,7 @@ import config from './config'
 
 import Application from './containers/Application'
 import LoginForm from './containers/LoginForm'
+import RegisterForm from './containers/RegisterForm'
 
 import Home from './components/Home'
 
@@ -52,6 +53,12 @@ export const routes = (
           <LoginForm />
         </Section>
       </Route>
+
+      <Route path='/register'>
+        <Section>
+          <RegisterForm />
+        </Section>
+      </Route>      
     </Application>
   </div>
 )

@@ -8,18 +8,18 @@ import forms from '../forms'
 import * as actions from '../actions'
 
 const Fields = FormContainer({
-  name: 'login',
-  fields: forms.login
+  name: 'register',
+  fields: forms.register
 })
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
   render() {
     const actions = [
-      { label: 'Login', raised: true, primary: true, onClick: this.props.submit }
+      { label: 'Register', raised: true, primary: true, onClick: this.props.submit }
     ]
     return (
       <div>
-        <div>Login</div>
+        <div>Register</div>
         <Fields />
         <Navigation
           type='horizontal'
@@ -33,6 +33,6 @@ class LoginForm extends Component {
 export default connect(
   (state, ownProps) => ({}),
   (dispatch) => ({
-    submit: () => dispatch(actions.router.trigger('loginSubmit'))
+    submit: () => dispatch(actions.router.trigger('registerSubmit'))
   })
-)(LoginForm)
+)(RegisterForm)
