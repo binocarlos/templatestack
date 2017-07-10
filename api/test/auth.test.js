@@ -3,10 +3,12 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
+const queries = require('./queries/user')
+
 const headers = tools.headers
 
 tape('auth - not logged in status', (t) => {
-  tools.status((err, result) => {
+  queries.status((err, result) => {
     if(err) t.error(err)
     t.equal(result.statusCode, 200, '200 status')
     t.equal(result.body.loggedIn, false, 'not logged in')
@@ -15,7 +17,7 @@ tape('auth - not logged in status', (t) => {
 })
 
 tape('auth - register, no username', (t) => {
-  tools.register({
+  queries.register({
     username: '',
     password: 'apples'
   }, (err, result) => {
@@ -28,7 +30,7 @@ tape('auth - register, no username', (t) => {
 
 
 tape('auth - register, no password', (t) => {
-  tools.register({
+  queries.register({
     username: 't@t.com',
     password: ''
   }, (err, result) => {
@@ -42,7 +44,7 @@ tape('auth - register, no password', (t) => {
 
 tape('auth - cycle', (t) => {
 
-  const userData = tools.UserData()
+  const userData = queries.UserData()
 
   const badLogin = Object.assign({}, userData, {
     username: userData.username + 'BAD'
@@ -90,19 +92,19 @@ tape('auth - cycle', (t) => {
 
   async.series({
 
-    guestStatus: (next) => tools.status(next),
-    registerNoUsername: (next) => tools.register({password: userData.password}, next),
-    registerNoPassword: (next) => tools.register({username: userData.username}, next),
-    register: (next) => tools.register(userData, next),
-    registerStatus: (next) => tools.status(next),
-    logout: (next) => tools.logout(next),
-    logoutStatus: (next) => tools.status(next),
-    badLogin: (next) => tools.login(badLogin, next),
-    badUpdate: (next) => tools.update(updateData, next),
-    registerExists: (next) => tools.register(userData, next),
-    login: (next) => tools.login(userData, next),
-    loginStatus: (next) => tools.status(next),
-    update: (next) => tools.update(updateData, next)
+    guestStatus: (next) => queries.status(next),
+    registerNoUsername: (next) => queries.register({password: userData.password}, next),
+    registerNoPassword: (next) => queries.register({username: userData.username}, next),
+    register: (next) => queries.register(userData, next),
+    registerStatus: (next) => queries.status(next),
+    logout: (next) => queries.logout(next),
+    logoutStatus: (next) => queries.status(next),
+    badLogin: (next) => queries.login(badLogin, next),
+    badUpdate: (next) => queries.update(updateData, next),
+    registerExists: (next) => queries.register(userData, next),
+    login: (next) => queries.login(userData, next),
+    loginStatus: (next) => queries.status(next),
+    update: (next) => queries.update(updateData, next)
 
 
   }, (err, results) => {
