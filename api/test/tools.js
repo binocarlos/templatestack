@@ -3,7 +3,7 @@ const async = require('async')
 const Request = require('request')
 const request = Request.defaults({jar: true})
 
-const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:80'
+const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:80/api/v1'
 
 const url = (path) => {
   path = path || ''
@@ -36,7 +36,7 @@ const wrapResult = (done) => (err, res, body) => {
 const register = (user, next) => {
   const req = {
     method: 'POST',
-    url: url('/api/v1/auth/register'),
+    url: url('/auth/register'),
     headers: headers(),
     json: user
   }
@@ -50,7 +50,7 @@ const register = (user, next) => {
 const login = (user, next) => {
   const req = {
     method: 'POST',
-    url: url('/api/v1/auth/login'),
+    url: url('/auth/login'),
     headers: headers(),
     json: user
   }
@@ -64,7 +64,7 @@ const login = (user, next) => {
 const logout = (next) => {
   const req = {
     method: 'GET',
-    url: url('/api/v1/auth/logout'),
+    url: url('/auth/logout'),
     headers: headers(),
     followAllRedirects: true
   }
@@ -78,7 +78,7 @@ const logout = (next) => {
 const status = (next) => {
   const req = {
     method: 'GET',
-    url: url('/api/v1/auth/status'),
+    url: url('/auth/status'),
     headers: headers(),
     json: true
   }

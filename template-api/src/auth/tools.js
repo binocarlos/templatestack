@@ -22,8 +22,16 @@ const checkUserPassword = (check_password, hashed_password, salt) => {
   return encryptPassword(check_password, salt) == hashed_password
 }
 
+const singleExtractor = (done) => (err, raw) => {
+  if(err) return done(err)
+  if(!raw) return done(null, null)
+  if(raw.result) raw = raw.result[0]
+  done(null, raw)
+}
+
 module.exports = {
   makeSalt,
   encryptPassword,
-  checkUserPassword
+  checkUserPassword,
+  singleExtractor
 }

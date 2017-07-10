@@ -1,8 +1,9 @@
 'use strict'
   
 // a bridge between the generic auth frontend and actual sql backend storage
+const async = require('async')
 const options = require('../utils/options')
-
+const tools = require('./tools')
 const REQUIRED = [
   
 ]
@@ -10,16 +11,6 @@ const REQUIRED = [
 const DEFAULTS = {
   table: 'useraccount',
   usernameField: 'username'
-}
-
-const singleExtractor = (done) => (err, raw) => {
-  if(err) return done(err)
-  if(!raw) return done(null, null)
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.dir(raw)
-  if(raw.result) raw = raw.result[0]
-  done(null, raw)
 }
 
 /*
@@ -50,7 +41,7 @@ const SQLUserStorage = (hemera, opts) => {
       cmd: 'findById',
       collection: opts.table,
       id: req.id
-    }, singleExtractor(done))
+    }, tools.singleExtractor(done))
   })
 
   /*
@@ -71,7 +62,7 @@ const SQLUserStorage = (hemera, opts) => {
         [opts.usernameField]: req.username
       },
       options: {}
-    }, singleExtractor(done))
+    }, tools.singleExtractor(done))
   })
 
   /*
@@ -85,11 +76,16 @@ const SQLUserStorage = (hemera, opts) => {
     data: Joi.object().required()
   }, (req, done) => {
     hemera.act({
-      topic: 'sql-store',
+      topic: 'sql-store-addons',
       cmd: 'create',
       collection: opts.table,
       data: req.data
-    }, singleExtractor(done))
+    }, (err, res) => {
+      console.log('-------------------------------------------');
+      console.dir(err)
+      console.dir(res)
+      process.exit()
+    })
   })
 
   /*
@@ -109,7 +105,7 @@ const SQLUserStorage = (hemera, opts) => {
       collection: opts.table,
       id: req.id,
       data: req.data
-    }, singleExtractor(done))
+    }, tools.singleExtractor(done))
   })
 }
 
