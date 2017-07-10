@@ -115,7 +115,7 @@ const AuthBackend = (hemera, opts) => {
 
       if(err) return done(new Error(err))
       if(user) return done(null, {
-        error: req.username + ' already exists'
+        error: req.data.username + ' already exists'
       })
 
       const userData = opts.processNewUser(req.data)
