@@ -5,8 +5,8 @@ const Databases = require('./databases')
 const Transport = require('./transport')
 const App = require('./app')
 
-const databases = Databases(settings)
-const transport = Transport(settings, databases)
-const app = App(settings, transport, databases)
+const databases = Databases()
+const transport = Transport(databases)
+const app = App(transport, databases)
 
 app.listen(settings.port)

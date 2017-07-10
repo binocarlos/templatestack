@@ -5,7 +5,9 @@ const SystemRoutes = require('template-api/src/system/routes')
 const Access = require('template-api/src/auth/access')
 const path = require('path')
 
-const Routes = (app, transport, settings) => {
+const settings = require('./settings')
+
+const Routes = (app, transport) => {
   const auth = AuthRoutes(transport)
   const system = SystemRoutes(transport)
 

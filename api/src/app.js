@@ -10,8 +10,9 @@ const Passport = require('template-api/src/auth/passport')
 const WebserverTools = require('template-api/src/webserver/tools')
 
 const Routes = require('./routes')
+const settings = require('./settings')
 
-const App = (settings, transport, databases) => {
+const App = (transport, databases) => {
 
   const app = express()
 

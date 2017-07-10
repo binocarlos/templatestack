@@ -4,21 +4,13 @@ const Redis = require('template-api/src/database/redis')
 const Postgres = require('template-api/src/database/postgres')
 const Knex = require('template-api/src/database/knex')
 
-const Databases = (settings) => {
-  const redisSettings = {
-    host: settings.redishost,
-    port: settings.redisport
-  }
-  const postgresSettings = {
-    host: settings.postgreshost,
-    port: settings.postgresport,
-    user: settings.postgresuser,
-    password: settings.postgrespassword,
-    database: settings.postgresdatabase
-  }
-  const redis = Redis(redisSettings)
-  const postgres = Postgres(postgresSettings)
-  const knex = Knex(postgresSettings)
+const settings = require('./settings')
+
+const Databases = () => {
+  
+  const redis = Redis(settings.databases.redis)
+  const postgres = Postgres(settings.databases.postgres.connection)
+  const knex = Knex(settings.databases.postgres)
   return {
     redis,
     postgres,

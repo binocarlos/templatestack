@@ -18,4 +18,27 @@ const args = require('minimist')(process.argv, {
   }
 })
 
+const databases = {
+  redis: {
+    host: args.redishost,
+    port: args.redisport
+  },
+  postgres: {
+    client: 'pg',
+    connection: {
+      host: args.postgreshost,
+      port: args.postgresport,
+      user: args.postgresuser,
+      password: args.postgrespassword,
+      database: args.postgresdatabase
+    },
+    pool: {
+      min: 2,
+      max: 10
+    }
+  }
+}
+
+args.databases = databases
+
 module.exports = args

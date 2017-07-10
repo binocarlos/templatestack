@@ -3,33 +3,37 @@
 const options = require('../utils/options')
 const knex = require('knex')
 
-const REQUIRED = [
+const REQUIRED_CONNECTION = [
   'host',
   'user',
   'password',
   'database'
 ]
 
-const DEFAULTS = {
+const DEFAULT_CONNECTION = {
   port: 5432
+}
+
+const DEFAULT_OPTS = {
+  client: 'pg',
+  pool: {
+    min: 0,
+    max: 10
+  }
 }
 
 const Knex = (opts) => {
   opts = opts || {}
   opts = options.processor(opts, {
-    required: REQUIRED,
-    defaults: DEFAULTS,
-    throwError: true
+    default: DEFAULT_OPTS,
   })
 
-  return knex({
-    client: 'pg',
-    connection: opts,
-    pool: {
-      min: 0,
-      max: 7
-    }
+  opts.connection = options.processor(opts.connection || {}, {
+    required: REQUIRED_CONNECTION,
+    default: DEFAULT_CONNECTION
   })
+
+  return knex(opts)
 }
 
 module.exports = Knex

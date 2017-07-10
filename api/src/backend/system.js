@@ -3,7 +3,7 @@
 const SystemBackend = require('template-api/src/system/backend')
 const packageJSON = require('../../package.json')
 
-const System = (settings, transport, databases) => {
+const System = (transport, databases) => {
   return SystemBackend(transport, {
     version: packageJSON.version
   })

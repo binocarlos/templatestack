@@ -5,6 +5,8 @@
   "description": "api",
   "main": "index.js",
   "scripts": {
+    "serve": "node src/index.js",
+    "knex": "knex",
     "test": "tape test/**/*.test.js"
   },
   "dependencies": {
@@ -14,6 +16,7 @@
     "ejs": "^2.5.6",
     "express": "^4.15.3",
     "morgan": "^1.8.2",
+    "knex": "^0.13.0",
     "template-api": "file:../template-api"
   },
   "devDependencies": {
