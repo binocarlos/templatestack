@@ -2,13 +2,11 @@ import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux
 
 import initialize from './initialize'
 import router from './router'
-import form from './form'
 
 export default function* root() {
   const handlers = [
     initialize,
-    router,
-    form
+    router
   ]
   yield all(handlers.map(fork))
 }

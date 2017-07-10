@@ -5,6 +5,8 @@ import { processRoutes } from 'template-ui/lib/utils/routes'
 import config from './config'
 
 import Application from './containers/Application'
+import LoginForm from './containers/LoginForm'
+
 import Home from './components/Home'
 
 const Route = RouteFactory(config.basepath)
@@ -40,6 +42,10 @@ export const routes = (
         <div>
           Help
         </div>
+      </Route>
+
+      <Route path='/login'>
+        <LoginForm />
       </Route>
     </Application>
   </div>

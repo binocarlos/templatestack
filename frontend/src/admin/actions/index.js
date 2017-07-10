@@ -1,13 +1,11 @@
 import { createAction } from 'redux-act'
 import ValueActions from 'template-ui/lib/plugins/value/actions'
 import ApiActions from 'template-ui/lib/plugins/api/actions'
-import FormActions from 'template-ui/lib/plugins/form/actions'
 import RouterActions from 'template-ui/lib/plugins/router/actions'
 
 export const base = {
   value: ValueActions(),
-  api: ApiActions(),
-  form: FormActions()
+  api: ApiActions()
 }
 
 export const value = {
@@ -27,12 +25,6 @@ export const api = {
   user: {
     status: base.api('user_status', {keepPayload:true})
   }
-}
-
-export const form = {
-  _types: base.form._genericTypes,
-  login: base.form('login'),
-  register: base.form('register')
 }
 
 export const events = {

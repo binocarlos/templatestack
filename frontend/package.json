@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
-    "dotty": "^0.0.2",
     "http-proxy": "^1.16.2",
     "immutability-helper": "^2.0.0",
     "morgan": "^1.8.2",
