@@ -8,6 +8,7 @@ const register = {
     validate: [validators.required,validators.email]
   },
   password: models.string({
+    type: 'password',
     component: fields.input,
     validate: validators.required
   })
@@ -19,6 +20,7 @@ const login = {
     validate: [validators.required,validators.email]
   },
   password: models.string({
+    type: 'password',
     component: fields.input,
     validate: validators.required
   })

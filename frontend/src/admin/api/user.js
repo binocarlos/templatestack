@@ -1,30 +1,24 @@
-export const status = (payload) => {  
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        loggedIn: false
-      })
-    }, 100)
+import { request } from 'template-ui/lib/utils/ajax'
+import config from '../config'
+const url = (path) => config.api + path
+
+export const status = (payload) => {
+  return request({
+    url: url('/auth/status')
   })
 }
 
-export const login = (payload) => {  
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        loggedIn: true
-      })
-    }, 100)
+export const login = (payload) => {
+  return request({
+    url: url('/auth/login'),
+    data: payload
   })
 }
 
-export const register = (payload) => {  
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        registered: true
-      })
-    }, 100)
+export const register = (payload) => {
+  return request({
+    url: url('/auth/register'),
+    data: payload
   })
 }
 

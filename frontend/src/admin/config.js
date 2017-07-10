@@ -26,6 +26,7 @@ const icons = {
 const config = {
   title:'Example Admin Panel',
   basepath:'/admin',
+  api: '/api/v1',
   // the default state for the value reducer
   initialState: {
     value: {

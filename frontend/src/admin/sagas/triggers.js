@@ -24,7 +24,8 @@ function* loginSubmit(action = {}) {
 
   const { answer, error } = yield call(apiSaga, {
     actions: actions.api.user.login,
-    api: api.user.login
+    api: api.user.login,
+    payload: values
   })
 
   if(error) {
@@ -51,7 +52,8 @@ function* registerSubmit(action = {}) {
 
   const { answer, error } = yield call(apiSaga, {
     actions: actions.api.user.register,
-    api: api.user.register
+    api: api.user.register,
+    payload: values
   })
 
   if(error) {
