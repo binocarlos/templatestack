@@ -37,6 +37,10 @@ function backup() {
   connect ${cmd}
 }
 
+function migrate() {
+  
+}
+
 function usage() {
 cat <<EOF
 Usage:

@@ -11,6 +11,7 @@ const Databases = () => {
   const redis = Redis(settings.databases.redis)
   const postgres = Postgres(settings.databases.postgres.connection)
   const knex = Knex(settings.databases.postgres)
+
   return {
     redis,
     postgres,
