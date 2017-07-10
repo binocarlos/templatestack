@@ -22,8 +22,14 @@ const checkUserPassword = (check_password, hashed_password, salt) => {
   return encryptPassword(check_password, salt) == hashed_password
 }
 
+const middleware = () => (req, res, next) => {
+  req.userid = req.user ? req.user.id : null
+  next()
+}
+
 module.exports = {
   makeSalt,
   encryptPassword,
-  checkUserPassword
+  checkUserPassword,
+  middleware
 }

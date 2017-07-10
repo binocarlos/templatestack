@@ -19,7 +19,7 @@ const DEFAULTS = {
   user namespace
   
 */
-const SQLUserStorage = (hemera, opts) => {
+const StorageSQL = (hemera, opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -136,4 +136,4 @@ const SQLUserStorage = (hemera, opts) => {
   })
 }
 
-module.exports = SQLUserStorage
+module.exports = StorageSQL

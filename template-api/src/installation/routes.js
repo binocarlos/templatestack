@@ -5,6 +5,7 @@ const urlparse = require('url').parse
 const async = require('async')
 
 const webserverTools = require('../webserver/tools')
+const tools = require('./tools')
 
 const REQUIRED = [
   
@@ -24,8 +25,8 @@ const InstallationRoutes = (transport, opts) => {
   // QUERIES
 
   const get = (req, res, next) => {
-    const id = webserverTools.getIdParam(req)
-    if(!installationID) return webserverTools.errorReply(next, res, 'installation id required')
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
       topic: 'installation',
       cmd: 'get',
@@ -44,7 +45,7 @@ const InstallationRoutes = (transport, opts) => {
     transport.act({
       topic: 'installation',
       cmd: 'list',
-      userid: accountid: req.userid
+      userid: req.userid
     }, (err, installations) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
@@ -60,7 +61,24 @@ const InstallationRoutes = (transport, opts) => {
       topic: 'installation',
       cmd: 'create',
       data: req.body || {},
-      accountid: req.userid
+      userid: req.userid
+    }, (err, installation) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(201)
+        .json(installation)
+    })
+  }
+
+  const save = (req, res, next) => {
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!id) return webserverTools.errorReply(next, res, 'installation id required')
+    transport.act({
+      topic: 'installation',
+      cmd: 'save',
+      id,
+      data: req.body || {},
+      userid: req.userid
     }, (err, installation) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
@@ -70,47 +88,62 @@ const InstallationRoutes = (transport, opts) => {
   }
 
   const update = (req, res, next) => {
-    if(!req.user) return webserverTools.errorReply(next, res, 'not logged in', 403)
-    const id = req.user.id
-    const data = req.body || {}
-    
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
-      topic: 'auth',
+      topic: 'installation',
       cmd: 'update',
       id,
-      data
+      data: req.body || {},
+      userid: req.userid
+    }, (err, installation) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(201)
+        .json(installation)
+    })
+  }
+
+  const activate = (req, res, next) => {
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!id) return webserverTools.errorReply(next, res, 'installation id required')
+    transport.act({
+      topic: 'installation',
+      cmd: 'activate',
+      id,
+      userid: req.userid
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
-      if(!user) return webserverTools.errorReply(next, res, err, 400)
       res
         .status(200)
         .json(user)
     })
   }
 
-  const logout = (req, res, next) => {
-    const redirectTo = urlparse(req.url, true).query.redirect || '/'
-    req.session.destroy(function () {
-      if(webserverTools.isJSON(req)) {
-        res
-          .status(200)
-          .json({
-            loggedIn: false
-          })
-      }
-      else {
-        res.redirect(redirectTo)  
-      }
-      
+  const del = (req, res, next) => {
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!id) return webserverTools.errorReply(next, res, 'installation id required')
+    transport.act({
+      topic: 'installation',
+      cmd: 'delete',
+      id,
+      userid: req.userid
+    }, (err) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(204)
     })
-  }
+  }s
+
 
   return {
-    status,
-    login,
-    register,
+    get,
+    list,
+    create,
+    save,
     update,
-    logout
+    activate,
+    del
   }
 }
 

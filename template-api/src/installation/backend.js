@@ -20,11 +20,8 @@ const InstallationBackend = (hemera, opts) => {
 
   const Joi = hemera.exposition['hemera-joi'].joi
 
-  /*
-  
-    get
-    
-  */
+/*
+  // get
   tools.backend(hemera, {
     inbound: {
       topic: 'installation',
@@ -40,11 +37,7 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
-  /*
-  
-    list
-    
-  */
+  // list
   tools.backend(hemera, {
     inbound: {
       topic: 'installation',
@@ -59,11 +52,7 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
-  /*
-  
-    loadCollaboration
-    
-  */
+  // loadCollaboration
   tools.backend(hemera, {
     inbound: {
       topic: 'installation',
@@ -79,11 +68,7 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
-  /*
-  
-    permission
-    
-  */
+  // permission
   tools.backend(hemera, {
     inbound: {
       topic: 'installation',
@@ -100,11 +85,7 @@ const InstallationBackend = (hemera, opts) => {
     map: (collaboration) => collaboration.permission
   })
 
-  /*
-  
-    create
-    
-  */
+  // create
   tools.backend(hemera, {
     inbound: {
       topic: 'installation',
@@ -123,11 +104,7 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
-  /*
-  
-    create default
-    
-  */
+  // createDefault
   hemera.add({
     topic: 'installation',
     cmd: 'createDefault',
@@ -144,11 +121,7 @@ const InstallationBackend = (hemera, opts) => {
     }, done)
   })
 
-  /*
-  
-    activate
-    
-  */
+  // activate
   hemera.add({
     topic: 'installation',
     cmd: 'activate',
@@ -165,6 +138,77 @@ const InstallationBackend = (hemera, opts) => {
     }, done)
   })
 
+
+  // save
+  tools.backend(hemera, {
+    inbound: {
+      topic: 'installation',
+      cmd: 'save'
+    },
+    outbound: {
+      topic: 'installation-storage',
+      cmd: 'save'
+    },
+    query: {
+      id: Joi.number().required(),
+      userid: Joi.number().required(),
+      data: Joi.object().keys({
+        name: Joi.string(),
+        meta: Joi.object()
+      })
+    }
+  })
+
+  // update
+  tools.backend(hemera, {
+    inbound: {
+      topic: 'installation',
+      cmd: 'update'
+    },
+    outbound: {
+      topic: 'installation-storage',
+      cmd: 'update'
+    },
+    query: {
+      id: Joi.number().required(),
+      userid: Joi.number().required(),
+      data: Joi.object()
+    }
+  })
+
+
+  // delete
+  tools.backend(hemera, {
+    inbound: {
+      topic: 'installation',
+      cmd: 'delete'
+    },
+    outbound: {
+      topic: 'installation-storage',
+      cmd: 'delete'
+    },
+    query: {
+      id: Joi.number().required(),
+      userid: Joi.number().required()
+    }
+  })
+*/
+  // create default
+  if(opts.createDefaultInstallation) {
+    hemera.add({
+      pubsub$: true,
+      topic: 'auth',
+      cmd: 'registered',
+      user: Joi.object().required()
+    }, (req) => {
+      console.log('-------------------------------------------');
+      console.log('-------------------------------------------');
+      console.log('-------------------------------------------');
+      console.log('USER IS REGISTERED')
+      console.log(JSON.stringify(user, null, 4))
+      process.exit()
+    })
+  }
 
 
 

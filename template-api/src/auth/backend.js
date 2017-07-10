@@ -106,28 +106,42 @@ const AuthBackend = (hemera, opts) => {
     })
   }, (req, done) => {
 
-    hemera.act({
-      topic: 'user-storage',
-      cmd: 'loadByUsername',
-      username: req.data.username
-    }, (err, user) => {
+    async.waterfall([
+      (next) => {
+        hemera.act({
+          topic: 'user-storage',
+          cmd: 'loadByUsername',
+          username: req.data.username
+        }, next)
+      },
 
+      (user, next) => {
+        if(user) return next(null, {
+          error: req.data.username + ' already exists'
+        })
+
+        const userData = opts.processNewUser(req.data)
+
+        hemera.act({
+          topic: 'user-storage',
+          cmd: 'create',
+          data: userData
+        }, next)
+      },
+
+      (user, next) => {
+        hemera.act({
+          pubsub$: true,
+          topic: 'auth',
+          cmd: 'registered',
+          user: userData
+        })
+        next(null, user)
+      }
+
+    ], (err, user) => {
       if(err) return done(new Error(err))
-      if(user) return done(null, {
-        error: req.data.username + ' already exists'
-      })
-
-      const userData = opts.processNewUser(req.data)
-
-      hemera.act({
-        topic: 'user-storage',
-        cmd: 'create',
-        data: userData
-      }, (err, user) => {
-        if(err) return done(err)
-        done(null, opts.displayUser(user))
-      })
-
+      done(null, opts.displayUser(user))
     })
   })
 

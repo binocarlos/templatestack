@@ -72,6 +72,11 @@ const getIdParam = (req, name) => {
   return isNaN(val) ? null : val
 }
 
+const middleware = () => (req, res, next) => {
+  req.qs = urlparse(req.url, true).query
+  next()
+}
+
 module.exports = {
   getQueryString,
   staticServer,
@@ -83,5 +88,6 @@ module.exports = {
   errorHandler,
   errorReply,
   isJSON,
-  getIdParam
+  getIdParam,
+  middleware
 }
