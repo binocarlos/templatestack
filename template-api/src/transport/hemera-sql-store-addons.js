@@ -1,5 +1,7 @@
 'use strict'
 
+const tools = require('../database/tools')
+
 const HemeraSqlAddons = (transport, database) => {
 
   transport.add({
@@ -17,11 +19,21 @@ const HemeraSqlAddons = (transport, database) => {
     topic: 'sql-store-addons',
     cmd: 'update'
   }, (req, done) => {
-    database(req.collection)
-      .where(req.query)
-      .update(data)
-      .returning('*')
-      .asCallback(done)
+    transport.act({
+      topic: 'sql-store',
+      cmd: 'update',
+      collection: req.collection,
+      query: req.query,
+      data: req.data
+    }, (err) => {
+      if(err) return done(err)
+      transport.act({
+        topic: 'sql-store',
+        cmd: 'find',
+        collection: req.collection,
+        query: req.query
+      }, tools.singleExtractor(done))
+    })
   })
 
 }

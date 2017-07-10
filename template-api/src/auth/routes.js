@@ -124,7 +124,7 @@ const AuthRoutes = (transport, opts) => {
     req.session.destroy(function () {
       if(webserverTools.isJSON(req)) {
         res
-          .status(201)
+          .status(200)
           .json({
             loggedIn: false
           })

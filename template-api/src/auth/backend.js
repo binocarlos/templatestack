@@ -55,7 +55,7 @@ const AuthBackend = (hemera, opts) => {
   }, (req, done) => {
 
     hemera.act({
-      topic: 'user',
+      topic: 'user-storage',
       cmd: 'loadById',
       id: req.id
     }, (err, user) => {
@@ -78,7 +78,7 @@ const AuthBackend = (hemera, opts) => {
   }, (req, done) => {
 
     hemera.act({
-      topic: 'user',
+      topic: 'user-storage',
       cmd: 'loadByUsername',
       username: req.username
     }, (err, user) => {
@@ -108,7 +108,7 @@ const AuthBackend = (hemera, opts) => {
   }, (req, done) => {
 
     hemera.act({
-      topic: 'user',
+      topic: 'user-storage',
       cmd: 'loadByUsername',
       username: req.data.username
     }, (err, user) => {
@@ -121,7 +121,7 @@ const AuthBackend = (hemera, opts) => {
       const userData = opts.processNewUser(req.data)
 
       hemera.act({
-        topic: 'user',
+        topic: 'user-storage',
         cmd: 'create',
         data: userData
       }, (err, user) => {
@@ -145,7 +145,7 @@ const AuthBackend = (hemera, opts) => {
   }, (req, done) => {
 
     hemera.act({
-      topic: 'user',
+      topic: 'user-storage',
       cmd: 'update',
       id: req.id,
       data: req.data
@@ -153,7 +153,6 @@ const AuthBackend = (hemera, opts) => {
       if(err) return done(err)
       done(null, opts.displayUser(user))
     })
-
 
   })
 }

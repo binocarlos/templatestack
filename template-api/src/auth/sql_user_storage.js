@@ -3,7 +3,8 @@
 // a bridge between the generic auth frontend and actual sql backend storage
 const async = require('async')
 const options = require('../utils/options')
-const tools = require('./tools')
+const tools = require('../database/tools')
+
 const REQUIRED = [
   
 ]
@@ -32,7 +33,7 @@ const SQLUserStorage = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user',
+    topic: 'user-storage',
     cmd: 'loadById',
     id: Joi.number().required()
   }, (req, done) => {
@@ -50,7 +51,7 @@ const SQLUserStorage = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user',
+    topic: 'user-storage',
     cmd: 'loadByUsername',
     username: Joi.string().required()
   }, (req, done) => {
@@ -71,7 +72,7 @@ const SQLUserStorage = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user',
+    topic: 'user-storage',
     cmd: 'create',
     data: Joi.object().required()
   }, (req, done) => {
@@ -89,13 +90,13 @@ const SQLUserStorage = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user',
+    topic: 'user-storage',
     cmd: 'update',
     id: Joi.number().required(),
     data: Joi.object().required()
   }, (req, done) => {
     hemera.act({
-      topic: 'sql-store',
+      topic: 'sql-store-addons',
       cmd: 'update',
       collection: opts.table,
       query: { id: req.id },

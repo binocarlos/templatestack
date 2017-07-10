@@ -5,7 +5,7 @@ const tools = require('./tools')
 
 const headers = tools.headers
 
-
+/*
 tape('auth - not logged in status', (t) => {
   tools.status((err, result) => {
     if(err) t.error(err)
@@ -40,15 +40,27 @@ tape('auth - register, no password', (t) => {
   })
 })
 
-tape('auth - register', (t) => {
+*/
+
+tape('auth - cycle', (t) => {
 
   const userData = tools.UserData()
 
-  const checkUser = (name, body) => {
+  const badLogin = Object.assign({}, userData, {
+    username: userData.username + 'BAD'
+  })
+  const updateData = {
+    meta: Object.assign({}, userData.meta, {
+      extraMeta: 10
+    })
+  }
+
+  const checkUser = (name, body, meta) => {
+    meta = meta || userData.meta
     t.notOk(body.hashed_password, `${name} hashed_password not present`)
     t.notOk(body.salt, `${name} salt not present`)
     t.equal(body.username, userData.username, `${name} username is equal`)
-    t.deepEqual(body.meta, userData.meta, `${name} meta is equal`)
+    t.deepEqual(body.meta, meta, `${name} meta is equal`)
   }
 
   const statusCheck = (name, loggedIn) => (body) => {
@@ -66,13 +78,17 @@ tape('auth - register', (t) => {
     guestStatus: [200, statusCheck('guestStatus', false)],
     register: [201, (body) => checkUser('register', body)],
     registerStatus: [200, statusCheck('registerStatus', true)],
-    logout: [201, statusCheck('logout', false)],
+    logout: [200, statusCheck('logout', false)],
     logoutStatus: [200, statusCheck('logoutStatus', false)],
     badLogin: [400, (body) => {
       t.equal(body.error, 'incorrect details', 'badLogin error')
     }],
+    badUpdate: [403, (body) => {
+      t.equal(body.error, 'access denied', 'badUpdate error')
+    }],
     login: [200, (body) => checkUser('login', body)],
-    loginStatus: [200, statusCheck('loginStatus', true)]
+    loginStatus: [200, statusCheck('loginStatus', true)],
+    update: [200, (body) => checkUser('update', body, updateData.meta)]
   }
 
   async.series({
@@ -82,13 +98,11 @@ tape('auth - register', (t) => {
     registerStatus: (next) => tools.status(next),
     logout: (next) => tools.logout(next),
     logoutStatus: (next) => tools.status(next),
-    badLogin: (next) => {
-      return tools.login(Object.assign({}, userData, {
-        username: userData.username + 'BAD'
-      }), next)
-    },
+    badLogin: (next) => tools.login(badLogin, next),
+    badUpdate: (next) => tools.update(updateData, next),
     login: (next) => tools.login(userData, next),
-    loginStatus: (next) => tools.status(next)
+    loginStatus: (next) => tools.status(next),
+    update: (next) => tools.update(updateData, next)
 
   }, (err, results) => {
 

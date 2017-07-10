@@ -64,6 +64,20 @@ const login = (user, next) => {
   request(req, wrapResult(next))
 }
 
+const update = (data, next) => {
+  const req = {
+    method: 'PUT',
+    url: url('/auth/update'),
+    headers: headers(),
+    json: data
+  }
+  if(process.env.TRACE_TEST) {
+    console.log('update')
+    console.log(JSON.stringify(req, null, 4))
+  }
+  request(req, wrapResult(next))
+}
+
 const logout = (next) => {
   const req = {
     method: 'GET',
@@ -100,6 +114,7 @@ module.exports = {
   wrapResult,
   headers,
   register,
+  update,
   login,
   logout,
   status
