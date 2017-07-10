@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react'
 
 import RouteFactory from 'template-ui/lib/containers/Route'
 import { processRoutes } from 'template-ui/lib/utils/routes'
+
+import Section from 'template-ui/lib/components/Section'
+
 import config from './config'
 
 import Application from './containers/Application'
@@ -45,7 +48,9 @@ export const routes = (
       </Route>
 
       <Route path='/login'>
-        <LoginForm />
+        <Section>
+          <LoginForm />
+        </Section>
       </Route>
     </Application>
   </div>

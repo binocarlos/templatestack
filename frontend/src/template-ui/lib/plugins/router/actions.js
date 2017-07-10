@@ -3,7 +3,8 @@ import { PUSH } from 'redux-little-router'
 export const TYPES = {
   push: PUSH,
   changed: 'ROUTER_LOCATION_CHANGED',
-  redirect: 'ROUTER_REDIRECT'
+  redirect: 'ROUTER_REDIRECT',
+  trigger: 'ROUTER_TRIGGER'
 }
 
 const RouterActions = {
@@ -14,6 +15,11 @@ const RouterActions = {
   }),
   redirect: (name, payload) => ({
     type: TYPES.redirect,
+    name,
+    payload
+  }),
+  trigger: (name, payload) => ({
+    type: TYPES.trigger,
     name,
     payload
   }),

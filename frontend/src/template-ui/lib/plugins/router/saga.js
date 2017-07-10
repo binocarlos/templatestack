@@ -6,11 +6,12 @@ import actions, { TYPES } from './actions'
 const RouterSaga = (opts = {}) => {
   if(!opts.redirects) throw new Error('redirects needed for RouterSaga')
   if(!opts.loaders) throw new Error('loaders needed for RouterSaga')
+  if(!opts.triggers) throw new Error('triggers needed for RouterSaga')
   if(!opts.basepath) throw new Error('basepath needed for RouterSaga')
 
   let initialRouteLoaded = false
 
-  const { redirects, loaders, basepath } = opts
+  const { redirects, loaders, triggers, basepath } = opts
 
   const getRoute = (path) => basepath + path
 
@@ -36,6 +37,13 @@ const RouterSaga = (opts = {}) => {
     initialRouteLoaded = true
   }
 
+  function* triggered(action) {
+    if(!action.name) return
+    const triggerHandler = triggers[action.name]
+    if(!triggerHandler) return
+    yield call(triggerHandler, action.payload)
+  }
+
   function* initializeRoute() {
     const routerState = yield select(state => state.router)
     yield put(actions.push(routerState.pathname))
@@ -43,7 +51,8 @@ const RouterSaga = (opts = {}) => {
 
   const listeners = ForkListeners([
     [TYPES.redirect, redirect],
-    [TYPES.changed, changed]
+    [TYPES.changed, changed],
+    [TYPES.trigger, triggered]
   ])
 
   function* routerEntrySaga() {
