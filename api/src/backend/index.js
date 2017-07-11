@@ -2,8 +2,10 @@
 
 const AuthBackend = require('template-api/src/auth/backend')
 const InstallationBackend = require('template-api/src/installation/backend')
-const AuthStorage = require('template-api/src/auth/storage_sql')
 const SystemBackend = require('template-api/src/system/backend')
+
+const AuthStorage = require('template-api/src/auth/storage_sql')
+const InstallationStorage = require('template-api/src/installation/storage_sql')
 
 const Hooks = require('./hooks')
 
@@ -15,7 +17,12 @@ const Backend = (transport, databases) => {
     version: packageJSON.version
   })
 
-  AuthStorage(transport, databases)
+  AuthStorage(transport, {
+    knex: databases.knex
+  })
+  InstallationStorage(transport, {
+    knex: databases.knex
+  })
   
   AuthBackend(transport)
   InstallationBackend(transport, {

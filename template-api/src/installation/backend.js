@@ -28,11 +28,10 @@ const InstallationBackend = (hemera, opts) => {
     },
     outbound: {
       topic: 'installation-storage',
-      cmd: 'load'
+      cmd: 'loadById'
     },
     query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
+      id: Joi.number().required()
     }
   })
 

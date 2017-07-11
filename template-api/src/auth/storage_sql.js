@@ -6,7 +6,7 @@ const options = require('../utils/options')
 const tools = require('../database/tools')
 
 const REQUIRED = [
-  
+  'knex'
 ]
 
 const DEFAULTS = {
@@ -24,6 +24,8 @@ const StorageSQL = (hemera, opts) => {
     required: REQUIRED,
     defaults: DEFAULTS
   })
+
+  const knex = opts.knex
 
   let Joi = hemera.exposition['hemera-joi'].joi
 
