@@ -7,8 +7,8 @@
   "scripts": {
     "serve": "node src/index.js",
     "knex": "knex",
-    "test2": "tape test/**/*.test.js",
-    "test": "tape test/installation.test.js"
+    "test": "tape test/**/*.test.js",
+    "test2": "tape test/installation.test.js"
   },
   "dependencies": {
     "body-parser": "^1.17.2",

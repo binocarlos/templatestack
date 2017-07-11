@@ -126,15 +126,14 @@ const InstallationRoutes = (transport, opts) => {
     transport.act({
       topic: 'installation',
       cmd: 'delete',
-      id,
-      userid: req.userid
+      id
     }, (err) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
         .status(204)
+        .end()
     })
   }
-
 
   return {
     get,

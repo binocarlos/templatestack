@@ -188,3 +188,172 @@ tape('installations - update installation', (t) => {
     t.end()
   })
 })
+
+tape('installations - delete installation', (t) => {
+  const INSTALLATION_NAME = 'apples install'
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  let obj = null
+
+  async.series({
+
+    user: (next) => userQueries.registerAccount(next),
+
+    create: (next) => queries.create(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
+
+    del: (next) => queries.del(obj.id, next),
+    installations: (next) => queries.list(next)
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    const installations = results.installations.body
+
+    t.equal(results.del.statusCode, 204, '204 delete code')
+    t.equal(installations.length, 1, 'only 1 installation')
+    t.equal(installations[0].name, 'default installation', 'the only one is the default')
+    t.end()
+  })
+})
+
+
+tape('installations - activate installation', (t) => {
+  
+  const INSTALLATION_NAME = 'apples install'
+  let obj = null
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  async.series({
+
+    user: (next) => userQueries.registerAccount(next),
+
+    create: (next) => queries.create(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
+
+    activate: (next) => queries.activate(obj.id, next),
+    status: (next) => userQueries.status(next)
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    const activeInstallation = results.status.body.data.meta.activeInstallation
+
+    t.equal(typeof(activeInstallation), 'number', 'active installation is number')
+    t.equal(activeInstallation, obj.id, 'active installation is created id')
+
+    t.end()
+  })
+})
+
+
+tape('installations - access control - different user', (t) => {
+  const userData1 = userQueries.UserData(1)
+  const userData2 = userQueries.UserData(2)
+  const INSTALLATION_NAME = 'apples install'
+
+  let installationid = null
+  let obj = null
+  let users = null
+  let status1 = null
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  async.series({
+
+    user1: (next) => userQueries.register(userData1, next),
+
+    status1: (next) => userQueries.status((err, s) => {
+      if(err) return next(err)
+      status1 = s
+      installationid = s.body.data.meta.activeInstallation
+      next()
+    }),
+
+    get1: (next) => queries.get(installationid, next),
+    put1: (next) => queries.save(installationid, {name:'updated1'}, next),
+
+    logout: (next) => userQueries.logout(next),
+
+    user2: (next) => userQueries.register(userData2, next),
+
+    get2: (next) => queries.get(installationid, next),
+    put2: (next) => queries.save(installationid, {name:'updated2'}, next)
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    t.equal(results.get1.statusCode, 200, 'get1 200')
+    t.equal(results.get2.statusCode, 403, 'get2 403')
+
+    t.equal(results.put1.statusCode, 201, 'put1 201')
+    t.equal(results.put2.statusCode, 403, 'put2 403')
+    
+    t.end()
+  })
+})
+
+
+
+tape('installations - access control - no user', (t) => {
+  const userData1 = userQueries.UserData(1)
+  const userData2 = userQueries.UserData(2)
+  const INSTALLATION_NAME = 'apples install'
+
+  let installationid = null
+  let obj = null
+  let users = null
+  let status1 = null
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  async.series({
+
+    user1: (next) => userQueries.register(userData1, next),
+
+    status1: (next) => userQueries.status((err, s) => {
+      if(err) return next(err)
+      status1 = s
+      installationid = s.body.data.meta.activeInstallation
+      next()
+    }),
+
+    put1: (next) => queries.save(installationid, {name:'updated1'}, next),
+
+    logout: (next) => userQueries.logout(next),
+
+    put2: (next) => queries.save(installationid, {name:'updated2'}, next),
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    t.equal(results.put1.statusCode, 201, 'get1 201')
+    t.equal(results.put2.statusCode, 403, 'get2 403')
+    
+    t.end()
+  })
+})
