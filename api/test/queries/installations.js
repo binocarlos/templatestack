@@ -33,6 +33,16 @@ const save = (id, data, next) => {
   tools.request(req, tools.wrapResult(next))
 }
 
+const update = (id, data, next) => {
+  const req = {
+    method: 'PUT',
+    url: tools.url('/installation/update/' + id),
+    headers: tools.headers(),
+    json: data
+  }
+  tools.request(req, tools.wrapResult(next))
+}
+
 const get = (id, next) => {
   const req = {
     method: 'GET',
@@ -55,7 +65,7 @@ const del = (id, next) => {
 const activate = (id, next) => {
   const req = {
     method: 'PUT',
-    url: tools.url('/installation/' + id + '/activate'),
+    url: tools.url('/installation/activate/' + id),
     headers: tools.headers()
   }
   tools.request(req, tools.wrapResult(next))
@@ -65,6 +75,7 @@ module.exports = {
   list,
   create,
   save,
+  update,
   get,
   del,
   activate

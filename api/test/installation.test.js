@@ -151,3 +151,40 @@ tape('installations - save installation', (t) => {
     t.end()
   })
 })
+
+
+tape('installations - update installation', (t) => {
+  const INSTALLATION_NAME = 'apples install'
+  const DATA = {
+    name: INSTALLATION_NAME,
+    meta: {
+      fruit: 'apples'
+    }
+  }
+  const UPDATE_DATA = {
+    color: 'red'
+  }
+  let obj = null
+  async.series({
+
+    user: (next) => userQueries.registerAccount(next),
+    create: (next) => queries.create(DATA, (err, r) => {
+      if(err) return next(err)
+      obj = r.body
+      next()
+    }),
+    update: (next) => queries.update(obj.id, UPDATE_DATA, next),
+    installation: (next) => queries.get(obj.id, next)
+
+  }, (err, results) => {
+
+    if(err) t.error(err)
+
+    const installation = results.installation.body
+
+    t.equal(results.installation.statusCode, 200, '200 code')
+    t.deepEqual(installation.meta, Object.assign({}, DATA.meta, UPDATE_DATA), 'meta is merged')
+
+    t.end()
+  })
+})
