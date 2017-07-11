@@ -58,6 +58,23 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
+
+  // list the users matching the given collaboration meta for an installation id
+  tools.backend(hemera, {
+    inbound: {
+      topic: 'installation',
+      cmd: 'list-users'
+    },
+    outbound: {
+      topic: 'installation-storage',
+      cmd: 'list-users'
+    },
+    query: {
+      id: Joi.number().required(),
+      meta: Joi.object().required()
+    }
+  })
+  
   // loadCollaboration
   tools.backend(hemera, {
     inbound: {
@@ -192,6 +209,8 @@ const InstallationBackend = (hemera, opts) => {
       id: Joi.number().required()
     }
   })
+
+  
 
 }
 

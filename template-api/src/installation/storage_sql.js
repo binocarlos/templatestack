@@ -34,7 +34,7 @@ const InstallationStorageSQL = (hemera, opts) => {
 
   const knex = opts.knex
 
-  const LIST_QUERY = `select 
+  const LIST_INSTALLATION_QUERY = () => `select 
   ${tables.installation}.*
 from
   ${tables.installation}
@@ -44,6 +44,28 @@ on
   (${tables.collaboration}.${tables.installation} = ${tables.installation}.id)
 where
   ${tables.collaboration}.${tables.user} = ?
+order by
+  installation.name
+`
+
+  const LIST_USERS_QUERY = (meta = {}) => 
+    return `select
+  ${tables.user}.*
+from
+  ${tables.user}
+join
+  ${tables.collaboration}
+on
+  (${tables.collaboration}.${tables.user} = ${tables.user}.id)
+  and
+  (${tables.collaboration}.${tables.installation} = ?
+where
+  ${
+    Object
+      .keys(meta)
+      .map(key => `json_extract_path_text(${tables.collaboration}.meta, '${key}') = ?`)
+      .join("\n and \n")
+  }
 order by
   installation.name
 `
@@ -80,9 +102,25 @@ order by
   }, (req, done) => {
 
     knex
-      .raw(LIST_QUERY, [req.userid])
+      .raw(LIST_INSTALLATION_QUERY(), [req.userid])
       .asCallback(tools.allExtractor(done))
 
+  })
+
+  /*
+  
+    list users
+    
+  */
+  hemera.add({
+    topic: 'installation-storage',
+    cmd: 'list-users',
+    id: Joi.number().required(),
+    meta: Joi.object().required()
+  }, (req, done) => {
+    knex
+      .raw(LIST_QUERY(req.meta), [req.id].concat(Object.values(req.meta)))
+      .asCallback(tools.allExtractor(done))
   })
 
   /*
