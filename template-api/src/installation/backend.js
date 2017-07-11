@@ -66,21 +66,24 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
+
   // permission
-  tools.backend(hemera, {
-    inbound: {
-      topic: 'installation',
-      cmd: 'permission'
-    },
-    outbound: {
+  hemera.add({
+    topic: 'installation',
+    cmd: 'permission',
+    id: Joi.number().required(),
+    userid: Joi.number().required()
+  }, (req, done) => {
+    hemera.act({
       topic: 'installation-storage',
-      cmd: 'loadCollaboration'
-    },
-    query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
-    },
-    map: (collaboration) => collaboration.permission
+      cmd: 'loadCollaboration',
+      id: req.id,
+      userid: req.userid
+    }, (err, collaboration) => {
+      if(err) return done(new Error(err))
+      if(!collaboration) return done()
+      done(null, collaboration.permission)
+    })
   })
 
   // create
@@ -118,7 +121,7 @@ const InstallationBackend = (hemera, opts) => {
         meta: {}
       }
     }, (err, installation) => {
-      if(err) return done(err)
+      if(err) return done(new Error(err))
 
       hemera.act({
         topic: 'installation',

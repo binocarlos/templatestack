@@ -34,6 +34,20 @@ const InstallationStorageSQL = (hemera, opts) => {
 
   const knex = opts.knex
 
+  const LIST_QUERY = `select 
+  ${tables.installation}.*
+from
+  ${tables.installation}
+join
+  ${tables.collaboration}
+on
+  (${tables.collaboration}.${tables.installation} = ${tables.installation}.id)
+where
+  ${tables.collaboration}.${tables.user} = ?
+order by
+  installation.name
+`
+
   let Joi = hemera.exposition['hemera-joi'].joi
 
   /*
@@ -66,16 +80,7 @@ const InstallationStorageSQL = (hemera, opts) => {
   }, (req, done) => {
 
     knex
-      .select(`${tables.installation}.*`)
-      .from(tables.installation)
-      .innerJoin(
-        tables.collaboration,
-        `${tables.installation}.id`,
-        `${tables.collaboration}.id`
-      )
-      .where({
-        [`${tables.collaboration}.${tables.user}`]: req.userid
-      })
+      .raw(LIST_QUERY, [req.userid])
       .asCallback(tools.allExtractor(done))
 
   })
@@ -123,8 +128,10 @@ const InstallationStorageSQL = (hemera, opts) => {
         .insert(req.data)
         .into(tables.installation)
         .returning('*')
-        .then((installation) => {
+        .then((installations) => {
 
+          const installation = installations[0]
+          
           return knex
             .insert({
               [tables.installation]: installation.id,
@@ -133,7 +140,7 @@ const InstallationStorageSQL = (hemera, opts) => {
             })
             .into(tables.collaboration)
             .returning('*')
-            .then((collaboration) => installation[0])
+            .then((collaboration) => installation)
 
         })
     })
@@ -186,7 +193,7 @@ const InstallationStorageSQL = (hemera, opts) => {
       collection: tables.installation,
       id: req.id
     }, tools.singleExtractor((err, installation) => {
-      if(err) return done(err)
+      if(err) return done(new Error(err))
       const meta = Object.assign({}, installation.meta, req.data)
       hemera.act({
         topic: 'sql-store-addons',

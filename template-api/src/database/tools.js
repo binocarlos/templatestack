@@ -1,14 +1,15 @@
 'use strict'
 
+const getBody = (raw) => raw.result || raw.rows || raw
 const getSingleRecord = (raw) => {
-  raw = raw.result || raw
+  raw = getBody(raw)
   raw = raw.constructor === Array ?
     raw[0] :
     raw
   return raw
 }
 
-const getAllRecords = (raw) => raw.result || raw
+const getAllRecords = (raw) => getBody(raw)
 
 const extractor = (map) => (done) => (err, raw) => {
   if(err) return done(err)

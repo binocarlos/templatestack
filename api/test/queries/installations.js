@@ -40,7 +40,7 @@ const get = (id, next) => {
     headers: tools.headers(),
     json: true
   }
-  request(req, tools.wrapResult(next))
+  tools.request(req, tools.wrapResult(next))
 }
 
 const del = (id, next) => {

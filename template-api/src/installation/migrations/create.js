@@ -41,11 +41,13 @@ const InstallationMigration = (opts = {}) => {
         table.integer(opts.userTablename)
           .references('id')
           .inTable(opts.userTablename)
+          .notNullable()
           .onDelete('cascade')
         
         table.integer(opts.installationTablename)
           .references('id')
           .inTable(opts.installationTablename)
+          .notNullable()
           .onDelete('cascade')
 
         table.string('permission')

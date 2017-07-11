@@ -124,7 +124,7 @@ const StorageSQL = (hemera, opts) => {
       collection: opts.table,
       id: req.id
     }, tools.singleExtractor((err, user) => {
-      if(err) return done(err)
+      if(err) return done(new Error(err))
       const meta = Object.assign({}, user.meta, req.data)
       hemera.act({
         topic: 'sql-store-addons',

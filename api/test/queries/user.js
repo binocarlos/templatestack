@@ -76,10 +76,14 @@ const status = (next) => {
 }
 
 const registerAccount = (done) => {
-  register(UserData(), (err, result) => {
-    if(result.statusCode != 201) return err(`bad status: ${result.statusCode}`)
-    done(null, result.body)
+  logout(err => {
+    if(err) return done(err)
+    register(UserData(), (err, result) => {
+      if(result.statusCode != 201) return err(`bad status: ${result.statusCode}`)
+      done(null, result.body)
+    })  
   })
+  
 }
 
 module.exports = {

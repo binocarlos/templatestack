@@ -17,7 +17,7 @@ const headers = (existing) => {
 const installationHeaders = (i) => {
   return headers({
     'x-installation-id': i
-  }) 
+  })
 }
 
 const wrapResult = (done) => (err, res, body) => {

@@ -13,8 +13,9 @@ const DEFAULTS = {
 }
 
 const LEVELS = {
-  viewer: 10,
-  editor: 20
+  viewer: 100,
+  editor: 200,
+  owner: 300
 }
 
 const InstallationAccess = (transport, opts) => {
