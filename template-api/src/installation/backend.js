@@ -159,7 +159,6 @@ const InstallationBackend = (hemera, opts) => {
     },
     query: {
       id: Joi.number().required(),
-      userid: Joi.number().required(),
       data: Joi.object().keys({
         name: Joi.string(),
         meta: Joi.object()
@@ -179,7 +178,6 @@ const InstallationBackend = (hemera, opts) => {
     },
     query: {
       id: Joi.number().required(),
-      userid: Joi.number().required(),
       data: Joi.object()
     }
   })
@@ -196,28 +194,9 @@ const InstallationBackend = (hemera, opts) => {
       cmd: 'delete'
     },
     query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
+      id: Joi.number().required()
     }
   })
-
-  // create default
-  if(opts.createDefaultInstallation) {
-    hemera.add({
-      pubsub$: true,
-      topic: 'auth',
-      cmd: 'registered',
-      user: Joi.object().required()
-    }, (req) => {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.log('USER IS REGISTERED')
-      console.log(JSON.stringify(req, null, 4))
-    })
-  }
-
-
 
 }
 

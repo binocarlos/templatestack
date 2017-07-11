@@ -133,7 +133,7 @@ const InstallationRoutes = (transport, opts) => {
       res
         .status(204)
     })
-  }s
+  }
 
 
   return {
@@ -147,4 +147,4 @@ const InstallationRoutes = (transport, opts) => {
   }
 }
 
-module.exports = AuthRoutes
+module.exports = InstallationRoutes

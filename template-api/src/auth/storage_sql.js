@@ -109,7 +109,7 @@ const StorageSQL = (hemera, opts) => {
 
   /*
   
-    update
+    update - merges meta data top-level keys
     
   */
   hemera.add({

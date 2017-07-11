@@ -143,6 +143,84 @@ const InstallationStorageSQL = (hemera, opts) => {
     .catch(done)
   })
 
+  /*
+  
+    save
+    
+  */
+  hemera.add({
+    topic: 'installation-storage',
+    cmd: 'save',
+    id: Joi.number().required(),
+    data: Joi.object().keys({
+      name: Joi.string().required(),
+      meta: Joi.object().required()
+    })
+  }, (req, done) => {
+
+    hemera.act({
+      topic: 'sql-store-addons',
+      cmd: 'update',
+      collection: tables.installation,
+      query: { id: req.id },
+      data: req.data
+    }, tools.singleExtractor(done))
+
+  })
+
+
+  /*
+  
+    update - merges meta data top-level keys
+    
+  */
+  hemera.add({
+    topic: 'installation-storage',
+    cmd: 'update',
+    id: Joi.number().required(),
+    data: Joi.object().required()
+  }, (req, done) => {
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'findById',
+      collection: tables.installation,
+      id: req.id
+    }, tools.singleExtractor((err, installation) => {
+      if(err) return done(err)
+      const meta = Object.assign({}, installation.meta, req.data)
+      hemera.act({
+        topic: 'sql-store-addons',
+        cmd: 'update',
+        collection: tables.installation,
+        query: { id: req.id },
+        data: { meta }
+      }, tools.singleExtractor(done))
+    }))
+    
+  })
+
+
+  /*
+  
+    delete
+    
+  */
+  hemera.add({
+    topic: 'installation-storage',
+    cmd: 'delete',
+    id: Joi.number().required()
+  }, (req, done) => {
+
+    hemera.act({
+      topic: 'sql-store',
+      cmd: 'removeById',
+      collection: tables.installation,
+      id: req.id
+    }, done)
+
+  })
+
+
 }
 
 module.exports = InstallationStorageSQL

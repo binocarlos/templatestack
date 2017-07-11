@@ -11,7 +11,7 @@ const DEFAULTS = {
   
 }
 
-const Access = (opts) => {
+const AuthAccess = (transport, opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,
@@ -28,4 +28,4 @@ const Access = (opts) => {
   }
 }
 
-module.exports = Access
+module.exports = AuthAccess

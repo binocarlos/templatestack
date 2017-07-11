@@ -75,8 +75,16 @@ const status = (next) => {
   tools.request(req, tools.wrapResult(next))
 }
 
+const registerAccount = (done) => {
+  register(UserData(), (err, result) => {
+    if(result.statusCode != 201) return err(`bad status: ${result.statusCode}`)
+    done(null, result.body)
+  })
+}
+
 module.exports = {
   UserData,
+  registerAccount,
   register,
   register,
   update,

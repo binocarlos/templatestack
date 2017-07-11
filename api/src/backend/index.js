@@ -25,9 +25,7 @@ const Backend = (transport, databases) => {
   })
   
   AuthBackend(transport)
-  InstallationBackend(transport, {
-    createDefaultInstallation: true
-  })
+  InstallationBackend(transport)
 
   Hooks(transport, databases)
 }

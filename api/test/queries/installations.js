@@ -6,7 +6,7 @@ const tools = require('../tools')
 const list = (next) => {
   const req = {
     method: 'GET',
-    url: tools.url('/installations'),
+    url: tools.url('/installation'),
     headers: tools.headers(),
     json: true
   }
@@ -16,7 +16,7 @@ const list = (next) => {
 const create = (data, next) => {
   const req = {
     method: 'POST',
-    url: tools.url('/installations'),
+    url: tools.url('/installation'),
     headers: tools.headers(),
     json: data
   }
@@ -26,7 +26,7 @@ const create = (data, next) => {
 const save = (id, data, next) => {
   const req = {
     method: 'PUT',
-    url: tools.url('/installations/' + id),
+    url: tools.url('/installation/' + id),
     headers: tools.headers(),
     json: data
   }
@@ -36,7 +36,7 @@ const save = (id, data, next) => {
 const get = (id, next) => {
   const req = {
     method: 'GET',
-    url: tools.url('/installations/' + id),
+    url: tools.url('/installation/' + id),
     headers: tools.headers(),
     json: true
   }
@@ -46,7 +46,7 @@ const get = (id, next) => {
 const del = (id, next) => {
   const req = {
     method: 'DELETE',
-    url: tools.url('/installations/' + id),
+    url: tools.url('/installation/' + id),
     headers: tools.headers()
   }
   tools.request(req, tools.wrapResult(next))
@@ -55,7 +55,7 @@ const del = (id, next) => {
 const activate = (id, next) => {
   const req = {
     method: 'PUT',
-    url: tools.url('/installations/' + id + '/activate'),
+    url: tools.url('/installation/' + id + '/activate'),
     headers: tools.headers()
   }
   tools.request(req, tools.wrapResult(next))
