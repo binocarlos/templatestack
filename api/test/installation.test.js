@@ -27,12 +27,23 @@ tape('installation - post register create', (t) => {
 
 tape('installation - list', (t) => {
 
-  async.waterfall([
-    (next) => userQueries.registerAccount(next),
-    (user, next) => queries.list(next)
-  ], (err, installations) => {
+  async.series({
+    user: (next) => userQueries.registerAccount(next),
+    installations: (next) => queries.list(next),
+    status: (next) => userQueries.status(next)
+  }, (err, results) => {
     if(err) t.error(err)
-    console.log(JSON.stringify(installations, null, 4))
+    const installations = results.installations
+    const status = results.status
+
+    const installation = installations.body[0]
+    const meta = status.body.data.meta
+
+    t.equal(installations.statusCode, 200, 'installations status 200')
+    t.equal(installations.body.length, 1, 'there is 1 eleement in the array')
+    t.equal(installations.body[0].name, 'default installation', 'it is the default installation')
+    t.equal(installation.id, meta.activeInstallation, 'active installation id is correct')
+
     t.end()
   })
 
