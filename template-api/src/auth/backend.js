@@ -5,7 +5,11 @@ const async = require('async')
 const authTools = require('./tools')
 const transportTools = require('../transport/tools')
 const REQUIRED = [
-  
+  'hooks'
+]
+
+const REQUIRED_HOOKS = [
+  'registered' 
 ]
 
 const DEFAULTS = {
@@ -38,6 +42,10 @@ const AuthBackend = (hemera, opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
+  })
+
+  const hooks = options.processor(opts.hooks, {
+    required: REQUIRED_HOOKS
   })
 
   const Joi = hemera.exposition['hemera-joi'].joi
@@ -131,12 +139,7 @@ const AuthBackend = (hemera, opts) => {
 
       (user, next) => {
         if(user.error) return done(null, user)
-
-        hemera.act({
-          topic: 'hook:auth',
-          cmd: 'registered',
-          user
-        }, (err) => {
+        hooks.registered(user, err => {
           if(err) return next(err)
           next(null, user)
         })

@@ -5,12 +5,7 @@ const async = require('async')
 const Hooks = (hemera, databases) => {
   const Joi = hemera.exposition['hemera-joi'].joi
 
-  hemera.add({
-    topic: 'hook:auth',
-    cmd: 'registered',
-    user: Joi.object().required()
-  }, (req, done) => {
-    const user = req.user
+  const authRegistered = (user, done) => {
     async.series({
       installation: (next) => {
         hemera.act({
@@ -20,7 +15,11 @@ const Hooks = (hemera, databases) => {
         }, next)
       }
     }, done)
-  })
+  }
+
+  return {
+    authRegistered
+  }
 }
 
 module.exports = Hooks

@@ -13,6 +13,8 @@ const packageJSON = require('../../package.json')
 
 const Backend = (transport, databases) => {
 
+  const hooks = Hooks(transport, databases)
+
   SystemBackend(transport, {
     version: packageJSON.version
   })
@@ -20,14 +22,22 @@ const Backend = (transport, databases) => {
   AuthStorage(transport, {
     knex: databases.knex
   })
+
   InstallationStorage(transport, {
     knex: databases.knex
   })
   
-  AuthBackend(transport)
-  InstallationBackend(transport)
+  AuthBackend(transport, {
+    hooks: {
+      registered: hooks.authRegistered
+    }
+  })
 
-  Hooks(transport, databases)
+  InstallationBackend(transport, {
+    hooks: {
+      registered: hooks.authRegistered
+    }
+  })
 }
 
 module.exports = Backend
