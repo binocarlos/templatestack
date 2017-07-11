@@ -109,8 +109,6 @@ const InstallationBackend = (hemera, opts) => {
     userid: Joi.number().required()
   }, (req, done) => {
 
-    return done()
-
     hemera.act({
       topic: 'installation',
       cmd: 'create',
@@ -121,6 +119,7 @@ const InstallationBackend = (hemera, opts) => {
       }
     }, (err, installation) => {
       if(err) return done(err)
+
       hemera.act({
         topic: 'installation',
         cmd: 'activate',

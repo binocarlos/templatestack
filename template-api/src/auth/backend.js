@@ -116,7 +116,7 @@ const AuthBackend = (hemera, opts) => {
       },
 
       (user, next) => {
-        if(user) return next(null, {
+        if(user) return done(null, {
           error: req.data.username + ' already exists'
         })
 
@@ -130,13 +130,25 @@ const AuthBackend = (hemera, opts) => {
       },
 
       (user, next) => {
-        if(user.error) return next(null, user)
+        if(user.error) return done(null, user)
+
         hemera.act({
           topic: 'hook:auth',
           cmd: 'registered',
           user
+        }, (err) => {
+          if(err) return next(err)
+          next(null, user)
         })
-        next(null, user)
+      },
+
+      (user, next) => {
+
+        hemera.act({
+          topic: 'user-storage',
+          cmd: 'loadById',
+          id: user.id
+        }, next)
       }
 
     ], (err, user) => {

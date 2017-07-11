@@ -49,6 +49,8 @@ tape('auth - cycle', (t) => {
 
   const userData = queries.UserData()
 
+  let checkUserMeta = Object.assign({}, userData.meta)
+
   const badLogin = Object.assign({}, userData, {
     username: userData.username + 'BAD'
   })
@@ -60,7 +62,7 @@ tape('auth - cycle', (t) => {
   }
 
   const checkUser = (name, body, meta) => {
-    meta = meta || userData.meta
+    meta = meta || checkUserMeta
     t.notOk(body.hashed_password, `${name} hashed_password not present`)
     t.notOk(body.salt, `${name} salt not present`)
     t.equal(body.username, userData.username, `${name} username is equal`)
@@ -82,7 +84,10 @@ tape('auth - cycle', (t) => {
     guestStatus: [200, statusCheck('guestStatus', false)],
     registerNoUsername: [400, (body) => t.equal(body.error, 'no username given', 'registerNoUsername error')],
     registerNoPassword: [400, (body) => t.equal(body.error, 'no password given', 'registerNoPassword error')],
-    register: [201, (body) => checkUser('register', body)],
+    register: [201, (body) => {
+      checkUserMeta = body.meta
+      return checkUser('register', body)
+    }],
     registerStatus: [200, statusCheck('registerStatus', true)],
     logout: [200, statusCheck('logout', false)],
     logoutStatus: [200, statusCheck('logoutStatus', false)],
@@ -91,7 +96,7 @@ tape('auth - cycle', (t) => {
     registerExists: [400, (body) => t.equal(body.error, `${userData.username} already exists`, 'registerExists error')],
     login: [200, (body) => checkUser('login', body)],
     loginStatus: [200, statusCheck('loginStatus', true)],
-    update: [200, (body) => checkUser('update', body, Object.assign({}, userData.meta, updateData))],
+    update: [200, (body) => checkUser('update', body, Object.assign({}, checkUserMeta, updateData))],
     save: [200, (body) => t.equal(body.username, saveData.username, 'save data username')]
   }
 

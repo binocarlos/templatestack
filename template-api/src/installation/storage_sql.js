@@ -133,14 +133,12 @@ const InstallationStorageSQL = (hemera, opts) => {
             })
             .into(tables.collaboration)
             .returning('*')
+            .then((collaboration) => installation[0])
 
         })
     })
-    .then((inserts) => {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.dir(inserts)
-      process.exit()
+    .then((installation) => {
+      done(null, installation)
     })
     .catch(done)
   })
