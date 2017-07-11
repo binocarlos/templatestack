@@ -92,7 +92,7 @@ order by
   */
   hemera.add({
     topic: 'installation-storage',
-    cmd: 'loadCollaboration',
+    cmd: 'collaborations',
     id: Joi.number().required(),
     userid: Joi.number().required()
   }, (req, done) => {
@@ -104,7 +104,7 @@ order by
         [tables.installation]: req.id,
         [tables.user]: req.userid
       })
-      .asCallback(tools.singleExtractor(done))
+      .asCallback(tools.allExtractor(done))
 
   })
 
@@ -120,7 +120,8 @@ order by
     data: Joi.object().keys({
       name: Joi.string().required(),
       meta: Joi.object().required()
-    })
+    }),
+    collaboration: Joi.object()
   }, (req, done) => {
 
     knex.transaction(function(trx) {
@@ -136,7 +137,7 @@ order by
             .insert({
               [tables.installation]: installation.id,
               [tables.user]: req.userid,
-              permission: 'owner'
+              meta: req.collaboration
             })
             .into(tables.collaboration)
             .returning('*')

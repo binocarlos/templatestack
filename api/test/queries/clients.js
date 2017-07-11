@@ -3,6 +3,17 @@ const async = require('async')
 
 const tools = require('../tools')
 
+const ClientData = (count) => {
+  count = count || ''
+  const ts = new Date().getTime()
+  return {
+    username: 'user' + ts + count + '@test.com',
+    meta: {
+      name: 'test client ' + ts + count
+    }
+  }
+}
+
 const create = (installation, data, next) => {
   const req = {
     method: 'POST',
@@ -64,6 +75,7 @@ const del = (installation, id, next) => {
 }
 
 module.exports = {
+  ClientData,
   create,
   list,
   get,

@@ -50,8 +50,7 @@ const InstallationMigration = (opts = {}) => {
           .notNullable()
           .onDelete('cascade')
 
-        table.string('permission')
-          .notNullable()
+        table.json('meta')
       })
     ])
   }

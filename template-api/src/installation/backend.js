@@ -62,11 +62,11 @@ const InstallationBackend = (hemera, opts) => {
   tools.backend(hemera, {
     inbound: {
       topic: 'installation',
-      cmd: 'loadCollaboration'
+      cmd: 'collaborations'
     },
     outbound: {
       topic: 'installation-storage',
-      cmd: 'loadCollaboration'
+      cmd: 'collaborations'
     },
     query: {
       id: Joi.number().required(),
@@ -74,43 +74,27 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
-
-  // permission
+  // create
   hemera.add({
     topic: 'installation',
-    cmd: 'permission',
-    id: Joi.number().required(),
-    userid: Joi.number().required()
+    cmd: 'create',
+    userid: Joi.number().required(),
+    data: Joi.object().keys({
+      name: Joi.string().required(),
+      meta: Joi.object().required()
+    })
   }, (req, done) => {
+
     hemera.act({
       topic: 'installation-storage',
-      cmd: 'loadCollaboration',
-      id: req.id,
-      userid: req.userid
-    }, (err, collaboration) => {
-      if(err) return done(new Error(err))
-      if(!collaboration) return done()
-      done(null, collaboration.permission)
-    })
-  })
+      cmd: 'create',
+      userid: req.userid,
+      data: req.data,
+      collaboration: {
+        permission: 'owner'
+      }
+    }, done)
 
-  // create
-  tools.backend(hemera, {
-    inbound: {
-      topic: 'installation',
-      cmd: 'create'
-    },
-    outbound: {
-      topic: 'installation-storage',
-      cmd: 'create'
-    },
-    query: {
-      userid: Joi.number().required(),
-      data: Joi.object().keys({
-        name: Joi.string().required(),
-        meta: Joi.object().required()
-      })
-    }
   })
 
   // createDefault
