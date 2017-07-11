@@ -7,7 +7,7 @@ const webserverTools = require('../webserver/tools')
 const getHeader = (headers = {}) => headers[HEADER_NAME]
 
 const middleware = () => (req, res, next) => {
-  req.installationid = tools.getHeader(req.headers)
+  req.installationid = getHeader(req.headers)
   next()
 }
 

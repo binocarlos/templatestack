@@ -20,7 +20,6 @@ const InstallationBackend = (hemera, opts) => {
 
   const Joi = hemera.exposition['hemera-joi'].joi
 
-/*
   // get
   tools.backend(hemera, {
     inbound: {
@@ -110,6 +109,9 @@ const InstallationBackend = (hemera, opts) => {
     cmd: 'createDefault',
     userid: Joi.number().required()
   }, (req, done) => {
+
+    return done()
+
     hemera.act({
       topic: 'installation',
       cmd: 'create',
@@ -118,7 +120,15 @@ const InstallationBackend = (hemera, opts) => {
         name: opts.defaultName,
         meta: {}
       }
-    }, done)
+    }, (err, installation) => {
+      if(err) return done(err)
+      hemera.act({
+        topic: 'installation',
+        cmd: 'activate',
+        userid: req.userid,
+        id: installation.id
+      }, done)
+    })
   })
 
   // activate
@@ -192,7 +202,7 @@ const InstallationBackend = (hemera, opts) => {
       userid: Joi.number().required()
     }
   })
-*/
+
   // create default
   if(opts.createDefaultInstallation) {
     hemera.add({
@@ -205,8 +215,7 @@ const InstallationBackend = (hemera, opts) => {
       console.log('-------------------------------------------');
       console.log('-------------------------------------------');
       console.log('USER IS REGISTERED')
-      console.log(JSON.stringify(user, null, 4))
-      process.exit()
+      console.log(JSON.stringify(req, null, 4))
     })
   }
 

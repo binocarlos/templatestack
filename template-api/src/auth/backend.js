@@ -130,11 +130,11 @@ const AuthBackend = (hemera, opts) => {
       },
 
       (user, next) => {
+        if(user.error) return next(null, user)
         hemera.act({
-          pubsub$: true,
-          topic: 'auth',
+          topic: 'hook:auth',
           cmd: 'registered',
-          user: userData
+          user
         })
         next(null, user)
       }

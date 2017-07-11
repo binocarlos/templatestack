@@ -5,6 +5,8 @@ const InstallationBackend = require('template-api/src/installation/backend')
 const AuthStorage = require('template-api/src/auth/storage_sql')
 const SystemBackend = require('template-api/src/system/backend')
 
+const Hooks = require('./hooks')
+
 const packageJSON = require('../../package.json')
 
 const Backend = (transport, databases) => {
@@ -19,7 +21,8 @@ const Backend = (transport, databases) => {
   InstallationBackend(transport, {
     createDefaultInstallation: true
   })
-  
+
+  Hooks(transport, databases)
 }
 
 module.exports = Backend
