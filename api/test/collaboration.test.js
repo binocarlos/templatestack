@@ -67,101 +67,65 @@ tape('collaborations - create user then list', (t) => {
 })
 
 
-/*
-
-
-tape('clients - createClient', (t) => {
-
-  createClient(null, (err, result) => {
-    //console.log(JSON.stringify(result, null, 4))
-    t.end()
-  })
-
-  
-    t.ok(data.email.indexOf('@') > 0, 'we have a client email')
-    t.equal(typeof(data.password), 'string', 'default password is string')
-    t.ok(data.password.length > 6, 'default password > 6 chars')
-    
-  
-})
-*/
-  
-/*
-
-tape('clients - create client', (t) => {
-
-  createClient((err, results) => {
-    if(err) t.error(err)
-
-    t.equal(results.client.statusCode, 201, 'create 201 status')
-    t.equal(results.client.body.meta.name, CLIENTDATA.meta.name, 'client name is correct')
-
-    t.end()
-
-  })
-  
-})
-
 tape('clients - list clients - no installation id', (t) => {
 
+  const collaboratorData = userQueries.CollaborationData()
   async.waterfall([
-    createClient,
-    (results, next) => tools.listClients(null, next)
-  ], (err, results) => {
+    (next) => createCollaborator(collaboratorData, next),
+    (result, next) => {
+      userQueries.list(null, next)
+    }
+  ], (err, result) => {
     if(err) t.error(err)
-
-    t.equal(results.statusCode, 403, '403 status no installation id')
+    t.equal(result.statusCode, 403, '403 status no installation id')
     t.end()
   })
 
   
 })
 
-tape('clients - list clients', (t) => {
-
-  async.waterfall([
-    createClient,
-    (results, next) => tools.listClients(results.installationid, next)
-  ], (err, results) => {
-    if(err) t.error(err)
-
-    const clients = results.body
-
-    t.equal(results.statusCode, 200, '200 status')
-    t.ok(clients.length, 'result is array of 1')
-    t.ok(clients[0].email.indexOf('@') > 0, 'the client has an email')
-    t.equal(clients[0].meta.name, CLIENTDATA.meta.name, 'client name is correct')
-    t.end()
-  })
-
-  
-})
 
 
 tape('clients - save client - no installation id', (t) => {
 
+  const collaboratorData = userQueries.CollaborationData()
   async.waterfall([
-    createClient,
+    (next) => createCollaborator(collaboratorData, next),
     (results, next) => {
-      const client = results.client.body
-      const clientid = client.id
-      delete(client.id)
-
-      client.email = 'bob@bob123.com'
-      client.meta.fruit = 'oranges'
-
-      tools.saveClient(null, clientid, client, next)
+      const client = results.collaborator
+      userQueries.save(null, client.id, {}, next)
     }
   ], (err, results) => {
     if(err) t.error(err)
-
     t.equal(results.statusCode, 403, '403 status no installation id')
-
     t.end()
   })
 
   
 })
+
+
+tape('clients - get client', (t) => {
+
+  const collaboratorData = userQueries.CollaborationData()
+  async.waterfall([
+    (next) => createCollaborator(collaboratorData, next),
+    (result, next) => {
+      userQueries.get(result.i, result.collaborator.id, next)
+    }
+  ], (err, result) => {
+    if(err) t.error(err)
+    t.equal(result.statusCode, 200, '200 statusCode')
+    t.equal(result.body.username, collaboratorData.user.username, 'username is correct')
+    t.end()
+  })
+
+  
+})
+
+  
+/*
+
 
 
 tape('clients - get client', (t) => {
