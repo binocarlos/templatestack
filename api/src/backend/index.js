@@ -28,15 +28,11 @@ const Backend = (transport, databases) => {
   })
   
   AuthBackend(transport, {
-    hooks: {
-      registered: hooks.authRegistered
-    }
+    hooks: hooks.auth
   })
 
   InstallationBackend(transport, {
-    hooks: {
-      registered: hooks.authRegistered
-    }
+    hooks: hooks.installation
   })
 }
 

@@ -3,7 +3,7 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
-const queries = require('./queries/user')
+const queries = require('./queries/auth')
 
 const headers = tools.headers
 

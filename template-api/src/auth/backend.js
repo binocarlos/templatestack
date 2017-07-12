@@ -9,7 +9,8 @@ const REQUIRED = [
 ]
 
 const REQUIRED_HOOKS = [
-  'registered' 
+  'register',
+  'create'
 ]
 
 const DEFAULTS = {
@@ -50,6 +51,76 @@ const AuthBackend = (hemera, opts) => {
 
   const Joi = hemera.exposition['hemera-joi'].joi
 
+  const loadUser = (username, done) => {
+    hemera.act({
+      topic: 'user-storage',
+      cmd: 'loadByUsername',
+      username: username
+    }, done)
+  }
+
+  const createUser = (data, done) => {
+    data = opts.processNewUser(data)
+    hemera.act({
+      topic: 'user-storage',
+      cmd: 'create',
+      data
+    }, done)
+  }
+
+  // refactor the create user code to be re-used in various situations (e.g. register vs user add by admin)
+  const createUserController = (subopts = {}) => {
+    if(!subopts.cmd) throw new Error('cmd opt required')
+    if(!subopts.existsHandler) throw new Error('existsHandler opt required')
+    if(!subopts.hook) throw new Error('hook opt required')
+
+    const cmd = subopts.cmd
+    const existsHandler = subopts.existsHandler
+    const hook = subopts.hook
+
+    hemera.add({
+      topic: 'auth',
+      cmd: cmd,
+      data: Joi.object().keys({
+        username: Joi.string().required(),
+        password: Joi.string().required()
+      })
+    }, (req, done) => {
+
+      async.waterfall([
+        (next) => loadUser(req.data.username, next),
+          
+        (user, next) => {
+          if(user) {
+            return existsHandler(user, done)
+          }
+          createUser(req.data, next)
+        },
+
+        (user, next) => {
+          if(user.error) return done(null, user)
+          
+          hook(user, err => {
+            if(err) return next(err)
+            next(null, user)
+          })
+        },
+
+        (user, next) => {
+
+          hemera.act({
+            topic: 'user-storage',
+            cmd: 'loadById',
+            id: user.id
+          }, next)
+        }
+
+      ], (err, user) => {
+        if(err) return done(new Error(err))
+        done(null, opts.displayUser(user))
+      })
+    })
+  }
 
   /*
   
@@ -83,12 +154,7 @@ const AuthBackend = (hemera, opts) => {
     password: Joi.string().required()
 
   }, (req, done) => {
-
-    hemera.act({
-      topic: 'user-storage',
-      cmd: 'loadByUsername',
-      username: req.username
-    }, (err, user) => {
+    loadUser(req.username, (err, user) => {
       if(err) return done(new Error(err))
       if(!user) return done(null, {
         error: 'incorrect details'
@@ -102,63 +168,32 @@ const AuthBackend = (hemera, opts) => {
 
   /*
   
+    ensure user - will return user if it exists
+    
+  */
+  createUserController({
+    cmd: 'ensure',
+    hook: hooks.create,
+    existsHandler: (user, done) => done(null, user)
+  })
+
+  /*
+  
     register
     
   */
-  hemera.add({
-    topic: 'auth',
+
+  createUserController({
     cmd: 'register',
-    data: Joi.object().keys({
-      username: Joi.string().required(),
-      password: Joi.string().required()
-    })
-  }, (req, done) => {
+    hook: hooks.register,
+    existsHandler: (user, done) => {
+      return done(null, {
+        error: user.username + ' already exists'
+      })
+    }
 
-    async.waterfall([
-      (next) => {
-        hemera.act({
-          topic: 'user-storage',
-          cmd: 'loadByUsername',
-          username: req.data.username
-        }, next)
-      },
-
-      (user, next) => {
-        if(user) return done(null, {
-          error: req.data.username + ' already exists'
-        })
-
-        const userData = opts.processNewUser(req.data)
-
-        hemera.act({
-          topic: 'user-storage',
-          cmd: 'create',
-          data: userData
-        }, next)
-      },
-
-      (user, next) => {
-        if(user.error) return done(null, user)
-        hooks.registered(user, err => {
-          if(err) return next(err)
-          next(null, user)
-        })
-      },
-
-      (user, next) => {
-
-        hemera.act({
-          topic: 'user-storage',
-          cmd: 'loadById',
-          id: user.id
-        }, next)
-      }
-
-    ], (err, user) => {
-      if(err) return done(new Error(err))
-      done(null, opts.displayUser(user))
-    })
   })
+  
 
 
   /*

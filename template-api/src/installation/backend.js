@@ -9,7 +9,7 @@ const REQUIRED = [
 ]
 
 const REQUIRED_HOOKS = [
-  'registered' 
+  
 ]
 
 const DEFAULTS = {
@@ -179,7 +179,6 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
-
   // list users with matching collab meta for a given installation
   tools.backend(hemera, {
     inbound: {
@@ -210,6 +209,40 @@ const InstallationBackend = (hemera, opts) => {
       id: Joi.number().required(),
       userid: Joi.number().required()
     }
+  })
+
+  // add a new user to an installation
+  // this means ensuring the useraccount with auth
+  // then adding a collaboration of the given meta to the installation
+  hemera.add({
+    topic: 'installation',
+    cmd: 'add_user',
+    id: Joi.number().required(),
+    userdata: Joi.object().keys({
+      username: Joi.string().required(),
+      password: Joi.string().required()
+    }),
+    collaboration_meta: Joi.object().required()
+  }, (req, done) => {
+
+    hemera.act({
+      topic: 'installation',
+      cmd: 'create',
+      userid: req.userid,
+      data: {
+        name: opts.defaultName,
+        meta: {}
+      }
+    }, (err, installation) => {
+      if(err) return done(new Error(err))
+
+      hemera.act({
+        topic: 'installation',
+        cmd: 'activate',
+        userid: req.userid,
+        id: installation.id
+      }, done)
+    })
   })
 
   

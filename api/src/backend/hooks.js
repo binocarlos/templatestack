@@ -5,7 +5,8 @@ const async = require('async')
 const Hooks = (hemera, databases) => {
   const Joi = hemera.exposition['hemera-joi'].joi
 
-  const authRegistered = (user, done) => {
+  // triggered when a new user registers
+  const authRegister = (user, done) => {
     async.series({
       installation: (next) => {
         hemera.act({
@@ -17,8 +18,18 @@ const Hooks = (hemera, databases) => {
     }, done)
   }
 
+  // triggered when a user account is created by another user
+  // this can either be manage installation users or other things like clients who can login
+  const authCreate = (user, done) => {
+    done()
+  }
+
   return {
-    authRegistered
+    auth: {
+      register: authRegister,
+      create: authCreate
+    },
+    installation: {}
   }
 }
 

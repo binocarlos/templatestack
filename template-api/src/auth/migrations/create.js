@@ -16,6 +16,7 @@ const UserMigration = (opts = {}) => {
         table.string('hashed_password').notNullable()
         table.string('salt').notNullable()
         table.json('meta')
+        table.string('mode')
       })
     ])
   }
