@@ -26,7 +26,7 @@ const InstallationAccess = (transport, opts) => {
   })
 
   const extractId = (req, extractor) => {
-    if(!extractor) return req.params.id
+    extractor = extractor || 'installationid'
     if(typeof(extractor) == 'string') return req.params[extractor]
     if(typeof(extractor) == 'function') return extractor(req)
     return null
@@ -42,13 +42,14 @@ const InstallationAccess = (transport, opts) => {
   }
 
   const handler = (filterfn, extractor, title = 'access') => (req, res, next) => {
-    const userid = req.userid
+    if(!req.user) return webserverTools.errorReply(next, res, 'access denied - not logged in', 403)
+    const userid = req.user.id
     const id = parseInt(extractId(req, extractor))
     if(isNaN(id)) return webserverTools.errorReply(next, res, 'access denied - no installation id present', 403)
 
     transport.act({
       topic: 'installation',
-      cmd: 'list_user_collaborations',
+      cmd: 'user_collaborations',
       id: id,
       userid: userid
     }, (err, collaborations) => {
@@ -61,10 +62,12 @@ const InstallationAccess = (transport, opts) => {
 
   const viewer = (extractor) => handler(permissionFilter('viewer'), extractor, 'viewer')
   const editor = (extractor) => handler(permissionFilter('editor'), extractor, 'editor')
+  const owner = (extractor) => handler(permissionFilter('owner'), extractor, 'owner')
 
   return {
     viewer,
     editor,
+    owner,
     handler
   }
 }

@@ -10,6 +10,7 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
+  topic: 'auth-storage',
   table: 'useraccount',
   usernameField: 'username'
 }
@@ -20,6 +21,8 @@ const DEFAULTS = {
   
 */
 const StorageSQL = (hemera, opts) => {
+  let Joi = hemera.exposition['hemera-joi'].joi
+
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -27,7 +30,7 @@ const StorageSQL = (hemera, opts) => {
 
   const knex = opts.knex
 
-  let Joi = hemera.exposition['hemera-joi'].joi
+  const TOPIC = opts.topic
 
   /*
   
@@ -35,7 +38,7 @@ const StorageSQL = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user-storage',
+    topic: TOPIC,
     cmd: 'loadById',
     id: Joi.number().required()
   }, (req, done) => {
@@ -53,7 +56,7 @@ const StorageSQL = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user-storage',
+    topic: TOPIC,
     cmd: 'loadByUsername',
     username: Joi.string().required()
   }, (req, done) => {
@@ -74,7 +77,7 @@ const StorageSQL = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user-storage',
+    topic: TOPIC,
     cmd: 'create',
     data: Joi.object().required()
   }, (req, done) => {
@@ -92,7 +95,7 @@ const StorageSQL = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user-storage',
+    topic: TOPIC,
     cmd: 'save',
     id: Joi.number().required(),
     data: Joi.object().required()
@@ -113,7 +116,7 @@ const StorageSQL = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'user-storage',
+    topic: TOPIC,
     cmd: 'update',
     id: Joi.number().required(),
     data: Joi.object().required()

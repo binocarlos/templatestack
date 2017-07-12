@@ -13,10 +13,22 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  defaultName: 'default installation'
+  topic: 'installation',
+  storageTopic: 'installation-storage',
+  authTopic: 'auth',
+  installationTemplate: {
+    name: 'default installation',
+    meta: {}
+  },
+  collaborationTemplate: {
+    permission: 'owner',
+    type: 'user'
+  }
 }
 
 const InstallationBackend = (hemera, opts) => {
+  const Joi = hemera.exposition['hemera-joi'].joi
+
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -26,16 +38,20 @@ const InstallationBackend = (hemera, opts) => {
     required: REQUIRED_HOOKS
   })
 
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const TOPIC = opts.topic
+  const STORAGE_TOPIC = opts.storageTopic
+  const AUTH_TOPIC = opts.authTopic
+  const INSTALLATION_TEMPLATE = opts.installationTemplate
+  const COLLABORATION_TEMPLATE = opts.collaborationTemplate
 
   // get
   tools.backend(hemera, {
     inbound: {
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'get'
     },
     outbound: {
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'loadById'
     },
     query: {
@@ -46,11 +62,11 @@ const InstallationBackend = (hemera, opts) => {
   // list
   tools.backend(hemera, {
     inbound: {
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'list'
     },
     outbound: {
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'list'
     },
     query: {
@@ -62,7 +78,7 @@ const InstallationBackend = (hemera, opts) => {
 
   // create
   hemera.add({
-    topic: 'installation',
+    topic: TOPIC,
     cmd: 'create',
     userid: Joi.number().required(),
     data: Joi.object().keys({
@@ -72,37 +88,32 @@ const InstallationBackend = (hemera, opts) => {
   }, (req, done) => {
 
     hemera.act({
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'create',
       userid: req.userid,
       data: req.data,
-      collaboration: {
-        permission: 'owner'
-      }
+      collaboration: COLLABORATION_TEMPLATE
     }, done)
 
   })
 
   // createDefault
   hemera.add({
-    topic: 'installation',
+    topic: TOPIC,
     cmd: 'createDefault',
     userid: Joi.number().required()
   }, (req, done) => {
 
     hemera.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'create',
       userid: req.userid,
-      data: {
-        name: opts.defaultName,
-        meta: {}
-      }
+      data: INSTALLATION_TEMPLATE
     }, (err, installation) => {
       if(err) return done(new Error(err))
 
       hemera.act({
-        topic: 'installation',
+        topic: TOPIC,
         cmd: 'activate',
         userid: req.userid,
         id: installation.id
@@ -112,13 +123,13 @@ const InstallationBackend = (hemera, opts) => {
 
   // activate
   hemera.add({
-    topic: 'installation',
+    topic: TOPIC,
     cmd: 'activate',
     id: Joi.number().required(),
     userid: Joi.number().required()
   }, (req, done) => {
     hemera.act({
-      topic: 'auth',
+      topic: AUTH_TOPIC,
       cmd: 'update',
       id: req.userid,
       data: {
@@ -131,11 +142,11 @@ const InstallationBackend = (hemera, opts) => {
   // save
   tools.backend(hemera, {
     inbound: {
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'save'
     },
     outbound: {
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'save'
     },
     query: {
@@ -150,11 +161,11 @@ const InstallationBackend = (hemera, opts) => {
   // update
   tools.backend(hemera, {
     inbound: {
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'update'
     },
     outbound: {
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'update'
     },
     query: {
@@ -167,11 +178,11 @@ const InstallationBackend = (hemera, opts) => {
   // delete
   tools.backend(hemera, {
     inbound: {
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'delete'
     },
     outbound: {
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'delete'
     },
     query: {
@@ -179,14 +190,32 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
 
+
+  // load all collaborations for a given user / installation
+  tools.backend(hemera, {
+    inbound: {
+      topic: TOPIC,
+      cmd: 'user_collaborations'
+    },
+    outbound: {
+      topic: STORAGE_TOPIC,
+      cmd: 'user_collaborations'
+    },
+    query: {
+      id: Joi.number().required(),
+      userid: Joi.number().required()
+    }
+  })
+
+
   // list users with matching collab meta for a given installation
   tools.backend(hemera, {
     inbound: {
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'list_users'
     },
     outbound: {
-      topic: 'installation-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'list_users'
     },
     query: {
@@ -195,58 +224,61 @@ const InstallationBackend = (hemera, opts) => {
     }
   })
   
-  // load all collaborations for a given user / installation
-  tools.backend(hemera, {
-    inbound: {
-      topic: 'installation',
-      cmd: 'list_user_collaborations'
-    },
-    outbound: {
-      topic: 'installation-storage',
-      cmd: 'list_user_collaborations'
-    },
-    query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
-    }
-  })
-
   // add a new user to an installation
   // this means ensuring the useraccount with auth
   // then adding a collaboration of the given meta to the installation
   hemera.add({
-    topic: 'installation',
+    topic: TOPIC,
     cmd: 'add_user',
     id: Joi.number().required(),
     userdata: Joi.object().keys({
       username: Joi.string().required(),
       password: Joi.string().required()
     }),
-    collaboration_meta: Joi.object().required()
+    collaboration: Joi.object().required()
   }, (req, done) => {
 
-    hemera.act({
-      topic: 'installation',
-      cmd: 'create',
-      userid: req.userid,
-      data: {
-        name: opts.defaultName,
-        meta: {}
-      }
-    }, (err, installation) => {
-      if(err) return done(new Error(err))
+    async.waterfall([
+      (next) => {
+        hemera.act({
+          topic: AUTH_TOPIC,
+          cmd: 'ensure',
+          data: req.userdata
+        }, done)
+      },
 
-      hemera.act({
-        topic: 'installation',
-        cmd: 'activate',
-        userid: req.userid,
-        id: installation.id
-      }, done)
+      (user, next) => {
+        hemera.act({
+          topic: STORAGE_TOPIC,
+          cmd: 'add_user_collaboration',
+          id: req.id,
+          userid: user.id,
+          meta: req.collaboration
+        }, (err) => {
+          if(err) return next(err)
+          next(null, user)
+        })
+      }
+    ], (err, user) => {
+      if(err) return done(new Error(err))
+      done(null, user)
     })
   })
 
-  
-
+  tools.backend(hemera, {
+    inbound: {
+      topic: TOPIC,
+      cmd: 'delete_user'
+    },
+    outbound: {
+      topic: STORAGE_TOPIC,
+      cmd: 'delete_user_collaboration'
+    },
+    query: {
+      id: Joi.number().required(),
+      userid: Joi.number().required()
+    }
+  })
 }
 
 module.exports = InstallationBackend

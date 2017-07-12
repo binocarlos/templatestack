@@ -10,6 +10,8 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
+  topic: 'installation-storage',
+
   installationTable: 'installation',
   collaborationTable: 'collaboration',
   userTablename: 'useraccount'
@@ -21,10 +23,15 @@ const DEFAULTS = {
   
 */
 const InstallationStorageSQL = (hemera, opts) => {
+  let Joi = hemera.exposition['hemera-joi'].joi
+
+
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
+
+  const TOPIC = opts.topic
 
   const tables = {
     installation: opts.installationTable,
@@ -70,7 +77,16 @@ order by
   installation.name
 `
 
-  let Joi = hemera.exposition['hemera-joi'].joi
+  const createCollaboration = ({ installationid, userid, meta } = opts) => {
+    return knex
+      .insert({
+        [tables.installation]: installationid,
+        [tables.user]: userid,
+        meta
+      })
+      .into(tables.collaboration)
+      .returning('*')
+  }
 
   /*
   
@@ -78,7 +94,7 @@ order by
     
   */
   hemera.add({
-    topic: 'installation-storage',
+    topic: TOPIC,
     cmd: 'loadById',
     id: Joi.number().required()
   }, (req, done) => {
@@ -96,7 +112,7 @@ order by
     
   */
   hemera.add({
-    topic: 'installation-storage',
+    topic: TOPIC,
     cmd: 'list',
     userid: Joi.number().required()
   }, (req, done) => {
@@ -113,7 +129,7 @@ order by
     
   */
   hemera.add({
-    topic: 'installation-storage',
+    topic: TOPIC,
     cmd: 'create',
     userid: Joi.number().required(),
     data: Joi.object().keys({
@@ -132,15 +148,11 @@ order by
 
           const installation = installations[0]
           
-          return knex
-            .insert({
-              [tables.installation]: installation.id,
-              [tables.user]: req.userid,
-              meta: req.collaboration
-            })
-            .into(tables.collaboration)
-            .returning('*')
-            .then((collaboration) => installation)
+          return createCollaboration({
+            installationid: installation.id,
+            userid: req.userid,
+            meta: req.collaboration
+          }).then((collaboration) => installation)
 
         })
     })
@@ -156,7 +168,7 @@ order by
     
   */
   hemera.add({
-    topic: 'installation-storage',
+    topic: TOPIC,
     cmd: 'save',
     id: Joi.number().required(),
     data: Joi.object().keys({
@@ -182,7 +194,7 @@ order by
     
   */
   hemera.add({
-    topic: 'installation-storage',
+    topic: TOPIC,
     cmd: 'update',
     id: Joi.number().required(),
     data: Joi.object().required()
@@ -213,7 +225,7 @@ order by
     
   */
   hemera.add({
-    topic: 'installation-storage',
+    topic: TOPIC,
     cmd: 'delete',
     id: Joi.number().required()
   }, (req, done) => {
@@ -230,28 +242,12 @@ order by
 
   /*
   
-    list_users
+     list_user_collaborations
     
   */
   hemera.add({
-    topic: 'installation-storage',
-    cmd: 'list_users',
-    id: Joi.number().required(),
-    meta: Joi.object().required()
-  }, (req, done) => {
-    knex
-      .raw(LIST_USERS_QUERY(req.meta), [req.id].concat(Object.values(req.meta)))
-      .asCallback(tools.allExtractor(done))
-  })
-
-  /*
-  
-     '
-    
-  */
-  hemera.add({
-    topic: 'installation-storage',
-    cmd: 'list_user_collaborations',
+    topic: TOPIC,
+    cmd: 'user_collaborations',
     id: Joi.number().required(),
     userid: Joi.number().required()
   }, (req, done) => {
@@ -264,6 +260,67 @@ order by
         [tables.user]: req.userid
       })
       .asCallback(tools.allExtractor(done))
+
+  })
+
+
+  /*
+  
+    list_users
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'list_users',
+    id: Joi.number().required(),
+    meta: Joi.object().required()
+  }, (req, done) => {
+    knex
+      .raw(LIST_USERS_QUERY(req.meta), [req.id].concat(Object.values(req.meta)))
+      .asCallback(tools.allExtractor(done))
+  })
+
+
+  /*
+  
+     add_user_collaboration
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'add_user_collaboration',
+    id: Joi.number().required(),
+    userid: Joi.number().required(),
+    meta: Joi.object().required()
+  }, (req, done) => {
+
+    createCollaboration({
+      installationid: req.id,
+      userid: req.userid,
+      meta: req.meta
+    }).asCallback(tools.singleExtractor(done))
+
+  })
+
+  /*
+  
+     delete_user_collaboration
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'delete_user_collaboration',
+    id: Joi.number().required(),
+    userid: Joi.number().required()
+  }, (req, done) => {
+
+    knex(tables.collaboration)
+    .where({
+      [tables.installation]: req.id,
+      [tables.user]: req.userid
+    })
+    .del()
+    .asCallback(tools.singleExtractor(done))
 
   })
 

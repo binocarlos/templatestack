@@ -12,7 +12,7 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  
+  topic: 'installation'
 }
 
 const InstallationRoutes = (transport, opts) => {
@@ -22,13 +22,15 @@ const InstallationRoutes = (transport, opts) => {
     defaults: DEFAULTS
   })
 
+  const TOPIC = opts.topic
+
   // QUERIES
 
   const get = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'get',
       id,
       userid: req.userid
@@ -43,7 +45,7 @@ const InstallationRoutes = (transport, opts) => {
 
   const list = (req, res, next) => {
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'list',
       userid: req.userid
     }, (err, installations) => {
@@ -58,7 +60,7 @@ const InstallationRoutes = (transport, opts) => {
 
   const create = (req, res, next) => {
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'create',
       data: req.body || {},
       userid: req.userid
@@ -74,11 +76,10 @@ const InstallationRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'save',
       id,
-      data: req.body || {},
-      userid: req.userid
+      data: req.body || {}
     }, (err, installation) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
@@ -91,11 +92,10 @@ const InstallationRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'update',
       id,
-      data: req.body || {},
-      userid: req.userid
+      data: req.body || {}
     }, (err, installation) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
@@ -108,7 +108,7 @@ const InstallationRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'activate',
       id,
       userid: req.userid
@@ -124,7 +124,7 @@ const InstallationRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
     transport.act({
-      topic: 'installation',
+      topic: TOPIC,
       cmd: 'delete',
       id
     }, (err) => {

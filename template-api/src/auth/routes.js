@@ -11,6 +11,8 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
+  topic: 'auth',
+  
   extractUsername: (req) => req.body.username,
   extractPassword: (req) => req.body.password
 }
@@ -21,6 +23,8 @@ const AuthRoutes = (transport, opts) => {
     required: REQUIRED,
     defaults: DEFAULTS
   })
+
+  const TOPIC = opts.topic
 
   // QUERIES
 
@@ -43,7 +47,7 @@ const AuthRoutes = (transport, opts) => {
     if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
 
     transport.act({
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'login',
       username,
       password
@@ -78,7 +82,7 @@ const AuthRoutes = (transport, opts) => {
     if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
     
     transport.act({
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'register',
       data
     }, (err, user) => {
@@ -106,7 +110,7 @@ const AuthRoutes = (transport, opts) => {
     const data = req.body || {}
 
     transport.act({
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'save',
       id,
       data
@@ -125,7 +129,7 @@ const AuthRoutes = (transport, opts) => {
     const data = req.body || {}
 
     transport.act({
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'update',
       id,
       data

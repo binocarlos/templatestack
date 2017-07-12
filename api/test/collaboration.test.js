@@ -4,38 +4,31 @@ const async = require('async')
 const tools = require('./tools')
 
 const userQueries = require('./queries/auth')
-const queries = require('./queries/clients')
+const Queries = require('./queries/collaborations')
 
-const headers = tools.headers
-const CLIENTDATA = {
-  meta: {
-    name: 'bob the client'  
-  }
-}
-
-const createClient = (userData, done) => {
-  userData = userData || userQueries.UserData() 
-  const clientData = queries.ClientData()
-  let user = null
-
-  userQueries.register(userData, (err, userResult) => {
-    if(err) return done(err)
-
-    done(null, userResult)
+const users = Queries('users')
   /*
-    const user = userResult.body.data
-    const installationid = user.meta.activeInstallation 
-    
-    queries.create(installationid, clientData, (err, client) => {
-      if(err) return done(err)
-      done(null, Object.assign({}, results, {
-        client,
-        installationid
-      }))
-    })
-  */
+tape('collaborations - create editor user', (t) => {
+
+  async.waterfall([
+    (next) => userQueries.registerAccount(next),
+
+    (user, next) => {
+      const i = user.meta.activeInstallation
+      queries.create(i, queries.CollaborationData(), next)
+    }
+  ], (err, result) => {
+    if(err) t.error(err)
+
+    console.log('-------------------------------------------');
+  console.log(JSON.stringify(result, null, 4))
+    t.end()
   })
-}
+
+})
+
+
+
 
 tape('clients - createClient', (t) => {
 
@@ -44,16 +37,15 @@ tape('clients - createClient', (t) => {
     t.end()
   })
 
-  /*
   
     t.ok(data.email.indexOf('@') > 0, 'we have a client email')
     t.equal(typeof(data.password), 'string', 'default password is string')
     t.ok(data.password.length > 6, 'default password > 6 chars')
     
-  */
   
 })
-
+*/
+  
 /*
 
 tape('clients - create client', (t) => {

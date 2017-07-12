@@ -23,7 +23,7 @@ const throwErrorFields = (data, opts) => {
     .map(processedField => {
       const status = processedField.incorrectType ?
         `should be of type ${processedField.requiredType}` :
-        `is required`
+        `is a required option`
       return `${processedField.field} ${status}`
     })
   if(errorFields.length > 0) {

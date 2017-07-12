@@ -4,6 +4,7 @@ const options = require('../utils/options')
 const async = require('async')
 const authTools = require('./tools')
 const transportTools = require('../transport/tools')
+
 const REQUIRED = [
   'hooks'
 ]
@@ -14,6 +15,9 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
+
+  topic: 'auth',
+  storageTopic: 'auth-storage',
 
   checkUserPassword: (user, check_password) => {
     const salt = user.salt
@@ -40,6 +44,8 @@ const DEFAULTS = {
 
 
 const AuthBackend = (hemera, opts) => {
+    const Joi = hemera.exposition['hemera-joi'].joi
+
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -49,11 +55,12 @@ const AuthBackend = (hemera, opts) => {
     required: REQUIRED_HOOKS
   })
 
-  const Joi = hemera.exposition['hemera-joi'].joi
+  const TOPIC = opts.topic
+  const STORAGE_TOPIC = opts.storageTopic
 
   const loadUser = (username, done) => {
     hemera.act({
-      topic: 'user-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'loadByUsername',
       username: username
     }, done)
@@ -62,7 +69,7 @@ const AuthBackend = (hemera, opts) => {
   const createUser = (data, done) => {
     data = opts.processNewUser(data)
     hemera.act({
-      topic: 'user-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'create',
       data
     }, done)
@@ -79,7 +86,7 @@ const AuthBackend = (hemera, opts) => {
     const hook = subopts.hook
 
     hemera.add({
-      topic: 'auth',
+      topic: TOPIC,
       cmd: cmd,
       data: Joi.object().keys({
         username: Joi.string().required(),
@@ -109,7 +116,7 @@ const AuthBackend = (hemera, opts) => {
         (user, next) => {
 
           hemera.act({
-            topic: 'user-storage',
+            topic: STORAGE_TOPIC,
             cmd: 'loadById',
             id: user.id
           }, next)
@@ -129,11 +136,11 @@ const AuthBackend = (hemera, opts) => {
   */
   transportTools.backend(hemera, {
     inbound: {
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'load'
     },
     outbound: {
-      topic: 'user-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'loadById'
     },
     query: {
@@ -148,7 +155,7 @@ const AuthBackend = (hemera, opts) => {
     
   */
   hemera.add({
-    topic: 'auth',
+    topic: TOPIC,
     cmd: 'login',
     username: Joi.string().required(),
     password: Joi.string().required()
@@ -203,11 +210,11 @@ const AuthBackend = (hemera, opts) => {
   */
   transportTools.backend(hemera, {
     inbound: {
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'save'
     },
     outbound: {
-      topic: 'user-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'save'
     },
     query: {
@@ -224,11 +231,11 @@ const AuthBackend = (hemera, opts) => {
   */
   transportTools.backend(hemera, {
     inbound: {
-      topic: 'auth',
+      topic: TOPIC,
       cmd: 'update'
     },
     outbound: {
-      topic: 'user-storage',
+      topic: STORAGE_TOPIC,
       cmd: 'update'
     },
     query: {
