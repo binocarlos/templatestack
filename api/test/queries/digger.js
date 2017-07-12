@@ -3,149 +3,136 @@ const async = require('async')
 
 const tools = require('../tools')
 
-const create = (installation, data, next) => {
+const create = (i, data, next) => {
   const req = {
     method: 'POST',
-    url: tools.url'/resources'),
-    headers: tools.installationHeaders(installation),
+    url: tools.url(`/i/${i}/resources`),
     json: data
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const append = (installation, parentid, data, next) => {
+const append = (i, parentid, data, next) => {
   const req = {
     method: 'POST',
-    url: tools.url'/resources/' + parentid),
-    headers: tools.installationHeaders(installation),
+    url: tools.url(`/i/${i}/resources/${parentid}`),
     json: data
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const list = (installation, qs, next) => {
+const list = (i, qs, next) => {
   const req = {
     method: 'GET',
-    url: tools.url'/resources'),
+    url: tools.url(`/i/${i}/resources`),
     qs,
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
 
-const get = (installation, id, qs, next) => {
+const get = (i, id, qs, next) => {
   const req = {
     method: 'GET',
-    url: tools.url'/resources/' + id),
+    url: tools.url(`/i/${i}/resources/${id}`),
     qs,
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const getLinks = (installation, id, qs, next) => {
+const getLinks = (i, id, qs, next) => {
   const req = {
     method: 'GET',
-    url: tools.url'/resources/links/' + id),
+    url: tools.url(`/i/${i}/resources/links/${id}`),
     qs,
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const children = (installation, id, qs, next) => {
+const children = (i, id, qs, next) => {
   const req = {
     method: 'GET',
-    url: tools.url'/resources/children' + (id ? '/' + id : '')),
+    url: tools.url(`/i/${i}/resources/children${ id ? '/' + id : '' }`),
     qs,
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const descendents = (installation, id, qs, next) => {
+const descendents = (i, id, qs, next) => {
   const req = {
     method: 'GET',
-    url: tools.url'/resources/descendents' + (id ? '/' + id : '')),
+    url: tools.url(`/i/${i}/resources/descendents${ id ? '/' + id : '' }`),
     qs,
-    headers: tools.installationHeaders(installation),
     json: true
   } 
   tools.request(req, tools.wrapResult(next))
 }
 
-const save = (installation, id, data, next) => {
+const save = (i, id, data, next) => {
   const req = {
     method: 'PUT',
-    url: tools.url'/resources/' + id),
-    headers: tools.installationHeaders(installation),
+    url: tools.url(`/i/${i}/resources/${id}`),
     json: data
   }  
   tools.request(req, tools.wrapResult(next))
 }
 
-const del = (installation, id, next) => {
+const del = (i, id, next) => {
   const req = {
     method: 'DELETE',
-    url: tools.url'/resources/' + id),
-    headers: tools.installationHeaders(installation),
+    url: tools.url(`/i/${i}/resources/${id}`),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const copy = (installation, target, ids, next) => {
+const copy = (i, target, ids, next) => {
   const req = {
     method: 'POST',
-    url: tools.url'/resources/paste/' + target),
+    url: tools.url(`/i/${i}/resources/paste/${target}`),
     qs: {
       copy: ids.join(',')
     },
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const badCopy = (installation, target, ids, next) => {
+const badCopy = (i, target, ids, next) => {
   const req = {
     method: 'POST',
-    url: tools.url'/resources/paste/' + target),
+    url: tools.url(`/i/${i}/resources/paste/${target}`),
     qs: {
       mode: 'copy',
       ids: {
         value: []
       }
     },
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const cut = (installation, target, ids, next) => {
+const cut = (i, target, ids, next) => {
   const req = {
     method: 'POST',
-    url: tools.url'/resources/paste/' + target),
+    url: tools.url(`/i/${i}/resources/paste/${target}`),
     qs: {
       cut: ids.join(',')
     },
-    headers: tools.installationHeaders(installation),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
 }
 
-const swap = (installation, source, target, mode, next) => {
+const swap = (i, source, target, mode, next) => {
   const req = {
     method: 'POST',
-    url: tools.url'/resources/swap/' + source + '/' + mode + '/' + target),
-    headers: tools.installationHeaders(installation),
+    url: tools.url(`/i/${i}/resources/swap/${source}/${mode}/${target}`),
     json: true
   }
   tools.request(req, tools.wrapResult(next))
