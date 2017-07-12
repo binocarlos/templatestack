@@ -52,11 +52,14 @@ tape('collaborations - create user then list', (t) => {
     t.equal(result.statusCode, 200, 'status code 200')
     t.equal(users.length, 2, 'there are 2 users')
 
-    const owner = users.filter(user => user.username != collaboratorData.user.username)
-    const collaborator = users.filter(user => user.username == collaboratorData.user.username)
+    const owner = users.filter(user => user.username != collaboratorData.user.username)[0]
+    const collaborator = users.filter(user => user.username == collaboratorData.user.username)[0]
 
-    t.ok(owner.collaboration, 'owner collaboration')
-    t.ok(collaborator.collaboration, 'collaborator collaboration')
+    t.ok(owner.collaboration, 'owner has collaboration')
+    t.ok(collaborator.collaboration, 'collaborator has collaboration')
+    t.equal(owner.collaboration.type, 'user', 'owner is a user')
+    t.equal(collaborator.collaboration.type, 'user', 'collaborator is a user')
+    
 
     t.end()
   })

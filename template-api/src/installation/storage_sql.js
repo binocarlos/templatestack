@@ -56,6 +56,7 @@ order by
 `
 
   const LIST_USERS_QUERY = (meta = {}) => `select
+  ${tables.collaboration}.meta as collaboration,
   ${tables.user}.*
 from
   ${tables.user}
