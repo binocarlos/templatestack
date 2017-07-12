@@ -56,7 +56,6 @@ order by
 `
 
   const LIST_USERS_QUERY = (meta = {}) => `select
-  }
   ${tables.user}.*
 from
   ${tables.user}
@@ -65,7 +64,7 @@ join
 on
   (${tables.collaboration}.${tables.user} = ${tables.user}.id)
   and
-  (${tables.collaboration}.${tables.installation} = ?
+  (${tables.collaboration}.${tables.installation} = ?)
 where
   ${
     Object
@@ -73,8 +72,6 @@ where
       .map(key => `json_extract_path_text(${tables.collaboration}.meta, '${key}') = ?`)
       .join("\n and \n")
   }
-order by
-  installation.name
 `
 
   const createCollaboration = ({ installationid, userid, meta } = opts) => {

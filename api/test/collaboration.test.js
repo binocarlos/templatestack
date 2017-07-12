@@ -8,7 +8,7 @@ const Queries = require('./queries/collaborations')
 
 const userQueries = Queries('users')
 
-const createUser = (userData, done) => {
+const createCollaborator = (userData, done) => {
   async.waterfall([
     (next) => authQueries.registerAccount(next),
 
@@ -18,7 +18,8 @@ const createUser = (userData, done) => {
         if(err) return next(err)
         next(null, {
           statusCode: result.statusCode,
-          user: result.body,
+          user,
+          collaborator: result.body,
           i
         })
       })
@@ -27,51 +28,44 @@ const createUser = (userData, done) => {
 }
 
 tape('collaborations - create user', (t) => {
-  const userData = userQueries.CollaborationData()
-  createUser(userData, (err, result) => {
+  const collaboratorData = userQueries.CollaborationData()
+  createCollaborator(collaboratorData, (err, result) => {
     if(err) t.error(err)
     t.equal(result.statusCode, 201, 'user created')
-    t.equal(result.user.username, userData.user.username, 'username is correct')
+    t.equal(result.collaborator.username, collaboratorData.user.username, 'username is correct')
     t.end()
   })
+})
+
+
+tape('collaborations - create user then list', (t) => {
+  const collaboratorData = userQueries.CollaborationData()
+  async.waterfall([
+    (next) => createCollaborator(collaboratorData, next),
+    (result, next) => {
+      userQueries.list(result.i, next)
+    }
+  ], (err, result) => {
+    if(err) t.error(err)
+
+    const users = result.body
+    t.equal(result.statusCode, 200, 'status code 200')
+    t.equal(users.length, 2, 'there are 2 users')
+
+    const owner = users.filter(user => user.username != collaboratorData.user.username)
+    const collaborator = users.filter(user => user.username == collaboratorData.user.username)
+
+    t.ok(owner.collaboration, 'owner collaboration')
+    t.ok(collaborator.collaboration, 'collaborator collaboration')
+
+    t.end()
+  })
+
 })
 
 
 /*
-tape('collaborations - create user then list', (t) =>
-  const userData = userQueries.CollaborationData()
-  let i = null
-  async.series({
-    register: (next) => authQueries.registerAccount((err, user) => {
-      i = user.meta.activeInstallation
-      next()
-    }),
-    user: (user, next) => userQueries.create(i, userData, next),
 
-
-  ], (err, result) => {
-    if(err) t.error(err)
-
-    t.equal(result.statusCode, 201, 'user created')
-    t.equal(result.body.username, userData.username, 'username is correct')
-
-    t.end()
-  })
-
-})
-
-
-{
-    "statusCode": 201,
-    "body": {
-        "id": 2,
-        "username": "client1499898326191@test.com",
-        "meta": {
-            "name": "test client 1499898326191"
-        },
-        "mode": null
-    }
-}
 
 tape('clients - createClient', (t) => {
 
