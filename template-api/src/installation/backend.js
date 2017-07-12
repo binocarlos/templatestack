@@ -59,37 +59,6 @@ const InstallationBackend = (hemera, opts) => {
   })
 
 
-  // list the users matching the given collaboration meta for an installation id
-  tools.backend(hemera, {
-    inbound: {
-      topic: 'installation',
-      cmd: 'list-users'
-    },
-    outbound: {
-      topic: 'installation-storage',
-      cmd: 'list-users'
-    },
-    query: {
-      id: Joi.number().required(),
-      meta: Joi.object().required()
-    }
-  })
-  
-  // loadCollaboration
-  tools.backend(hemera, {
-    inbound: {
-      topic: 'installation',
-      cmd: 'collaborations'
-    },
-    outbound: {
-      topic: 'installation-storage',
-      cmd: 'collaborations'
-    },
-    query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
-    }
-  })
 
   // create
   hemera.add({
@@ -207,6 +176,39 @@ const InstallationBackend = (hemera, opts) => {
     },
     query: {
       id: Joi.number().required()
+    }
+  })
+
+
+  // list users with matching collab meta for a given installation
+  tools.backend(hemera, {
+    inbound: {
+      topic: 'installation',
+      cmd: 'list_users'
+    },
+    outbound: {
+      topic: 'installation-storage',
+      cmd: 'list_users'
+    },
+    query: {
+      id: Joi.number().required(),
+      meta: Joi.object().required()
+    }
+  })
+  
+  // load all collaborations for a given user / installation
+  tools.backend(hemera, {
+    inbound: {
+      topic: 'installation',
+      cmd: 'list_user_collaborations'
+    },
+    outbound: {
+      topic: 'installation-storage',
+      cmd: 'list_user_collaborations'
+    },
+    query: {
+      id: Joi.number().required(),
+      userid: Joi.number().required()
     }
   })
 

@@ -48,8 +48,8 @@ order by
   installation.name
 `
 
-  const LIST_USERS_QUERY = (meta = {}) => 
-    return `select
+  const LIST_USERS_QUERY = (meta = {}) => `select
+  }
   ${tables.user}.*
 from
   ${tables.user}
@@ -103,45 +103,6 @@ order by
 
     knex
       .raw(LIST_INSTALLATION_QUERY(), [req.userid])
-      .asCallback(tools.allExtractor(done))
-
-  })
-
-  /*
-  
-    list users
-    
-  */
-  hemera.add({
-    topic: 'installation-storage',
-    cmd: 'list-users',
-    id: Joi.number().required(),
-    meta: Joi.object().required()
-  }, (req, done) => {
-    knex
-      .raw(LIST_QUERY(req.meta), [req.id].concat(Object.values(req.meta)))
-      .asCallback(tools.allExtractor(done))
-  })
-
-  /*
-  
-    loadCollaboration
-    
-  */
-  hemera.add({
-    topic: 'installation-storage',
-    cmd: 'collaborations',
-    id: Joi.number().required(),
-    userid: Joi.number().required()
-  }, (req, done) => {
-
-    knex
-      .select()
-      .from(tables.collaboration)
-      .where({
-        [tables.installation]: req.id,
-        [tables.user]: req.userid
-      })
       .asCallback(tools.allExtractor(done))
 
   })
@@ -263,6 +224,46 @@ order by
       collection: tables.installation,
       id: req.id
     }, done)
+
+  })
+
+
+  /*
+  
+    list_users
+    
+  */
+  hemera.add({
+    topic: 'installation-storage',
+    cmd: 'list_users',
+    id: Joi.number().required(),
+    meta: Joi.object().required()
+  }, (req, done) => {
+    knex
+      .raw(LIST_USERS_QUERY(req.meta), [req.id].concat(Object.values(req.meta)))
+      .asCallback(tools.allExtractor(done))
+  })
+
+  /*
+  
+     '
+    
+  */
+  hemera.add({
+    topic: 'installation-storage',
+    cmd: 'list_user_collaborations',
+    id: Joi.number().required(),
+    userid: Joi.number().required()
+  }, (req, done) => {
+
+    knex
+      .select()
+      .from(tables.collaboration)
+      .where({
+        [tables.installation]: req.id,
+        [tables.user]: req.userid
+      })
+      .asCallback(tools.allExtractor(done))
 
   })
 

@@ -37,30 +37,35 @@ const InstallationAccess = (transport, opts) => {
   const getLevel = (type) => LEVELS[type] || 0
   const isAllowed = (required, actual) => getLevel(actual) >= getLevel(required)
 
-  const handler = (requiredPermission, extractor) => (req, res, next) => {
+  const permissionFilter = (requiredPermission) => (collaboration) => {
+    return isAllowed(requiredPermission, collaboration.meta.permission)
+  }
+
+  const handler = (filterfn, extractor, title = 'access') => (req, res, next) => {
     const userid = req.userid
     const id = parseInt(extractId(req, extractor))
     if(isNaN(id)) return webserverTools.errorReply(next, res, 'access denied - no installation id present', 403)
 
     transport.act({
       topic: 'installation',
-      cmd: 'collaborations',
+      cmd: 'list_user_collaborations',
       id: id,
       userid: userid
     }, (err, collaborations) => {
       if(err) return webserverTools.errorReply(next, res, `access denied - ${err.toString()}`, 403)
-      collaborations = (collaborations || []).filter(c => isAllowed(requiredPermission, c.meta.permission))
-      if(!collaborations || collaborations.length <=0) return webserverTools.errorReply(next, res, `access denied - ${requiredPermission} level needed`, 403)
+      collaborations = (collaborations || []).filter(filterfn)
+      if(!collaborations || collaborations.length <=0) return webserverTools.errorReply(next, res, `access denied - ${title} level needed`, 403)
       next()
     })
   }
 
-  const viewer = (extractor) => handler('viewer', extractor)
-  const editor = (extractor) => handler('editor', extractor)
+  const viewer = (extractor) => handler(permissionFilter('viewer'), extractor, 'viewer')
+  const editor = (extractor) => handler(permissionFilter('editor'), extractor, 'editor')
 
   return {
     viewer,
-    editor
+    editor,
+    handler
   }
 }
 
