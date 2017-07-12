@@ -90,7 +90,7 @@ const CollaborationRoutes = (transport, opts) => {
       topic: TOPIC,
       cmd: 'add_user',
       id: i,
-      userdata: data,
+      userdata: user,
       collaboration
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)

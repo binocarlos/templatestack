@@ -23,6 +23,10 @@ const CollaborationData = (permission, count) => {
 
 const CollaborationQueries = (path) => {
 
+  const createUser = (userData, done) => {
+    userData = userData || CollaborationData()
+    
+  }
   const create = (i, data, next) => {
     const req = {
       method: 'POST',

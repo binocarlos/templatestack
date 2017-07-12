@@ -3,32 +3,75 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
-const userQueries = require('./queries/auth')
+const authQueries = require('./queries/auth')
 const Queries = require('./queries/collaborations')
 
-const users = Queries('users')
-  /*
-tape('collaborations - create editor user', (t) => {
+const userQueries = Queries('users')
 
+const createUser = (userData, done) => {
   async.waterfall([
-    (next) => userQueries.registerAccount(next),
+    (next) => authQueries.registerAccount(next),
 
     (user, next) => {
       const i = user.meta.activeInstallation
-      queries.create(i, queries.CollaborationData(), next)
+      userQueries.create(i, userData, (err, result) => {
+        if(err) return next(err)
+        next(null, {
+          statusCode: result.statusCode,
+          user: result.body,
+          i
+        })
+      })
     }
+  ], done)
+}
+
+tape('collaborations - create user', (t) => {
+  const userData = userQueries.CollaborationData()
+  createUser(userData, (err, result) => {
+    if(err) t.error(err)
+    t.equal(result.statusCode, 201, 'user created')
+    t.equal(result.user.username, userData.user.username, 'username is correct')
+    t.end()
+  })
+})
+
+
+/*
+tape('collaborations - create user then list', (t) =>
+  const userData = userQueries.CollaborationData()
+  let i = null
+  async.series({
+    register: (next) => authQueries.registerAccount((err, user) => {
+      i = user.meta.activeInstallation
+      next()
+    }),
+    user: (user, next) => userQueries.create(i, userData, next),
+
+
   ], (err, result) => {
     if(err) t.error(err)
 
-    console.log('-------------------------------------------');
-  console.log(JSON.stringify(result, null, 4))
+    t.equal(result.statusCode, 201, 'user created')
+    t.equal(result.body.username, userData.username, 'username is correct')
+
     t.end()
   })
 
 })
 
 
-
+{
+    "statusCode": 201,
+    "body": {
+        "id": 2,
+        "username": "client1499898326191@test.com",
+        "meta": {
+            "name": "test client 1499898326191"
+        },
+        "mode": null
+    }
+}
 
 tape('clients - createClient', (t) => {
 

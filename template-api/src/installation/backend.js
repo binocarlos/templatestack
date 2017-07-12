@@ -244,7 +244,7 @@ const InstallationBackend = (hemera, opts) => {
           topic: AUTH_TOPIC,
           cmd: 'ensure',
           data: req.userdata
-        }, done)
+        }, next)
       },
 
       (user, next) => {
