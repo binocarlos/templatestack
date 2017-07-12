@@ -123,56 +123,67 @@ tape('clients - get client', (t) => {
   
 })
 
+tape('clients - save client', (t) => {
+
+  const collaboratorData = userQueries.CollaborationData()
+
+  async.waterfall([
+    (next) => createCollaborator(collaboratorData, next),
+    (results, next) => {
+      const client = results.collaborator
+      client.meta.pears = 25
+      userQueries.save(results.i, client.id, {meta: client.meta}, next)
+    }
+  ], (err, result) => {
+    if(err) t.error(err)
+
+    t.equal(result.statusCode, 200, '200 status')
+    t.equal(result.body.meta.pears, 25, 'meta is updated')
+    t.equal(result.body.username, collaboratorData.user.username, 'username is correct')
+
+
+    t.end()
+  })
+
   
+})
+
+tape('clients - delete client', (t) => {
+
+  const collaboratorData = userQueries.CollaborationData()
+  let createresults = null
+  let deleteresults = null
+
+  async.waterfall([
+    (next) => createCollaborator(collaboratorData, next),
+    (results, next) => {
+      async.series({
+        list1: (n) => userQueries.list(results.i, n),
+        del: (n) => userQueries.del(results.i, results.collaborator.id, n),
+        list2: (n) => userQueries.list(results.i, n)
+      }, next)
+    }
+  ], (err, result) => {
+    if(err) t.error(err)
+
+    t.equal(result.list1.statusCode, 200, 'list1 200 code')
+    t.equal(result.del.statusCode, 200, 'list1 200 code')
+    t.equal(result.del.body, "1", 'response from delete')
+    t.equal(result.list2.statusCode, 200, 'list1 200 code')
+
+    t.equal(result.list1.body.length, 2, '2 in list 1')
+    t.equal(result.list2.body.length, 1, '1 in list 2')
+    
+    t.end()
+  })
+
+
+  
+})
+
 /*
 
 
-
-tape('clients - get client', (t) => {
-
-  async.waterfall([
-    createClient,
-    (results, next) => tools.getClient(results.installationid, results.client.body.id, next)
-  ], (err, results) => {
-    if(err) t.error(err)
-
-    const client = results.body
-
-    t.equal(client.meta.name, CLIENTDATA.meta.name, 'get client name correct')
-
-    t.end()
-  })
-
-  
-})
-
-
-tape('clients - save client', (t) => {
-
-  async.waterfall([
-    createClient,
-    (results, next) => {
-      const client = results.client.body
-      const clientid = client.id
-      delete(client.id)
-
-      client.email = 'SAVED' + client.email
-      client.meta.fruit = 'oranges'
-
-      tools.saveClient(results.installationid, clientid, client, next)
-    }
-  ], (err, results) => {
-    if(err) t.error(err)
-
-    const client = results.body
-    t.equal(client.email.indexOf('SAVED'), 0, 'saved email')
-    t.equal(client.meta.fruit, 'oranges', 'saved meta')
-
-    t.end()
-  })
-
-  
-})
 
 tape('clients - delete client', (t) => {
 
