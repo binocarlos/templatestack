@@ -4,6 +4,7 @@ const SystemRoutes = require('template-api/src/system/routes')
 const AuthRoutes = require('template-api/src/auth/routes')
 const InstallationRoutes = require('template-api/src/installation/routes')
 const CollaborationRoutes = require('template-api/src/installation/collaboration_routes')
+const DiggerRoutes = require('template-api/src/digger/routes')
 
 const AuthAccess = require('template-api/src/auth/access')
 const InstallationAccess = require('template-api/src/installation/access')
@@ -16,7 +17,7 @@ const Routes = (app, transport) => {
   const auth = AuthRoutes(transport)
   const system = SystemRoutes(transport)
   const installation = InstallationRoutes(transport)
-
+  const digger = DiggerRoutes(transport)
   const users = CollaborationRoutes(transport, {
     collaboration_template: {
       type: 'user'
@@ -32,7 +33,7 @@ const Routes = (app, transport) => {
   const installationAccess = InstallationAccess(transport)
 
   const basePath = (path) => settings.base + path
-  const iPath = (path) => basePath('/installation/:id' + path)
+  const iPath = (path) => basePath('/i/:installationid' + path)
   
   app.get(basePath('/version'), system.version)
 
@@ -64,23 +65,23 @@ const Routes = (app, transport) => {
   app.delete(iPath('/clients/:id'), installationAccess.editor(), clients.del)
 
   // resource
-  app.get(iPath('/resources'), installationAccess.viewer(), resources.search)
-  app.get(iPath('/resources/children'), installationAccess.viewer(), resources.children)
-  app.get(iPath('/resources/children/:id'), installationAccess.viewer(), resources.children)
-  app.get(iPath('/resources/descendents'), installationAccess.viewer(), resources.descendents)
-  app.get(iPath('/resources/descendents/:id'), installationAccess.viewer(), resources.descendents)
-  app.get(iPath('/resources/links/:id'), installationAccess.viewer(), resources.links)
+  app.get(iPath('/resources'), installationAccess.viewer(), digger.search)
+  app.get(iPath('/resources/children'), installationAccess.viewer(), digger.children)
+  app.get(iPath('/resources/children/:id'), installationAccess.viewer(), digger.children)
+  app.get(iPath('/resources/descendents'), installationAccess.viewer(), digger.descendents)
+  app.get(iPath('/resources/descendents/:id'), installationAccess.viewer(), digger.descendents)
+  app.get(iPath('/resources/links/:id'), installationAccess.viewer(), digger.links)
 
-  app.post(iPath('/resources'), installationAccess.editor(), resources.create)
-  app.post(iPath('/resources/paste'), installationAccess.editor(), resources.paste)
-  app.post(iPath('/resources/paste/:id'), installationAccess.editor(), resources.paste)
-  app.post(iPath('/resources/swap/:source/:mode/:target'), installationAccess.editor(), resources.swap)
+  app.post(iPath('/resources'), installationAccess.editor(), digger.create)
+  app.post(iPath('/resources/paste'), installationAccess.editor(), digger.paste)
+  app.post(iPath('/resources/paste/:id'), installationAccess.editor(), digger.paste)
+  app.post(iPath('/resources/swap/:source/:mode/:target'), installationAccess.editor(), digger.swap)
 
   // these are at the bottom because they could be ambigous
-  app.post(iPath('/resources/:id'), installationAccess.editor(), resources.create)
-  app.get(iPath('/resources/:id'), installationAccess.viewer(), resources.get)
-  app.put(iPath('/resources/:id'), installationAccess.editor(), resources.save)
-  app.del(iPath('/resources/:id'), installationAccess.editor(), resources.delete)
+  app.post(iPath('/resources/:id'), installationAccess.editor(), digger.create)
+  app.get(iPath('/resources/:id'), installationAccess.viewer(), digger.get)
+  app.put(iPath('/resources/:id'), installationAccess.editor(), digger.save)
+  app.del(iPath('/resources/:id'), installationAccess.editor(), digger.delete)
 
   app.set('views', path.join(__dirname, 'views'))
 }

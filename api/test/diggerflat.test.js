@@ -1,49 +1,38 @@
 "use strict";
+
 const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
-const FIXTURES = require('./fixtures.json')
+const authQueries = require('./queries/auth')
+const queries = require('./queries/digger')
+
+const FIXTURES = require('./fixtures/digger.json')
 const NODE = FIXTURES.resourceNode
 const TYPENODES = FIXTURES.resourceTypes
 const TREE = FIXTURES.resourceTree
-const headers = tools.headers
 
-const register = (userData, done) => {
-  if(!done) {
-    done = userData
-    userData = tools.UserData() 
-  }
-  let user = null
-
-  async.series({
-    user: (next) => tools.register(userData, next)
-  }, (err, results) => {
-    if(err) t.error(err)
-    const user = results.user.body.data
-    const installationid = user.meta.activeInstallation 
-    done(null, {
-      user,
-      installationid
-    })
-
-  })
-}
 
 const createSingleResource = (userData, data, done) => {
-  data = data || NODE
-  register(userData, (err, base) => {
-    if(err) t.error(err)
-    tools.createResource(base.installationid, data, (err, results) => {
-      if(err) return done(err)
-      done(null, Object.assign({}, base, {
-        folder: results
-      }))
-    })
-  })
-}
+  async.waterfall([
+    (next) => authQueries.register(userData, next),
 
+    (user, next) => {
+      const i = user.meta.activeInstallation
+      queries.create(i, data, (err, result) => {
+        if(err) return next(err)
+        next(null, {
+          statusCode: result.statusCode,
+          user,
+          body: result.body,
+          i
+        })
+      })
+    }
+  ], done)
+}
+/*
 tape('resourceflat - create resource', (t) => {
-  const userData = tools.UserData()
+  const userData = authQueries.UserData()
 
   createSingleResource(userData, NODE, (err, base) => {
 
@@ -56,6 +45,7 @@ tape('resourceflat - create resource', (t) => {
     t.end()
   })
 })
+
 
 tape('resourceflat - get resource', (t) => {
   const userData = tools.UserData()
@@ -333,3 +323,4 @@ tape('resourceflat - order resources', (t) => {
 
 
 })
+*/

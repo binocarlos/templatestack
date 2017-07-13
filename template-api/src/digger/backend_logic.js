@@ -6,8 +6,6 @@ const options = require('../utils/options')
 const databaseTools = require('../database/tools')
 const tools = require('./tools')
 
-const SQL = require('./sql')
-
 const REQUIRED = []
 const DEFAULTS = {}
 
@@ -35,6 +33,7 @@ const BackendLogic = (storage, opts = {}) => {
     required: STORAGE_REQUIRED
   })
 
+  const loadLinks = storage.loadLinks
   const getResource = storage.getResource
   const search = storage.search
   const children = storage.children
@@ -90,7 +89,7 @@ const BackendLogic = (storage, opts = {}) => {
     storage.loadLinks(query, (err, links) => {
       if(err) return done(err)
       done(null, links.map(mapLink))
-    }))
+    })
   }
 
 
@@ -488,3 +487,5 @@ const BackendLogic = (storage, opts = {}) => {
     transaction
   }
 }
+
+module.exports = BackendLogic

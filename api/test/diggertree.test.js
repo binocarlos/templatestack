@@ -1,14 +1,20 @@
 "use strict";
+
+
 const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
-const FIXTURES = require('./fixtures.json')
+const authQueries = require('./queries/auth')
+const queries = require('./queries/digger')
+
+const FIXTURES = require('./fixtures/digger.json')
 const NODE = FIXTURES.resourceNode
 const TREE = FIXTURES.resourceTree
 const TREE2 = FIXTURES.resourceTree2
 const MATERIALS = FIXTURES.materialsFolder
-const headers = tools.headers
 
+
+/*
 const register = (userData, done) => {
   if(!done) {
     done = userData
@@ -977,3 +983,4 @@ tape('resourcetree - cut paste links that still load', (t) => {
     t.end()
   })
 })
+*/

@@ -29,7 +29,12 @@ const wrapResult = (done) => (err, res, body) => {
 }
 
 module.exports = {
-  request,
+  request: (req, done) => {
+    if(process.env.DEBUG_HTTP) {
+      console.log(JSON.stringify(req, null, 4))
+    }
+    return request(req, done)
+  },
   url,
   wrapResult,
   headers

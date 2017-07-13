@@ -9,7 +9,7 @@ const tools = require('./tools')
 const SQL = require('./storage_sql_queries')
 
 const REQUIRED = [
-  'knex'
+  
 ]
 
 const DEFAULT_TABLES = {
@@ -31,8 +31,6 @@ const DiggerStorageSQL = (knex, opts) => {
   const tables = options.processor(opts.tables, {
     defaults: DEFAULT_TABLES
   })
-
-  const knex = opts.knex
 
   const sqlQueries = SQL({ tables })
 
