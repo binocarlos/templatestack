@@ -88,7 +88,7 @@ const DiggerStorageSQL = (knex, opts) => {
   }
 
 
-  const createResource = (trx, data, done) => {
+  const insertResource = (trx, data, done) => {
     return knex
       .insert(data)
       .into(tables.resource)
@@ -136,7 +136,7 @@ const DiggerStorageSQL = (knex, opts) => {
     search,
     children,
     descendents,
-    createResource,
+    insertResource,
     saveResource,
     createLinks,
     del,

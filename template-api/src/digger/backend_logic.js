@@ -15,7 +15,7 @@ const STORAGE_REQUIRED = [
   'search',
   'children',
   'descendents',
-  'createResource',
+  'insertResource',
   'saveResource',
   'createLinks',
   'del',
@@ -122,7 +122,7 @@ const BackendLogic = (storage, opts = {}) => {
     const data = query.data
 
     const resource = tools.prepareResource(
-      assignChildToParent(parent, data),
+      tools.assignChildToParent(parent, data),
       installationid
     )
 
@@ -197,7 +197,7 @@ const BackendLogic = (storage, opts = {}) => {
           parent,
           installationid: installationid,
           data: data
-        })
+        }, next)
       }
     ], done)
 

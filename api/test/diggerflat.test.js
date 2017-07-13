@@ -17,6 +17,7 @@ const createSingleResource = (userData, data, done) => {
     (next) => authQueries.register(userData, next),
 
     (user, next) => {
+      user = user.body      
       const i = user.meta.activeInstallation
       queries.create(i, data, (err, result) => {
         if(err) return next(err)
@@ -30,23 +31,27 @@ const createSingleResource = (userData, data, done) => {
     }
   ], done)
 }
-/*
+
 tape('resourceflat - create resource', (t) => {
   const userData = authQueries.UserData()
 
   createSingleResource(userData, NODE, (err, base) => {
 
+    console.log('-------------------------------------------');
+    console.log(JSON.stringify(base, null, 4))
+
+    /*
     const folder = base.folder
 
     t.equal(folder.statusCode, 201, '201 code')
     t.equal(folder.body.name, NODE.name, 'resource name')
     t.equal(folder.body.meta.price, NODE.meta.price, 'resource meta')
-
+*/
     t.end()
   })
 })
 
-
+/*
 tape('resourceflat - get resource', (t) => {
   const userData = tools.UserData()
 
