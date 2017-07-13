@@ -32,6 +32,7 @@ const Routes = (app, transport) => {
   const installationAccess = InstallationAccess(transport)
 
   const basePath = (path) => settings.base + path
+  const iPath = (path) => basePath('/installation/:id' + path)
   
   app.get(basePath('/version'), system.version)
 
@@ -50,17 +51,36 @@ const Routes = (app, transport) => {
   app.put(basePath('/installation/update/:id'), installationAccess.editor('id'), installation.update)
   app.put(basePath('/installation/activate/:id'), installationAccess.viewer('id'), installation.activate)
 
-  app.get(basePath('/i/:installationid/users'), installationAccess.owner(), users.list)
-  app.post(basePath('/i/:installationid/users'), installationAccess.owner(), users.create)
-  app.get(basePath('/i/:installationid/users/:id'), installationAccess.owner(), users.get)
-  app.put(basePath('/i/:installationid/users/:id'), installationAccess.owner(), users.save)
-  app.delete(basePath('/i/:installationid/users/:id'), installationAccess.owner(), users.del)
+  app.get(iPath('/users'), installationAccess.owner(), users.list)
+  app.post(iPath('/users'), installationAccess.owner(), users.create)
+  app.get(iPath('/users/:id'), installationAccess.owner(), users.get)
+  app.put(iPath('/users/:id'), installationAccess.owner(), users.save)
+  app.delete(iPath('/users/:id'), installationAccess.owner(), users.del)
 
-  app.get(basePath('/i/:installationid/clients'), installationAccess.viewer(), clients.list)
-  app.post(basePath('/i/:installationid/clients'), installationAccess.editor(), clients.create)
-  app.get(basePath('/i/:installationid/clients/:id'), installationAccess.viewer(), clients.get)
-  app.put(basePath('/i/:installationid/clients/:id'), installationAccess.editor(), clients.save)
-  app.delete(basePath('/i/:installationid/clients/:id'), installationAccess.editor(), clients.del)
+  app.get(iPath('/clients'), installationAccess.viewer(), clients.list)
+  app.post(iPath('/clients'), installationAccess.editor(), clients.create)
+  app.get(iPath('/clients/:id'), installationAccess.viewer(), clients.get)
+  app.put(iPath('/clients/:id'), installationAccess.editor(), clients.save)
+  app.delete(iPath('/clients/:id'), installationAccess.editor(), clients.del)
+
+  // resource
+  app.get(iPath('/resources'), installationAccess.viewer(), resources.search)
+  app.get(iPath('/resources/children'), installationAccess.viewer(), resources.children)
+  app.get(iPath('/resources/children/:id'), installationAccess.viewer(), resources.children)
+  app.get(iPath('/resources/descendents'), installationAccess.viewer(), resources.descendents)
+  app.get(iPath('/resources/descendents/:id'), installationAccess.viewer(), resources.descendents)
+  app.get(iPath('/resources/links/:id'), installationAccess.viewer(), resources.links)
+
+  app.post(iPath('/resources'), installationAccess.editor(), resources.create)
+  app.post(iPath('/resources/paste'), installationAccess.editor(), resources.paste)
+  app.post(iPath('/resources/paste/:id'), installationAccess.editor(), resources.paste)
+  app.post(iPath('/resources/swap/:source/:mode/:target'), installationAccess.editor(), resources.swap)
+
+  // these are at the bottom because they could be ambigous
+  app.post(iPath('/resources/:id'), installationAccess.editor(), resources.create)
+  app.get(iPath('/resources/:id'), installationAccess.viewer(), resources.get)
+  app.put(iPath('/resources/:id'), installationAccess.editor(), resources.save)
+  app.del(iPath('/resources/:id'), installationAccess.editor(), resources.delete)
 
   app.set('views', path.join(__dirname, 'views'))
 }

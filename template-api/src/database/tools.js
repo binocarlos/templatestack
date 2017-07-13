@@ -20,10 +20,32 @@ const extractor = (map) => (done) => (err, raw) => {
 const singleExtractor = extractor(getSingleRecord)
 const allExtractor = extractor(getAllRecords)
 
+const knexTransaction = (knex, handler, done) => {
+  knex.transaction(trx => {
+    handler(trx, (err, results) => {
+      if(err) {
+        trx
+          .rollback()
+          .then(() => {
+            done(err)
+          })
+      }
+      else {
+        trx
+          .commit()
+          .then(() => {
+            done(null, results)
+          })
+      }
+    })
+  })
+}
+
 module.exports = {
   getSingleRecord,
   getAllRecords,
   extractor,
   singleExtractor,
-  allExtractor
+  allExtractor,
+  knexTransaction
 }

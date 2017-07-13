@@ -1,6 +1,7 @@
 'use strict'
 
 const DEFAULT_OPTS = {
+  installationTablename: 'installation',
   resourceTablename: 'resource'
 }
 
