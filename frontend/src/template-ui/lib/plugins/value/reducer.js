@@ -1,32 +1,33 @@
 import update from 'immutability-helper'
 import ReducerFactory from '../../utils/reducer'
-import { ID } from './actions'
+import { TYPES } from './actions'
 
 const INITIAL_STATE = {}
 
 const HANDLERS = {
-  set: (state, action, id) => {
+  [TYPES.set]: (state, action) => {
     return update(state, {
-      [id]: {
-        $set: action.payload
+      [action.name]: {
+        $set: action.value
       }
     })
   },
-  toggle: (state, action, id) => {
+  [TYPES.toggle]: (state, action) => {
     return update(state, {
-      [id]: {
-        $set: !(state[id] || false)
+      [action.name]: {
+        $set: !(state[action.name] || false)
       }
     })
   }
 }
 
-const ValueReducer = (id = ID, initialState = INITIAL_STATE) => {
-  return ReducerFactory({
-    id,
-    initialState,
-    handlers: HANDLERS
-  })
+const ValueReducer = (initialState = INITIAL_STATE) => {
+  return (state = initialState, action = {}) => {
+    const handler = HANDLERS[action.type]
+    return handler ?
+      handler(state, action) :
+      state
+  }
 }
 
 export default ValueReducer
