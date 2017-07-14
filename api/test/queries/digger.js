@@ -21,7 +21,7 @@ const append = (i, parentid, data, next) => {
   tools.request(req, tools.wrapResult(next))
 }
 
-const list = (i, qs, next) => {
+const search = (i, qs, next) => {
   const req = {
     method: 'GET',
     url: tools.url(`/i/${i}/resources`),
@@ -141,7 +141,7 @@ const swap = (i, source, target, mode, next) => {
 module.exports = {
   create,
   append,
-  list,
+  search,
   get: get,
   getLinks,
   children,

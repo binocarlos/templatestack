@@ -41,6 +41,8 @@ const BackendLogic = (storage, opts = {}) => {
   const insertResource = storage.insertResource
   const saveResource = storage.saveResource
   const createLinks = storage.createLinks
+  const del = storage.del
+  const deleteLinks = storage.deleteLinks
   const transaction = storage.transaction
 
   const linkTreeLayer = (installationid, parents, done) => {
@@ -241,19 +243,6 @@ const BackendLogic = (storage, opts = {}) => {
       done(null, results.saveResource)
     })
   }
-
-  //   * id
-  //   * installationid
-  const del = (trx, query, done) => {
-    knex(tables.resource)
-      .where({
-        id: query.id,
-        installationid: query.installationid
-      })
-      .del()
-      .asCallback(tools.singleExtractor(done))
-  }
-  
 
   // keep resource intact so links are not deleted
   const moveChildren = (trx, parent, item, done) => {

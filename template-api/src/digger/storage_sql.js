@@ -122,10 +122,21 @@ const DiggerStorageSQL = (knex, opts) => {
     knex(tables.resource)
       .where({
         id: query.id,
-        installationid: query.installationid
+        installation: query.installationid
       })
       .del()
-      .asCallback(tools.singleExtractor(done))
+      .asCallback(databaseTools.singleExtractor(done))
+  }
+
+  //   * id
+  //   * installationid
+  const deleteLinks = (trx, id, done) => {
+    knex(tables.link)
+      .where({
+        parent: id
+      })
+      .del()
+      .asCallback(databaseTools.singleExtractor(done))
   }
 
   const transaction = (handler, done) => databaseTools.knexTransaction(knex, handler, done)
@@ -139,6 +150,7 @@ const DiggerStorageSQL = (knex, opts) => {
     insertResource,
     saveResource,
     createLinks,
+    deleteLinks,
     del,
     transaction
   }

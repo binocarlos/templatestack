@@ -25,6 +25,10 @@ const DiggerRoutes = (transport, opts) => {
 
   const TOPIC = opts.topic
 
+  const areResourcesFromDifferentInstallation = (i, resources) => {
+    return resources.filter(r => r.installation != i).length > 0
+  }
+
   // QUERIES
 
   const get = (req, res, next) => {
@@ -40,6 +44,7 @@ const DiggerRoutes = (transport, opts) => {
     }, (err, resource) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!resource) return webserverTools.errorReply(next, res, 'resource not found', 404)
+      if(areResourcesFromDifferentInstallation(installationid, [resource])) return webserverTools.errorReply(next, res, 'wrong installation id', 403)
       res
         .status(200)
         .json(resource)
@@ -57,6 +62,7 @@ const DiggerRoutes = (transport, opts) => {
       search: req.qs.search
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
+      if(areResourcesFromDifferentInstallation(installationid, resources)) return webserverTools.errorReply(next, res, 'wrong installation id', 403)
       res
         .status(200)
         .json(resources)
@@ -77,6 +83,7 @@ const DiggerRoutes = (transport, opts) => {
       withLinks: req.qs.links ? true : false
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
+      if(areResourcesFromDifferentInstallation(installationid, resources)) return webserverTools.errorReply(next, res, 'wrong installation id', 403)
       res
         .status(200)
         .json(resources)
@@ -99,6 +106,7 @@ const DiggerRoutes = (transport, opts) => {
       withLinks: req.qs.links ? true : false
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
+      if(areResourcesFromDifferentInstallation(installationid, resources)) return webserverTools.errorReply(next, res, 'wrong installation id', 403)
       res
         .status(200)
         .json(resources)
@@ -119,6 +127,7 @@ const DiggerRoutes = (transport, opts) => {
       follow: req.qs.follow ? true : false
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
+      if(areResourcesFromDifferentInstallation(installationid, resources)) return webserverTools.errorReply(next, res, 'wrong installation id', 403)
       res
         .status(200)
         .json(resources)
