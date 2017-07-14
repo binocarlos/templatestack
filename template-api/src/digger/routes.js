@@ -73,8 +73,7 @@ const DiggerRoutes = (transport, opts) => {
     const installationid = opts.extractInstallationId(req)
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
-    if(!id) return webserverTools.errorReply(next, res, 'resource id required')
-
+    
     transport.act({
       topic: TOPIC,
       cmd: 'children',
@@ -238,7 +237,7 @@ const DiggerRoutes = (transport, opts) => {
     const installationid = opts.extractInstallationId(req)
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
 
-    const source = req.params.target
+    const source = req.params.source
     const target = req.params.target
     const mode = req.params.mode
   

@@ -32,6 +32,7 @@ const createSingleResource = (userData, data, done) => {
   ], done)
 }
 
+
 tape('resourceflat - create resource', (t) => {
   const userData = authQueries.UserData()
 
@@ -287,15 +288,16 @@ tape('resourceflat - cross installation get resource with hacked installation id
   
 })
 
-/*
 tape('resourceflat - search resource on type', (t) => {
 
-  const userData = tools.UserData()
+  const userData = authQueries.UserData()
 
-  register(userData, (err, base) => {
+  authQueries.register(userData, (err, user) => {
+
+    const i = user.body.meta.activeInstallation
     async.series({
-      create: (next) => async.series(TYPENODES.map(node => cnext => tools.createResource(base.installationid, node, cnext)), next),
-      list: (next) => tools.listResources(base.installationid, {type:'folder'}, next)
+      create: (next) => async.series(TYPENODES.map(node => cnext => queries.create(i, node, cnext)), next),
+      list: (next) => queries.search(i, {type:'folder'}, next)
     }, (err, results) => {
       if(err) t.error(err)
 
@@ -305,10 +307,11 @@ tape('resourceflat - search resource on type', (t) => {
   })
   
 })
+/*
 
 tape('resourceflat - order resources', (t) => {
 
-  const userData = tools.UserData()
+  const userData = authQueries.UserData()
   let base = null
 
   const getFactory = (index) => (next) => {
@@ -317,17 +320,21 @@ tape('resourceflat - order resources', (t) => {
     data.meta.order = index
     data.name = 'ITEM' + index
 
-    tools.createResource(base.installationid, data, (err, results) => {
+    queries.create(base.i, data, (err, results) => {
       if(err) return done(err)
       next(null, results)
     })
   }
 
   async.waterfall([
-    (next) => register(userData, next),
+    (next) => authQueries.register(userData, next),
 
     (b, next) => {
-      base = b
+      const user = b.body
+      base = {
+        user,
+        i: user.meta.activeInstallation
+      }
       async.series({
         node3: getFactory(3),
         node2: getFactory(2),
@@ -337,20 +344,21 @@ tape('resourceflat - order resources', (t) => {
 
     (items, next) => {
       base.items = items
-      tools.resourceChildren(base.installationid, null, {}, next)
+      queries.children(base.i, null, {}, next)
     },
 
     (results, next) => {
+
       base.titles = results.body.map(item => item.name)
       base.results = results
       const item1id = base.items.node1.body.id
       const item3id = base.items.node3.body.id
 
-      tools.swapResources(base.installationid, item3id, item1id, 'before', next)
+      queries.swap(base.i, item3id, item1id, 'before', next)
     },
 
     (noop, next) => {
-      tools.resourceChildren(base.installationid, null, {}, next)
+      queries.children(base.i, null, {}, next)
     },
 
     (results, next) => {
@@ -359,11 +367,11 @@ tape('resourceflat - order resources', (t) => {
       const item2id = base.items.node2.body.id
       const item3id = base.items.node3.body.id
 
-      tools.swapResources(base.installationid, item2id, item3id, 'after', next)
+      queries.swap(base.i, item2id, item3id, 'after', next)
     },
 
     (noop, next) => {
-      tools.resourceChildren(base.installationid, null, {}, next)
+      queries.children(base.i, null, {}, next)
     },
 
     (results, next) => {
@@ -381,4 +389,5 @@ tape('resourceflat - order resources', (t) => {
 
 
 })
+
 */
