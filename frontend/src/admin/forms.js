@@ -3,7 +3,8 @@ import fields from 'template-ui/lib/plugins/form/fields'
 import validators from 'template-ui/lib/plugins/form/validators'
 
 const register = {
-  email: {
+  username: {
+    title: 'Email',
     component: fields.input,
     validate: [validators.required,validators.email]
   },

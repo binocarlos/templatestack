@@ -10,6 +10,7 @@ export const status = (payload) => {
 
 export const login = (payload) => {
   return request({
+    method: 'post',
     url: url('/auth/login'),
     data: payload
   })
@@ -17,6 +18,7 @@ export const login = (payload) => {
 
 export const register = (payload) => {
   return request({
+    method: 'post',
     url: url('/auth/register'),
     data: payload
   })

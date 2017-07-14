@@ -37,8 +37,12 @@ const errorLogger = (err, req, res, next) => {
   next(err)
 }
 
+const isXHR = (req) => {
+  return req.xhr || ((req.headers['accept'] || '').indexOf('application/json') >= 0)
+}
+
 const clientErrorHandler = (err, req, res, next) => {
-  if (req.xhr) {
+  if (isXHR(req)) {
     jsonError(res, err)
   } else {
     next(err)
@@ -49,11 +53,10 @@ const errorHandler = (err, req, res, next) => {
   if (res.headersSent) {
     return next(err)
   }
-
-  if(req.headers['accept'] == 'application/json') {
+  
+  if (isXHR(req)) {
     jsonError(res, err)
-  }
-  else {
+  } else {
     htmlError(res, err)
   }
 }

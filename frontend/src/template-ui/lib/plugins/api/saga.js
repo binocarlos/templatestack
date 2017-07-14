@@ -1,5 +1,13 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
+const isResponseJson = (res) => res.headers['content-type'].indexOf('application/json') >= 0
+const getErrorText = (error) => {
+  const response = error.response
+  if(!response) return error.toString()
+  if(!isResponseJson(response)) return error.toString()
+  return response.data.error || error.toString()
+}
+
 function* ApiSaga(opts = {}) {
   if(!opts.actions) throw new Error('actions needed for ApiResolverSaga')
   if(!opts.api) throw new Error('actions needed for ApiResolverSaga')
@@ -18,8 +26,8 @@ function* ApiSaga(opts = {}) {
     yield put(actions.response(data))
     apiResult = data
   }
-  catch(error) {
-    apiError = error.toString()
+  catch(error) { 
+    apiError = getErrorText(error)
     yield put(actions.error(apiError))
   }
 

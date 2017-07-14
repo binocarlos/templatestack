@@ -21,23 +21,26 @@ class FormWrapper extends Component {
   render() {
     const actions = this.props.actions || this.defaultActions()
     return (
-      <Loading loading={this.props.loading}>
+      <div>
+      
         {
           this.props.title ?
             (
-              <div>Register</div>
+              <div className={ formTheme.title }>{ this.props.title }</div>
             ) :
             null
         }
         <div className={ formTheme.fieldsWrapper }>
           { this.props.fields }
         </div>
-        <Navigation
-          type='horizontal'
-          actions={actions}
-        />
+        <Loading loading={this.props.loading}>
+          <Navigation
+            type='horizontal'
+            actions={actions}
+          />
+        </Loading>
         <ErrorText error={ this.props.error } />        
-      </Loading>
+      </div>
     )
     
   }

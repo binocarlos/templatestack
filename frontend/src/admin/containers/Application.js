@@ -50,9 +50,9 @@ export default connect(
   },
   (dispatch) => {
     return {
-      toggleMenu: () => dispatch(actions.value.menuOpen.toggle()),
+      toggleMenu: () => dispatch(actions.value.toggle('menuOpen')),
       onMenuClick: (id) => {
-        dispatch(actions.value.menuOpen.set(false))
+        dispatch(actions.value.set('menuOpen', false))
         dispatch(actions.router.redirect(id))
       },
       onOptionClick: (id) => {

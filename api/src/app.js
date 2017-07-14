@@ -40,7 +40,6 @@ const App = (transport, databases) => {
   Routes(app, transport, settings)
 
   app.use(WebserverTools.errorLogger)
-  app.use(WebserverTools.clientErrorHandler)
   app.use(WebserverTools.errorHandler)
 
   return app

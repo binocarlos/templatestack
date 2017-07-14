@@ -9,7 +9,7 @@ export const processSchema = (fields = {}) => {
     const fieldDesc = Object.assign({}, {
       name,
       component: input,
-      label: name.replace(/^\w/, (s) => s.toUpperCase()),
+      label: opts.title || name.replace(/^\w/, (s) => s.toUpperCase()),
     }, opts)
     all[fieldname] = fieldDesc
     return all
