@@ -4,7 +4,7 @@ import ApiReducer from 'template-ui/lib/plugins/api/reducer'
 import * as actions from '../actions'
 import config from '../config'
 
-const value = ValueReducer(undefined, config.initialState.value)
+const value = ValueReducer(config.initialState.value)
 const api = ApiReducer()
 
 const reducers = {

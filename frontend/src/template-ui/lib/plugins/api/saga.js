@@ -19,8 +19,8 @@ function* ApiSaga(opts = {}) {
     apiResult = data
   }
   catch(error) {
-    yield put(actions.error(error))
-    apiError = error
+    apiError = error.toString()
+    yield put(actions.error(apiError))
   }
 
   const ret = {

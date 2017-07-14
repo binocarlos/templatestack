@@ -1,3 +1,5 @@
+import APISelector from 'template-ui/lib/plugins/api/selectors'
+
 export const valuesSelector = (state) => state.value || {}
 export const valueSelector = (state, name) => valuesSelector(state)[name]
 
@@ -6,3 +8,5 @@ export const formStatus = (name) => (state) => {
   if(!formData) return {}
   
 }
+
+export const api = APISelector()

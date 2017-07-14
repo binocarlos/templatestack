@@ -17,7 +17,7 @@ function* config(payload = {}) {
     api: api.config.load
   })
   if(error) throw new Error(error)
-  yield put(actions.value.config.set(answer))
+  yield put(actions.value.set('config', answer))
   return answer
 }
 
@@ -29,7 +29,7 @@ function* userStatus(payload = {}) {
   if(error) throw new Error(error)
   const loggedIn = answer.loggedIn ? true : false
   const user = loggedIn ? answer.user : null
-  yield put(actions.value.user.set(user))
+  yield put(actions.value.set('user', user))
   return answer
 }
 

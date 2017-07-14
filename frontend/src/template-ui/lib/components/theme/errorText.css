@@ -1,0 +1,7 @@
+.errorText {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #cc0000;
+  font-weight: bold;
+  text-decoration: underline;
+}

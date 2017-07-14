@@ -8,7 +8,7 @@ function* initialize() {
     call(loaders.config),
     call(loaders.userStatus)
   ])
-  yield put(actions.value.initialized.set(true))
+  yield put(actions.value.set('initialized', true))
 }
 
 export default initialize

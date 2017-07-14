@@ -29,7 +29,7 @@ function* loginSubmit(action = {}) {
   })
 
   if(error) {
-    yield put(actions.value.loginError(error))
+    yield put(actions.value.set('loginError', error))
     return
   }
 
@@ -57,7 +57,7 @@ function* registerSubmit(action = {}) {
   })
 
   if(error) {
-    yield put(actions.value.registerError(error))
+    yield put(actions.value.set('registerError', error))
     return
   }
 
