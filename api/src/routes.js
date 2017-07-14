@@ -81,7 +81,7 @@ const Routes = (app, transport) => {
   app.post(iPath('/resources/:id'), installationAccess.editor(), digger.create)
   app.get(iPath('/resources/:id'), installationAccess.viewer(), digger.get)
   app.put(iPath('/resources/:id'), installationAccess.editor(), digger.save)
-  app.del(iPath('/resources/:id'), installationAccess.editor(), digger.delete)
+  app.delete(iPath('/resources/:id'), installationAccess.editor(), digger.delete)
 
   app.set('views', path.join(__dirname, 'views'))
 }

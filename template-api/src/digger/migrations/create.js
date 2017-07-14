@@ -25,11 +25,14 @@ const DiggerMigration = (opts = {}) => {
           .references('id')
           .inTable(opts.resourceTablename)
           .onDelete('cascade')
-        table.specificType('ltree', 'path')
+        table.specificType('path', 'ltree')
         table.string('namespace')
           .defaultTo('default')
         table.string('name')
           .notNullable()
+        table.string('type')
+          .notNullable()
+        table.specificType('labels', 'text[][]')
         table.json('meta')
       }),
 

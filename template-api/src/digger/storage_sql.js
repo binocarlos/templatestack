@@ -108,7 +108,7 @@ const DiggerStorageSQL = (knex, opts) => {
 
   const createLinks = (trx, data, done) => {
     return knex
-      .insert(dataArray)
+      .insert(data)
       .into(tables.link)
       .returning('*')
       .transacting(trx)

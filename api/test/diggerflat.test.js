@@ -37,16 +37,10 @@ tape('resourceflat - create resource', (t) => {
 
   createSingleResource(userData, NODE, (err, base) => {
 
-    console.log('-------------------------------------------');
-    console.log(JSON.stringify(base, null, 4))
+    t.equal(base.statusCode, 201, '201 status')
+    t.equal(base.body.name, NODE.name, 'resource name')
+    t.equal(base.body.meta.price, NODE.meta.price, 'resource meta')
 
-    /*
-    const folder = base.folder
-
-    t.equal(folder.statusCode, 201, '201 code')
-    t.equal(folder.body.name, NODE.name, 'resource name')
-    t.equal(folder.body.meta.price, NODE.meta.price, 'resource meta')
-*/
     t.end()
   })
 })
