@@ -9,7 +9,7 @@ import * as selectors from '../selectors'
 import * as actions from '../actions'
 
 const FORM_NAME = 'login'
-const API_NAME = FORM_NAME
+const API_NAME = 'auth_login'
 
 const Fields = FormContainer({
   name: FORM_NAME,

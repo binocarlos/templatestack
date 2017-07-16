@@ -15,14 +15,13 @@ const AuthSagas = (opts = {}) => {
 
   opts = Object.assign({}, {
     userValueName: 'user',
-    logoutUrl: '/api/v1/logout',
+    logoutUrl: '/api/v1/auth/logout',
+    basepath: '/',
     handleLogout: () => {
-      document.location = opts.logoutUrl
+      document.location = opts.logoutUrl + '?redirect=' + opts.basepath
     },
     loginForm: 'login',
-    registerForm: 'register',
-    loginErrorValue: 'loginError',
-    registerErrorValue: 'registerError'
+    registerForm: 'register'
   }, opts)
 
   const actions = opts.actions
@@ -39,14 +38,13 @@ const AuthSagas = (opts = {}) => {
     name: opts.userValueName,
     actions: actions.status,
     api: apis.status,
-    mapResult: (answer) => (answer.loggedIn ? true : false) ? answer.user : null
+    mapResult: (answer) => answer.loggedIn ? answer.data : null
   })
 
   function* login(action = {}) {
     const valid = yield select(isValid(opts.loginForm))
     if(!valid) return
     const values = yield select(getFormValues(opts.loginForm))
-
     const { answer, error } = yield call(apiSaga, {
       actions: actions.login,
       api: apis.login,
@@ -59,8 +57,7 @@ const AuthSagas = (opts = {}) => {
     }
 
     const user = yield call(status)
-
-    yield put(routerActions.trigger('login', user))
+    yield put(routerActions.trigger('loginSuccess', user))
   }
 
   function* register(action = {}) {
@@ -69,8 +66,8 @@ const AuthSagas = (opts = {}) => {
     const values = yield select(getFormValues('register'))
 
     const { answer, error } = yield call(apiSaga, {
-      actions: actions.api.user.register,
-      api: api.user.register,
+      actions: actions.register,
+      api: apis.register,
       payload: values
     })
 
@@ -79,8 +76,8 @@ const AuthSagas = (opts = {}) => {
       return
     }
 
-    const user = yield call(loadUserStatus)
-    yield put(routerActions.trigger('register', user))    
+    const user = yield call(status)
+    yield put(routerActions.trigger('registerSuccess', user))    
   }
 
   return {

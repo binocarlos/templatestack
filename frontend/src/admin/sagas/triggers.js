@@ -10,41 +10,35 @@ import apiSaga from 'template-ui/lib/plugins/api/saga'
 import api from '../api'
 import * as actions from '../actions'
 
-function* exampleTrigger(payload) {
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('trigger yo')
-  console.dir(payload)
+const Triggers = (opts = {}) => {
+
+  const auth = opts.auth
+
+  function* loginError(error) {
+    yield put(actions.value.set('loginError', error))
+  }
+
+  function* registerError(error) {
+    yield put(actions.value.set('registerError', error))
+  }
+
+  function* loginSuccess(user) {
+    yield put(actions.router.redirect('/'))
+  }
+
+  function* registerSuccess(user) {
+    yield put(actions.router.redirect('/'))
+  }
+
+  return {
+    logout: auth.logout,
+    loginSubmit: auth.login,
+    registerSubmit: auth.register,
+    loginError,
+    registerError,
+    loginSuccess,
+    registerSuccess
+  }
 }
 
-function* loginError(error) {
-  yield put(actions.value.set('loginError', error))
-}
-
-function* registerError(error) {
-  yield put(actions.value.set('registerError', error))
-}
-
-function* login(user) {
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('logged in')
-  console.dir(user)
-}
-
-function* register(user) {
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.log('registered')
-  console.dir(user)
-}
-
-const triggers = {
-  exampleTrigger,
-  loginError,
-  registerError,
-  login,
-  register
-}
-
-export default triggers
+export default Triggers

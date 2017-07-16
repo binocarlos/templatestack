@@ -18,10 +18,7 @@ const Route = RouteFactory(config.basepath)
 export const routeConfig = processRoutes({
   '/': {},
   '/help': {
-    triggers: [{
-      name: 'exampleTrigger',
-      payload: {test: 'help'}
-    }]
+    triggers: []
   },
   '/about': {
   },

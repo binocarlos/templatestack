@@ -16,7 +16,7 @@ const register = {
 }
 
 const login = {
-  email: {
+  username: {
     component: fields.input,
     validate: [validators.required,validators.email]
   },

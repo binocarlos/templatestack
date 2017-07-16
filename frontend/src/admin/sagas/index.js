@@ -6,22 +6,27 @@ import * as actions from '../actions'
 
 import api from '../api'
 import config from '../config'
-import triggers from './triggers'
+import Triggers from './triggers'
 import loaders from './loaders'
+
+const auth = AuthSaga({
+  actions: actions.auth,
+  apis: api.auth,
+  basepath: config.basepath
+})
+
+const triggers = Triggers({
+  auth
+})
 
 const router = RouterSaga({
   triggers,
   basepath: config.basepath
 })
 
-const auth = AuthSaga({
-  actions: actions.auth,
-  apis: api.auth
-})
-
 function* initialize() {
   yield all([
-    call(loaders.loadConfig),
+    call(loaders.config),
     call(auth.status)
   ])
   yield put(actions.value.set('initialized', true))

@@ -3,14 +3,14 @@ import ValueLoaderSaga from 'template-ui/lib/plugins/saga/valueLoader'
 import api from '../api'
 import * as actions from '../actions'
 
-const loadConfig = ValueLoaderSaga({
+const config = ValueLoaderSaga({
   name: 'config',
   actions: actions.api.config.load,
   api: api.config.load
 })
 
-const triggers = {
-  loadConfig
+const loaders = {
+  config
 }
 
-export default triggers
+export default loaders
