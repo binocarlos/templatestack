@@ -4,36 +4,47 @@ import { ForkListeners } from '../../utils/saga'
 import actions, { TYPES } from './actions'
 
 const RouterSaga = (opts = {}) => {
-  if(!opts.redirects) throw new Error('redirects needed for RouterSaga')
-  if(!opts.loaders) throw new Error('loaders needed for RouterSaga')
   if(!opts.triggers) throw new Error('triggers needed for RouterSaga')
   if(!opts.basepath) throw new Error('basepath needed for RouterSaga')
 
   let initialRouteLoaded = false
 
-  const { redirects, loaders, triggers, basepath } = opts
+  const { triggers, basepath } = opts
 
   const getRoute = (path) => basepath + path
 
-  function* redirect(action) {
-    if(!action.name) return
-    if(action.name.indexOf('/') == 0) {
-      yield put(actions.push(getRoute(action.name)))
+  function* runTrigger(name, payload) {
+    if(name.indexOf('/') == 0) {
+      yield put(actions.push(getRoute(name)))
     }
     else {
-      const redirectHandler = redirects[action.name]
-      if(!redirectHandler) return
-      yield call(redirectHandler, action.payload)
+      const triggerHandler = triggers[name]
+      if(!triggerHandler) {
+        console.error(`no trigger found for ${name}`)
+        return
+      }
+      yield call(triggerHandler, payload)
     }
   }
 
-  function* changed(action) {
+  // handle a trigger from other code
+  function* handleTrigger(action) {
+    yield call(runTrigger, action.name, action.payload)
+  }
+
+  function* routerChanged(action) {
     const router = yield select(state => state.router)
     const routeInfo = router.result || {}
-    const loaderName = routeInfo.loader
-    if(!loaderName) return
-    if(!loaders[loaderName]) return
-    yield call(loaders[loaderName], action.payload)
+    const triggerArray = routeInfo.triggers || []
+    const redirect = routeInfo.redirect
+    if(redirect) triggerArray.push(redirect)
+    if(!triggerArray || triggerArray.length <= 0) return
+
+    const triggerHandlers = triggerArray
+      .map(trigger => {        
+        return call(runTrigger, trigger.name, trigger.payload)
+      })
+    yield all(triggerHandlers)
     initialRouteLoaded = true
   }
 
@@ -50,9 +61,9 @@ const RouterSaga = (opts = {}) => {
   }
 
   const listeners = ForkListeners([
-    [TYPES.redirect, redirect],
-    [TYPES.changed, changed],
-    [TYPES.trigger, triggered]
+    [TYPES.changed, routerChanged],
+    [TYPES.redirect, handleTrigger],
+    [TYPES.trigger, handleTrigger]
   ])
 
   function* routerEntrySaga() {

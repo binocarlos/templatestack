@@ -18,20 +18,16 @@ const Route = RouteFactory(config.basepath)
 export const routeConfig = processRoutes({
   '/': {},
   '/help': {
-    loader: 'example',
-    payload: 'help'
+    triggers: [{
+      name: 'exampleTrigger',
+      payload: {test: 'help'}
+    }]
   },
   '/about': {
-    loader: 'example',
-    payload: 'about'
   },
   '/login': {
-    loader: 'example',
-    payload: 'login'
   },
   '/register': {
-    loader: 'example',
-    payload: 'register'
   }
 }, config.basepath)
 

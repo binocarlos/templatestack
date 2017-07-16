@@ -9,72 +9,42 @@ import apiSaga from 'template-ui/lib/plugins/api/saga'
 
 import api from '../api'
 import * as actions from '../actions'
-import loaders from './loaders'
 
-/*
-
-  USER TRIGGERS
-  
-*/
-
-function* loginSubmit(action = {}) {
-  const valid = yield select(isValid('login'))
-  if(!valid) return
-  const values = yield select(getFormValues('login'))
-
-  const { answer, error } = yield call(apiSaga, {
-    actions: actions.api.user.login,
-    api: api.user.login,
-    payload: values
-  })
-
-  if(error) {
-    yield put(actions.value.set('loginError', error))
-    return
-  }
-
-  const user = yield call(loaders.userStatus)
-
+function* exampleTrigger(payload) {
   console.log('-------------------------------------------');
   console.log('-------------------------------------------');
-  console.log('logged in!')
-
-  console.log('-------------------------------------------');
-  console.dir(user)
-
-  
+  console.log('trigger yo')
+  console.dir(payload)
 }
 
-function* registerSubmit(action = {}) {
-  const valid = yield select(isValid('register'))
-  if(!valid) return
-  const values = yield select(getFormValues('register'))
+function* loginError(error) {
+  yield put(actions.value.set('loginError', error))
+}
 
-  const { answer, error } = yield call(apiSaga, {
-    actions: actions.api.user.register,
-    api: api.user.register,
-    payload: values
-  })
+function* registerError(error) {
+  yield put(actions.value.set('registerError', error))
+}
 
-  if(error) {
-    yield put(actions.value.set('registerError', error))
-    return
-  }
-
-  const user = yield call(loaders.userStatus)
-
+function* login(user) {
   console.log('-------------------------------------------');
   console.log('-------------------------------------------');
-  console.log('registered!')
-
-  console.log('-------------------------------------------');
+  console.log('logged in')
   console.dir(user)
-  
+}
+
+function* register(user) {
+  console.log('-------------------------------------------');
+  console.log('-------------------------------------------');
+  console.log('registered')
+  console.dir(user)
 }
 
 const triggers = {
-  loginSubmit,
-  registerSubmit
+  exampleTrigger,
+  loginError,
+  registerError,
+  login,
+  register
 }
 
 export default triggers
