@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const toolboxVariables = require('./toolbox-variables');
 
 const appsConfig = require('./apps.config')
@@ -69,10 +70,24 @@ const prodPlugins = () => {
   ]
 }
 
+
+const htmlPlugins = () => {
+  return APPS.map(app => {
+    return new HtmlWebpackPlugin({
+      inject: false,
+      chunks: [app.name],
+      title: app.title,
+      template: 'template.ejs',
+      filename: `${app.name}/index.html`
+    })
+  })
+}
+
 const getPlugins = () => {
-  return isDevelopment ?
+  const basePlugins =  isDevelopment ?
     devPlugins() :
     prodPlugins()
+  return basePlugins.concat(htmlPlugins())
 }
 
 const getEntryPoints = () => {
