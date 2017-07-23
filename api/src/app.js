@@ -14,15 +14,20 @@ const InstallationTools = require('template-api/src/installation/tools')
 const Routes = require('./routes')
 const settings = require('./settings')
 
-const App = (transport, databases) => {
+const Transport = require('./transport')
+const Redis = require('./databases/redis')
+
+const App = () => {
 
   const app = express()
+  const redis = Redis()
+  const transport = Transport()
 
   app.set('view engine', 'ejs')
   
   const session = RedisSession({
     secret: settings.cookie_secret,
-    redis: databases.redis
+    redis
   })
   
   const passport = Passport(transport)

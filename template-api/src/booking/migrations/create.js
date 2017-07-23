@@ -23,8 +23,6 @@ const BookingMigration = (opts = {}) => {
         }
         table.date('date')
           .notNullable()
-        table.string('name')
-          .notNullable()
         table.string('type')
           .notNullable()
         table.string('booking_reference')
@@ -32,24 +30,6 @@ const BookingMigration = (opts = {}) => {
         table.string('slot')
           .notNullable()
         table.json('meta')
-      }),
-      knex.schema.createTable(opts.paymentLinkTablename, (table) => {
-        table.increments('id')
-          .primary()
-        if(opts.installationTablename) {
-          table.integer(opts.installationTablename)
-            .references('id')
-            .inTable(opts.installationTablename)
-            .onDelete('cascade')
-        }
-        table.integer('booking')
-          .references('id')
-          .inTable(opts.bookingTablename)
-          .onDelete('cascade')
-        table.integer('payment')
-          .references('id')
-          .inTable(opts.paymentTablename)
-          .onDelete('cascade')
       })
     ])
   }

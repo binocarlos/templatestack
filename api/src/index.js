@@ -1,12 +1,16 @@
 'use strict'
 
 const settings = require('./settings')
-const Databases = require('./databases')
-const Transport = require('./transport')
-const App = require('./app')
 
-const databases = Databases()
-const transport = Transport(databases)
-const app = App(transport, databases)
+if(settings.backend) {
+  const Backend = require('./backend')
+  Backend()
+}
 
-app.listen(settings.port)
+if(settings.webserver) {
+  const App = require('./app')
+  const app = App()
+  app.listen(settings.port, () => {
+    console.log(`webserver listening on port ${settings.port}`)
+  })
+}

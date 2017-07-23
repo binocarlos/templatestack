@@ -50,9 +50,43 @@ const BookingStorageSQL = (knex, opts) => {
       .raw(sql, params)
       .asCallback(databaseTools.allExtractor(done))
   }
+
+  /*
+  
+    create
+
+    * installationid
+    * data
+      * name
+      * date
+      * type
+      * slot
+      * meta
+    
+  */
+  const create = (trx, query, done) => {
+    console.log('-------------------------------------------');
+    console.dir(query)
+    const insertData = Object.assign({}, query.data, {
+      installation: query.installationid
+    })
+
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(insertData)
+    knex('booking')
+      .insert(insertData)
+      .transacting(trx)
+      .returning('*')
+      .asCallback(databaseTools.singleExtractor(done))
+  }
+
+  const transaction = (handler, done) => databaseTools.knexTransaction(knex, handler, done)
   
   return {
-    search
+    search,
+    create,
+    transaction
   }
 }
 

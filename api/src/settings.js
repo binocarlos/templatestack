@@ -2,6 +2,8 @@
 
 const args = require('minimist')(process.argv, {
   default:{
+    backend: process.env.BACKEND || 'yes',
+    webserver: process.env.WEBSERVER || 'yes',
     port: process.env.PORT || 80,
     base: process.env.BASE || '/api/v1',
     postgreshost: process.env.POSTGRES_SERVICE_HOST || 'postgres',

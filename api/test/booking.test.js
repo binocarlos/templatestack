@@ -9,11 +9,11 @@ const fixtures = require('./fixtures/booking')
 
 const dateTools = require('template-api/src/utils/date')
 
-const Databases = require('../src/databases')
+const Knex = require('../src/databases/knex')
+const Transport = require('../src/transport')
 
-const databases = Databases()
-
-const knex = databases.knex
+const knex = Knex()
+const transport = Transport()
 
 const getFixtureData = (i, overlays, bookingOpts) => {
   overlays = overlays.map(overlay => {
@@ -65,7 +65,11 @@ tape('booking - search all', (t) => {
   }
 
   createFixtureBookings(userData, overlays, {}, (err, base) => {
-
+    if(err) {
+      t.error(err)
+      t.end()
+      return
+    }
     queries.search(base.i, {}, (err, result) => {
       if(err) t.error(err)
 
@@ -103,7 +107,11 @@ tape('booking - search from', (t) => {
   }
 
   createFixtureBookings(userData, overlays, {}, (err, base) => {
-
+    if(err) {
+      t.error(err)
+      t.end()
+      return
+    }
     queries.search(base.i, {
       from: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_FROM), true)
     }, (err, result) => {
@@ -144,7 +152,11 @@ tape('booking - search from & to / range', (t) => {
   }
 
   createFixtureBookings(userData, overlays, {}, (err, base) => {
-
+    if(err) {
+      t.error(err)
+      t.end()
+      return
+    }
     queries.search(base.i, {
       from: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_FROM), true),
       to: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_TO), true)
@@ -184,7 +196,11 @@ tape('booking - search from & to / range', (t) => {
   const dateString = dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_FROM), true)
 
   createFixtureBookings(userData, overlays, {}, (err, base) => {
-
+    if(err) {
+      t.error(err)
+      t.end()
+      return
+    }
     queries.search(base.i, {
       from: dateString,
       to: dateString
@@ -203,7 +219,84 @@ tape('booking - search from & to / range', (t) => {
   })
 })
 
+tape('booking - search meta', (t) => {
+
+  const userData = authQueries.UserData()
+  let overlays = [{
+    name: 'person1'
+  },{
+    name: 'person2'
+  },{
+    email: 'person1@test.com'
+  }]
+  
+  createFixtureBookings(userData, overlays, {}, (err, base) => {
+    if(err) {
+      t.error(err)
+      t.end()
+      return
+    }
+    queries.search(base.i, {
+      search: 'person1'
+    }, (err, result) => {
+      if(err) t.error(err)
+
+      const bookings = result.body
+
+      t.equal(result.statusCode, 200, '200 code')
+
+      t.equal(bookings.length, 2, 'correct count')
+
+      t.equal(bookings[0].meta.info.name, 'person1', 'name = person1')
+      t.equal(bookings[1].meta.info.email, 'person1@test.com', 'email = person1')
+
+      t.end()
+    })
+    
+  })
+})
+
+tape('booking - create', (t) => {
+
+  const userData = authQueries.UserData()
+  let overlays = [{
+    name: 'person1'
+  }]
+
+  let user = null
+  let i = null
+
+  const data = fixtures.createMany(overlays, {})[0]
+
+  async.waterfall([
+    (next) => authQueries.register(userData, next),
+
+    (u, next) => {
+      user = u.body      
+      i = user.meta.activeInstallation
+      transport.act({
+        topic: 'booking',
+        cmd: 'create',
+        installationid: i,
+        data
+      }, next)
+    }
+  ], (err, result) => {
+    if(err) t.error(err)
+
+    t.equal(result.installation, i, 'installation ok')
+    t.equal(result.meta.info.name, 'person1', 'name ok')
+    
+    t.end()
+  })
+
+})
+
 tape('close database', (t) => {
-  t.end()
-  process.exit()
+  
+  knex.destroy()
+    .then(() => {
+      transport.close()
+      t.end()
+    })
 })

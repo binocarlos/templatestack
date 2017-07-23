@@ -2,7 +2,7 @@
 
 const async = require('async')
 
-const Hooks = (hemera, databases) => {
+const Hooks = (hemera) => {
   const Joi = hemera.exposition['hemera-joi'].joi
 
   // triggered when a new user registers
@@ -24,6 +24,8 @@ const Hooks = (hemera, databases) => {
     done()
   }
 
+  const bookingCreate = (booking, done) => done()
+
   return {
     auth: {
       register: authRegister,
@@ -31,7 +33,9 @@ const Hooks = (hemera, databases) => {
     },
     installation: {},
     digger: {},
-    booking: {}
+    booking: {
+      create: bookingCreate
+    }
   }
 }
 

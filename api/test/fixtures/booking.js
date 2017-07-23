@@ -7,9 +7,7 @@ const tools = require('../tools')
 const create = (opts = {}) => {
   const email = (new Date().getTime()) + (Math.floor(Math.random()*1000000)) + 'test@test.com'
   const date = opts.date || new Date()
-  return {
-    installation: opts.installation || 1,
-    name: opts.name || 'test booking',
+  let ret = {
     type: opts.type || 'default',
     booking_reference: opts.booking_reference || idTools.makeid(),
     slot: opts.slot || '0-1',
@@ -23,6 +21,10 @@ const create = (opts = {}) => {
       }
     } 
   }
+  if(opts.installation) {
+    ret.installation = opts.installation
+  }
+  return ret
 }
 
 const createMany = (overlays, bookingOpts) => {

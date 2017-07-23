@@ -1,5 +1,9 @@
 'use strict'
 
+const HemeraJoi = require('template-api/src/transport/hemera-joi')
+const HemeraSql = require('template-api/src/transport/hemera-sql-store')
+const SQLAddons = require('template-api/src/transport/hemera-sql-store-addons')
+
 const SystemBackend = require('template-api/src/system/backend')
 const AuthBackend = require('template-api/src/auth/backend')
 const InstallationBackend = require('template-api/src/installation/backend')
@@ -13,40 +17,61 @@ const BookingStorage = require('template-api/src/booking/storage_sql')
 
 const Hooks = require('./hooks')
 
+const Transport = require('../transport')
+const Knex = require('../databases/knex')
+
 const packageJSON = require('../../package.json')
 
-const Backend = (transport, databases) => {
+const setupBackends = (hemera, knex) => {
+  
+  const hooks = Hooks(hemera, knex)
 
-  const hooks = Hooks(transport, databases)
-
-  SystemBackend(transport, {
+  SystemBackend(hemera, {
     version: packageJSON.version
   })
 
-  AuthStorage(transport, {
-    knex: databases.knex
+  AuthStorage(hemera, {
+    knex
   })
 
-  InstallationStorage(transport, {
-    knex: databases.knex
+  InstallationStorage(hemera, {
+    knex
   })
   
-  AuthBackend(transport, {
+  AuthBackend(hemera, {
     hooks: hooks.auth
   })
 
-  InstallationBackend(transport, {
+  InstallationBackend(hemera, {
     hooks: hooks.installation
   })
 
-  DiggerBackend(transport, {
-    storage: DiggerStorage(databases.knex),
+  DiggerBackend(hemera, {
+    storage: DiggerStorage(knex),
     hooks: hooks.digger
   })
 
-  BookingBackend(transport, {
-    storage: BookingStorage(databases.knex),
+  BookingBackend(hemera, {
+    storage: BookingStorage(knex),
     hooks: hooks.booking
+  })
+}
+
+const Backend = () => {
+  
+  const transport = Transport()
+  const knex = Knex()
+
+  transport.use(HemeraJoi)
+  transport.use(HemeraSql, {
+    knex: {
+      driver: knex
+    }
+  })
+
+  transport.ready(() => {
+    SQLAddons(transport, knex)
+    setupBackends(transport, knex)
   })
 }
 

@@ -1,6 +1,4 @@
-drop table booking_payment;
 drop table booking;
-drop table payment;
 drop table resource_link;
 drop table resource;
 drop extension ltree;
