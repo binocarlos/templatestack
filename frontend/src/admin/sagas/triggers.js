@@ -14,14 +14,6 @@ const Triggers = (opts = {}) => {
 
   const auth = opts.auth
 
-  function* loginError(error) {
-    yield put(actions.value.set('loginError', error))
-  }
-
-  function* registerError(error) {
-    yield put(actions.value.set('registerError', error))
-  }
-
   function* loginSuccess(user) {
     yield put(actions.router.redirect('/'))
   }
@@ -34,8 +26,6 @@ const Triggers = (opts = {}) => {
     logout: auth.logout,
     loginSubmit: auth.login,
     registerSubmit: auth.register,
-    loginError,
-    registerError,
     loginSuccess,
     registerSuccess
   }

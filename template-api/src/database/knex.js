@@ -33,6 +33,8 @@ const Knex = (opts) => {
     default: DEFAULT_CONNECTION
   })
 
+  opts.timezone = 'UTC'
+
   return knex(opts)
 }
 

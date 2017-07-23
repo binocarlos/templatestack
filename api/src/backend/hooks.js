@@ -29,7 +29,9 @@ const Hooks = (hemera, databases) => {
       register: authRegister,
       create: authCreate
     },
-    installation: {}
+    installation: {},
+    digger: {},
+    booking: {}
   }
 }
 

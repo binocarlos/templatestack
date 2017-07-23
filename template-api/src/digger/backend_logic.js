@@ -184,8 +184,6 @@ const BackendLogic = (storage, opts = {}) => {
     const parentid = query.parentid
     const data = query.data
 
-    //databaseTools.knexTransaction(knex, (trx, finish) => {
-
     async.waterfall([
 
       // first get the parent (if any) so we can assign the first level

@@ -7,7 +7,6 @@ import * as actions from '../actions'
 import api from '../api'
 import config from '../config'
 import Triggers from './triggers'
-import loaders from './loaders'
 
 const auth = AuthSaga({
   actions: actions.auth,
@@ -26,7 +25,6 @@ const router = RouterSaga({
 
 function* initialize() {
   yield all([
-    call(loaders.config),
     call(auth.status)
   ])
   yield put(actions.value.set('initialized', true))

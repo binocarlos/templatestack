@@ -5,6 +5,7 @@ const AuthRoutes = require('template-api/src/auth/routes')
 const InstallationRoutes = require('template-api/src/installation/routes')
 const CollaborationRoutes = require('template-api/src/installation/collaboration_routes')
 const DiggerRoutes = require('template-api/src/digger/routes')
+const BookingRoutes = require('template-api/src/booking/routes')
 
 const AuthAccess = require('template-api/src/auth/access')
 const InstallationAccess = require('template-api/src/installation/access')
@@ -18,6 +19,7 @@ const Routes = (app, transport) => {
   const system = SystemRoutes(transport)
   const installation = InstallationRoutes(transport)
   const digger = DiggerRoutes(transport)
+  const booking = BookingRoutes(transport)
   const users = CollaborationRoutes(transport, {
     collaboration_template: {
       type: 'user'
@@ -82,6 +84,9 @@ const Routes = (app, transport) => {
   app.get(iPath('/resources/:id'), installationAccess.viewer(), digger.get)
   app.put(iPath('/resources/:id'), installationAccess.editor(), digger.save)
   app.delete(iPath('/resources/:id'), installationAccess.editor(), digger.delete)
+
+  // booking
+  app.get(iPath('/bookings'), installationAccess.viewer(), booking.search)
 
   app.set('views', path.join(__dirname, 'views'))
 }
