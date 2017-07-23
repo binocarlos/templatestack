@@ -9,6 +9,7 @@ const AuthBackend = require('template-api/src/auth/backend')
 const InstallationBackend = require('template-api/src/installation/backend')
 const DiggerBackend = require('template-api/src/digger/backend')
 const BookingBackend = require('template-api/src/booking/backend')
+const ScheduleBackend = require('template-api/src/schedule/backend')
 
 const AuthStorage = require('template-api/src/auth/storage_sql')
 const InstallationStorage = require('template-api/src/installation/storage_sql')
@@ -54,6 +55,10 @@ const setupBackends = (hemera, knex) => {
   BookingBackend(hemera, {
     storage: BookingStorage(knex),
     hooks: hooks.booking
+  })
+
+  ScheduleBackend(hemera, {
+    
   })
 }
 
