@@ -11,7 +11,9 @@ const REQUIRED = [
 ]
 
 const REQUIRED_HOOKS = [
-  'create'
+  'create',
+  'save',
+  'del'
 ]
 
 const DEFAULTS = {
@@ -42,6 +44,27 @@ const BookingBackend = (hemera, opts) => {
 
   const storage = opts.storage
   const checkBookingSlot = opts.checkBookingSlot
+
+  /*
+  
+    load
+
+    * id
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'load',
+    installationid: Joi.number().required(),
+    id: Joi.number().required()
+  }, (req, done) => {
+
+    storage.get({
+      id: req.id,
+      installationid: req.installationid
+    }, done)
+
+  })
 
   /*
   
@@ -114,13 +137,85 @@ const BookingBackend = (hemera, opts) => {
           }, next)
         },
         (booking, next) => {
-          hooks.create(booking, (err) => {
+          hooks.create({trx}, booking, (err) => {
             if(err) return next(err)
             next(null, booking)
           })
         }
       ], finish)
     }, done)
+  })
+
+  /*
+  
+    save
+
+    * id
+    * data
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'save',
+    installationid: Joi.number().required(),
+    id: Joi.number().required(),
+    data: Joi.object().required()
+  }, (req, done) => {
+
+    storage.transaction((trx, finish) => {
+      async.waterfall([
+        (next) => {
+          storage.save(trx, {
+            id: req.id,
+            installationid: req.installationid,
+            data: req.data
+          }, next)
+        },
+        (booking, next) => {
+          hooks.save({trx}, booking, (err) => {
+            if(err) return next(err)
+            next(null, booking)
+          })
+        }
+      ], finish)
+    }, done)
+
+  })
+
+
+  /*
+  
+    del
+
+    * id
+    * data
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'del',
+    installationid: Joi.number().required(),
+    id: Joi.number().required()
+  }, (req, done) => {
+
+
+    storage.transaction((trx, finish) => {
+      async.waterfall([
+        (next) => {
+          storage.del(trx, {
+            id: req.id,
+            installationid: req.installationid
+          }, next)
+        },
+        (booking, next) => {
+          hooks.del({trx}, booking, (err) => {
+            if(err) return next(err)
+            next(null, booking)
+          })
+        }
+      ], finish)
+    }, done)
+
   })
 
 }

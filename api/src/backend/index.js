@@ -48,12 +48,12 @@ const setupBackends = (hemera, knex) => {
   })
 
   DiggerBackend(hemera, {
-    storage: DiggerStorage(knex),
+    storage: DiggerStorage(knex, hemera),
     hooks: hooks.digger
   })
 
   BookingBackend(hemera, {
-    storage: BookingStorage(knex),
+    storage: BookingStorage(knex, hemera),
     hooks: hooks.booking
   })
 

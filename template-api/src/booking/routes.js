@@ -25,6 +25,24 @@ const BookingRoutes = (transport, opts) => {
   const TOPIC = opts.topic
 
   // QUERIES
+  const load = (req, res, next) => {
+    const installationid = opts.extractInstallationId(req)
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
+    if(!id) return webserverTools.errorReply(next, res, 'booking id required')
+    transport.act({
+      topic: TOPIC,
+      cmd: 'load',
+      installationid,
+      id
+    }, (err, booking) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      if(!booking) return webserverTools.errorReply(next, res, 'booking not found', 404)
+      res
+        .status(200)
+        .json(booking)
+    })
+  }
 
   const search = (req, res, next) => {
     const installationid = opts.extractInstallationId(req)
@@ -45,8 +63,70 @@ const BookingRoutes = (transport, opts) => {
     })
   }
 
+  // COMMANDS
+  const create = (req, res, next) => {
+    const installationid = opts.extractInstallationId(req)
+    if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
+    const data = req.body
+    if(!data) return webserverTools.errorReply(next, res, 'no data given', 400)
+    transport.act({
+      topic: TOPIC,
+      cmd: 'create',
+      installationid,
+      data
+    }, (err, booking) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(201)
+        .json(booking)
+    })
+  }
+
+  const save = (req, res, next) => {
+    const installationid = opts.extractInstallationId(req)
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
+    if(!id) return webserverTools.errorReply(next, res, 'booking id required')
+    const data = req.body
+    if(!data) return webserverTools.errorReply(next, res, 'no data given', 400)
+    transport.act({
+      topic: TOPIC,
+      cmd: 'save',
+      installationid,
+      id,
+      data
+    }, (err, booking) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(200)
+        .json(booking)
+    })
+  }
+
+  const del = (req, res, next) => {
+    const installationid = opts.extractInstallationId(req)
+    const id = webserverTools.getIdParam(req, 'id')
+    if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
+    if(!id) return webserverTools.errorReply(next, res, 'booking id required')
+    transport.act({
+      topic: TOPIC,
+      cmd: 'del',
+      installationid,
+      id
+    }, (err, booking) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(200)
+        .json(booking)
+    })
+  }
+
   return {
-    search
+    load,
+    search,
+    create,
+    save,
+    del
   }
 }
 

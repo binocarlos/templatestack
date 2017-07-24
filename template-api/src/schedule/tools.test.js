@@ -1,5 +1,5 @@
 const tape = require('tape')
-const options = require('../../src/options')
+const tools = require('./tools')
 
 tape('required options', (t) => {
   const required = [
@@ -83,7 +83,7 @@ tape('throw errors', (t) => {
     }, {
       required
     })
-  }, /width should be of type number, height is required/, "Should throw typeError")
+  }, /width should be of type number, height is a required option/, "Should throw typeError")
   
   t.end()
 })
@@ -100,7 +100,7 @@ tape('processor throws', (t) => {
     }, {
       required
     })
-  }, /width should be of type number, height is required/, "Should throw typeError")
+  }, /width should be of type number, height is a required option/, "Should throw typeError")
   
   t.end()
 })

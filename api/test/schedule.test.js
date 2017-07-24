@@ -17,16 +17,21 @@ tape('schedule - 3 day range', (t) => {
     to: '2017-07-26'
   }
   
-/*
   transport.act({
     topic: 'schedule',
     cmd: 'range',
-    installationid: i,
-    data
-  }, next)
-*/
-  console.log(JSON.stringify(fixtures, null, 4))
-  t.end()
+    calendar: fixtures.calendar,
+    schedule: fixtures.schedule_templates,
+    from: dates.from,
+    to: dates.to
+  }, (err, results) => {
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(err)
+    console.dir(results)
+    t.end()
+  })
+
 })
 
 tape('close database', (t) => {

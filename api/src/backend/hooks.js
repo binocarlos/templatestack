@@ -24,7 +24,7 @@ const Hooks = (hemera) => {
     done()
   }
 
-  const bookingCreate = (booking, done) => done()
+  const bookingNoop = (context, booking, done) => done()
 
   return {
     auth: {
@@ -34,7 +34,9 @@ const Hooks = (hemera) => {
     installation: {},
     digger: {},
     booking: {
-      create: bookingCreate
+      create: bookingNoop,
+      save: bookingNoop,
+      del: bookingNoop
     }
   }
 }

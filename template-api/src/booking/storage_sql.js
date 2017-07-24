@@ -53,6 +53,23 @@ const BookingStorageSQL = (knex, opts) => {
 
   /*
   
+    load
+
+    * id
+    
+  */
+  const load = (query, done) => {
+    knex.select('*')
+      .from(tables.booking)
+      .where({
+        id: query.id,
+        [tables.installation]: query.installationid
+      })
+      .asCallback(databaseTools.singleExtractor(done))
+  }
+
+  /*
+  
     create
 
     * installationid
@@ -65,15 +82,9 @@ const BookingStorageSQL = (knex, opts) => {
     
   */
   const create = (trx, query, done) => {
-    console.log('-------------------------------------------');
-    console.dir(query)
     const insertData = Object.assign({}, query.data, {
       installation: query.installationid
     })
-
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(insertData)
     knex('booking')
       .insert(insertData)
       .transacting(trx)
@@ -81,11 +92,55 @@ const BookingStorageSQL = (knex, opts) => {
       .asCallback(databaseTools.singleExtractor(done))
   }
 
+
+  /*
+  
+    save
+
+    * id
+    * data
+    
+  */
+  const save = (trx, query, done) => {
+    knex(tables.booking)
+      .where({
+        id: query.id,
+        [tables.installation]: query.installationid
+      })
+      .update(data)
+      .transacting(trx)
+      .returning('*')
+      .asCallback(databaseTools.singleExtractor(done))
+  }
+
+  /*
+  
+    del
+
+    * id
+    
+  */
+  const del = (trx, query, done) => {
+    knex(tables.booking)
+      .where({
+        id: query.id,
+        [tables.installation]: query.installationid
+      })
+      .del(data)
+      .transacting(trx)
+      .returning('*')
+      .asCallback(databaseTools.singleExtractor(done))
+  }
+
+
   const transaction = (handler, done) => databaseTools.knexTransaction(knex, handler, done)
   
   return {
     search,
     create,
+    load,
+    save,
+    del,
     transaction
   }
 }
