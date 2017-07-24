@@ -1,8 +1,7 @@
 const tape = require('tape')
-const tools = require('./test.tools')
 const schedule = require('./schedule')
+const fixtures = require('./fixtures/schedule')
 
-const fixtures = tools.fixtureData()
 tape('peak schedule', (t) => {
   const data = fixtures.schedule_templates.peak
   const day = schedule(data)

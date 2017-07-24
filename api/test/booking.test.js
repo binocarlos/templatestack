@@ -88,14 +88,14 @@ tape('booking - search all', (t) => {
   })
 })
 
-tape('booking - search from', (t) => {
+tape('booking - search start', (t) => {
 
   const userData = authQueries.UserData()
   const MAX = 10
   const YEAR = 2017
   const MONTH = 7
 
-  const SEARCH_FROM = 6
+  const SEARCH_START = 6
   let overlays = []
   let count = 0
 
@@ -113,34 +113,34 @@ tape('booking - search from', (t) => {
       return
     }
     queries.search(base.i, {
-      from: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_FROM), true)
+      start: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_START), true)
     }, (err, result) => {
       if(err) t.error(err)
 
       const bookings = result.body
       t.equal(result.statusCode, 200, '200 code')
 
-      t.equal(bookings.length, MAX - SEARCH_FROM + 1, 'correct count')
+      t.equal(bookings.length, MAX - SEARCH_START + 1, 'correct count')
 
       const firstBooking = bookings[0]
       const firstBookingDate = new Date(firstBooking.date)
 
-      t.equal(firstBookingDate.getDate(), SEARCH_FROM, 'first booking date is correct')
+      t.equal(firstBookingDate.getDate(), SEARCH_START, 'first booking date is correct')
       t.end()
     })
     
   })
 })
 
-tape('booking - search from & to / range', (t) => {
+tape('booking - search start & end / range', (t) => {
 
   const userData = authQueries.UserData()
   const MAX = 10
   const YEAR = 2017
   const MONTH = 7
 
-  const SEARCH_FROM = 6
-  const SEARCH_TO = 9
+  const SEARCH_START = 6
+  const SEARCH_END = 9
   let overlays = []
   let count = 0
 
@@ -158,15 +158,15 @@ tape('booking - search from & to / range', (t) => {
       return
     }
     queries.search(base.i, {
-      from: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_FROM), true),
-      to: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_TO), true)
+      start: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_START), true),
+      end: dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_END), true)
     }, (err, result) => {
       if(err) t.error(err)
 
       const bookings = result.body
       t.equal(result.statusCode, 200, '200 code')
 
-      t.equal(bookings.length, SEARCH_TO - SEARCH_FROM + 1, 'correct count')
+      t.equal(bookings.length, SEARCH_END - SEARCH_START + 1, 'correct count')
 
       t.end()
     })
@@ -174,14 +174,14 @@ tape('booking - search from & to / range', (t) => {
   })
 })
 
-tape('booking - search from & to / range', (t) => {
+tape('booking - search start & end same date', (t) => {
 
   const userData = authQueries.UserData()
   const MAX = 10
   const YEAR = 2017
   const MONTH = 7
 
-  const SEARCH_FROM = 6
+  const SEARCH_START = 6
   
   let overlays = []
   let count = 0
@@ -193,7 +193,7 @@ tape('booking - search from & to / range', (t) => {
     count++
   }
 
-  const dateString = dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_FROM), true)
+  const dateString = dateTools.sqlDate(new Date(YEAR, MONTH, SEARCH_START), true)
 
   createFixtureBookings(userData, overlays, {}, (err, base) => {
     if(err) {
@@ -202,8 +202,8 @@ tape('booking - search from & to / range', (t) => {
       return
     }
     queries.search(base.i, {
-      from: dateString,
-      to: dateString
+      start: dateString,
+      end: dateString
     }, (err, result) => {
       if(err) t.error(err)
 

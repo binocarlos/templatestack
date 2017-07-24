@@ -35,8 +35,8 @@ const BookingSQL = (opts = {}) => {
 
     * installationid
     * search
-    * from
-    * to
+    * start
+    * end
     * type
     
   */
@@ -53,14 +53,14 @@ const BookingSQL = (opts = {}) => {
       parts.push(`( ${searchParts.join(' or ')} )`)
     }
 
-    if(query.from) {
+    if(query.start) {
       parts.push(`booking.date::text >= ?`)
-      params.push(query.from)
+      params.push(query.start)
     }
 
-    if(query.to) {
+    if(query.end) {
       parts.push(`booking.date::text <= ?`)
-      params.push(query.to)
+      params.push(query.end)
     }
 
     if(query.type) {

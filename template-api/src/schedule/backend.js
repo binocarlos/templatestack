@@ -28,8 +28,8 @@ const ScheduleBackend = (hemera, opts) => {
 
     * calendar - array of calendar descriptions
     * schedule - object of schedule descriptions
-    * from - start date
-    * to - end date
+    * start - start date
+    * end - end date
     * items - array of objects with
       * id
       * date
@@ -43,8 +43,9 @@ const ScheduleBackend = (hemera, opts) => {
     cmd: 'range',
     calendar: Joi.array(),
     schedule: Joi.object(),
-    from: Joi.string(),
-    to: Joi.string(),
+    start: Joi.string(),
+    end: Joi.string(),
+    items: Joi.array()
 
   }, (req, done) => {
     console.log('-------------------------------------------');

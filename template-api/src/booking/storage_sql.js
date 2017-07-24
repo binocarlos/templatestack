@@ -39,8 +39,8 @@ const BookingStorageSQL = (knex, opts) => {
 
     * installationid
     * search
-    * from
-    * to
+    * start
+    * end
     * type
     
   */

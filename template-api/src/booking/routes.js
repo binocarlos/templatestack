@@ -53,8 +53,8 @@ const BookingRoutes = (transport, opts) => {
       installationid,
       type: req.qs.type,
       search: req.qs.search,
-      from: req.qs.from,
-      to: req.qs.to
+      start: req.qs.start,
+      end: req.qs.end
     }, (err, bookings) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res

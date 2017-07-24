@@ -1,7 +1,6 @@
 const tape = require('tape')
-const tools = require('./test.tools')
 const Calendar = require('./calendar')
-const fixtures = tools.fixtureData()
+const fixtures = require('./fixtures/schedule')
 
 tape('off grid mid-week should get offpeak', (t) => {
   const data = fixtures.calendar

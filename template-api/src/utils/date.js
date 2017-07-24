@@ -93,6 +93,24 @@ const timeRangeTitle = (startDate, duration) => {
   ].join(' - ')
 }
 
+const isBeforeToday = (date) => {
+  const now = new Date()
+  return moment(date).isBefore(now, 'day')
+}
+
+const getRange = (start, end) => {
+  start = moment(start)
+  end = moment(end)
+  const range = moment().range(start, end)
+  const diff = range.diff('days')
+
+  let ret = [start.toDate()]
+
+  while(ret.length<diff) {
+
+  }
+}
+
 module.exports = {
   utcParts,
   sqlDate,
@@ -106,5 +124,7 @@ module.exports = {
   dateDelta,
   getTime,
   timeRange,
-  timeRangeTitle
+  timeRangeTitle,
+  isBeforeToday,
+  getRange
 }
