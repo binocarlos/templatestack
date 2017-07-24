@@ -1,4 +1,6 @@
-const moment = require('moment')
+const Moment = require('moment')
+const MomentRange = require('moment-range')
+const moment = MomentRange.extendMoment(Moment)
 
 const utcParts = (date) => {
   date = date || new Date()
@@ -99,16 +101,9 @@ const isBeforeToday = (date) => {
 }
 
 const getRange = (start, end) => {
-  start = moment(start)
-  end = moment(end)
-  const range = moment().range(start, end)
-  const diff = range.diff('days')
-
-  let ret = [start.toDate()]
-
-  while(ret.length<diff) {
-
-  }
+  const range = moment.range(start, end)
+  const days = Array.from(range.by('day'))
+  return days.map(day => day.toDate())
 }
 
 module.exports = {

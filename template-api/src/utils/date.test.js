@@ -9,6 +9,9 @@ tape('date range', (t) => {
 
   const range = tools.getRange(start, end)
 
-  console.dir(range)
+  t.equal(range.length, 6, 'correct length')
+  t.equal(range[0].getDate(), 10, 'first day correct')
+  t.equal(range[5].getDate(), 15, 'last day correct')
+
   t.end()
 })
