@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "test": "tape src/**/date.test.js"
+    "test": "tape src/**/range.test.js"
   },
   "dependencies": {
     "async": "^2.4.1",
