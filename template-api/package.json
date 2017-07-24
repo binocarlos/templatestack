@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "test": "tape src/**/schedule.test.js"
+    "test": "tape src/**/calendar.test.js"
   },
   "dependencies": {
     "async": "^2.4.1",

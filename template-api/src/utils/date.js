@@ -35,7 +35,7 @@ const isDateBefore = (date1, date2) => {
 }
 
 // days is an array like 'Mon', 'Tue', 'Wed'
-const isDateWithinDays = (days, date, debug) => {
+const isDateWithinDays = (days, date) => {
   const dateDay = moment(date).format("ddd").toLowerCase()
   days = days.map(d => d.toLowerCase())
   return days.indexOf(dateDay) >= 0
