@@ -12,29 +12,23 @@ POSTGRES_HOST="postgres"
 POSTGRES_USER="${STACKNAME}"
 POSTGRES_PASSWORD="${STACKNAME}"
 POSTGRES_DATABASE="${STACKNAME}"
-NETWORK_NAME=`echo "${STACKNAME}" | sed 's/_//'`"_default"
+NETWORK_NAME="${STACKNAME}_default"
 POSTGRES_NAME="${STACKNAME}_postgres"
 
 function connect() {
-  docker run -i --rm ${EXTRA_DOCKER_ARGS} \
-    --network ${NETWORK_NAME} \
-    --link ${POSTGRES_NAME}:${POSTGRES_HOST} \
-    -e PGPASSWORD=${POSTGRES_PASSWORD} \
-    postgres $@
+  local flags=""
+  if [ -t 0 ]; then
+    flags="t"
+  fi
+  eval "docker exec -i${flags} ${POSTGRES_NAME} "$@""
 }
 
 function psql() {
-  local cmd="psql --host ${POSTGRES_HOST} --username ${POSTGRES_USER} --dbname ${POSTGRES_DATABASE} $@"
-  if [ -t 0 ]; then
-    echo 'connecting to postgres'
-    export EXTRA_DOCKER_ARGS="${EXTRA_DOCKER_ARGS} -t "
-  fi
-  connect ${cmd}
+  connect "psql --user ${POSTGRES_USER} $@"
 }
 
 function backup() {
-  local cmd="pg_dump --host ${POSTGRES_HOST} --username ${POSTGRES_USER} ${POSTGRES_DATABASE}"
-  connect ${cmd}
+  connect "pg_dump --user ${POSTGRES_USER} $@"
 }
 
 function usage() {

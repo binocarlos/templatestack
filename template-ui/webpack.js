@@ -6,13 +6,17 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+// these need compiling
+const DEFAULT_LINKED_MODULES = [
+  'template-tools/src',
+  'template-ui/lib'
+]
+
 const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
   const APPS = appsConfig.apps || []
-  const LINKED_MODULES = appsConfig.linkedModules || []
   const SHARED_MODULES = appsConfig.sharedModules || []
-
+  const LINKED_MODULES = appsConfig.linkedModules || DEFAULT_LINKED_MODULES
   const isDevelopment = process.env.NODE_ENV !== "production"
-  const shouldLinkModules = process.env.LINKMODULES ? true : false
 
   const isExternalModule = (module) => {
     var userRequest = module.userRequest
@@ -117,13 +121,11 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
   }
 
   const mapModule = m => fs.realpathSync(`./node_modules/${m}`)
-  const linkedModules = shouldLinkModules ? LINKED_MODULES : []
-
   const babelIncludes = [
     path.resolve(dirname, 'src')
   ]
   .concat(SHARED_MODULES.map(mapModule))
-  .concat(linkedModules.map(mapModule))
+  .concat(LINKED_MODULES.map(mapModule))
 
   return {
     _apps: APPS,

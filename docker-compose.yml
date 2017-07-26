@@ -2,28 +2,28 @@ version: '2'
 services:
   postgres:
     image: postgres:9.6.1
-    container_name: template_stack_postgres
+    container_name: templatestack_postgres
     volumes:
       - ./.data/postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=template_stack
-      - POSTGRES_PASSWORD=template_stack
-      - POSTGRES_DB=template_stack
+      - POSTGRES_USER=templatestack
+      - POSTGRES_PASSWORD=templatestack
+      - POSTGRES_DB=templatestack
   redis:
     image: redis
-    container_name: template_stack_redis
+    container_name: templatestack_redis
     volumes:
       - ./.data/redis:/data
   nats:
     image: nats
-    container_name: template_stack_nats
+    container_name: templatestack_nats
   frontend:
     build:
       context: ./
       dockerfile: Dockerfile.frontend
     ports:
       - "80:80"
-    container_name: template_stack_frontend
+    container_name: templatestack_frontend
     entrypoint:
       - "bash"
       - "run.sh"
@@ -33,11 +33,12 @@ services:
       - ./shared:/app/frontend/node_modules/shared
     environment:
       - MANUALRUN
+      - LINKMODULES
   api:
     build:
       context: ./
       dockerfile: Dockerfile.api
-    container_name: template_stack_api
+    container_name: templatestack_api
     entrypoint:
       - "bash"
       - "run.sh"
@@ -47,8 +48,8 @@ services:
       - ./shared:/app/frontend/node_modules/shared
     environment:
       - MANUALRUN
-      - POSTGRES_SERVICE_USER=template_stack
-      - POSTGRES_SERVICE_PASSWORD=template_stack
-      - POSTGRES_SERVICE_DATABASE=template_stack
+      - POSTGRES_SERVICE_USER=templatestack
+      - POSTGRES_SERVICE_PASSWORD=templatestack
+      - POSTGRES_SERVICE_DATABASE=templatestack
       - COOKIE_SECRET=apples
     

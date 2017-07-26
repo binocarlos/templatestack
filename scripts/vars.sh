@@ -7,4 +7,4 @@ set -e
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-export STACKNAME="template_stack"
+export STACKNAME="templatestack"
