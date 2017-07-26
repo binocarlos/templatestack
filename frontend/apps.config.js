@@ -3,11 +3,12 @@ const CONFIG = {
     "name": "admin",
     "title": "Admin Panel"
   }],
-  // node_modules to run through babel
+  sharedModules: [
+    'shared'
+  ],
   linkedModules: [
     'template-tools',
-    'template-ui',
-    'shared'
+    'template-ui'
   ]
 }
 

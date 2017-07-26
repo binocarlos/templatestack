@@ -1,6 +1,11 @@
 import processLoaders from 'template-ui/lib/plugins/api/processLoaders'
-import handlers from './api_handlers'
+import auth from './auth'
 
+export const backends = {
+  auth
+}
+
+// a combo of handler, actions and saga
 const loaders = {
   
 }

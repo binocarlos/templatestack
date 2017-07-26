@@ -5,14 +5,14 @@ import AuthSaga from 'template-ui/lib/plugins/auth/saga'
 
 import * as actions from '../actions'
 
-import authHandlers from '../api_handlers/auth'
+import authApi from '../api/auth'
 import config from '../config'
 
 import Hooks from './hooks'
 
 const auth = AuthSaga({
   actions: actions.auth,
-  apis: authHandlers,
+  apis: authApi,
   basepath: config.basepath
 })
 

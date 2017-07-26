@@ -24,34 +24,31 @@ services:
     ports:
       - "80:80"
     container_name: template_stack_frontend
-    environment:
-      - MANUALRUN
-    volumes:
-      - ./template-ui:/app/template-ui
-      - ./template-tools:/app/template-tools
-      - ./shared:/app/shared
-      - ./frontend:/app/frontend
-      - /app/frontend/node_modules/
     entrypoint:
       - "bash"
       - "run.sh"
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules/
+      - ./shared:/app/frontend/node_modules/shared
+    environment:
+      - MANUALRUN
   api:
     build:
       context: ./
       dockerfile: Dockerfile.api
     container_name: template_stack_api
+    entrypoint:
+      - "bash"
+      - "run.sh"
+    volumes:
+      - ./api:/app/api
+      - /app/api/node_modules/
+      - ./shared:/app/frontend/node_modules/shared
     environment:
       - MANUALRUN
       - POSTGRES_SERVICE_USER=template_stack
       - POSTGRES_SERVICE_PASSWORD=template_stack
       - POSTGRES_SERVICE_DATABASE=template_stack
       - COOKIE_SECRET=apples
-    volumes:
-      - ./template-ui:/app/template-ui
-      - ./template-tools:/app/template-tools
-      - ./shared:/app/shared
-      - ./api:/app/api
-      - /app/api/node_modules/
-    entrypoint:
-      - "bash"
-      - "run.sh"
+    
