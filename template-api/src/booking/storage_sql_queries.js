@@ -2,7 +2,7 @@
   
 // a bridge between the generic auth frontend and actual sql backend storage
 const async = require('async')
-const options = require('../utils/options')
+const options = require('template-tools/src/utils/options')
 const tools = require('../database/tools')
 
 const REQUIRED = [
@@ -77,7 +77,6 @@ where
 ${clause}
 order by
   date ASC
-limit 100
 `
 
     const ret = {

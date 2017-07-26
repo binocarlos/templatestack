@@ -1,0 +1,16 @@
+{
+  "name": "template-tools",
+  "version": "1.0.1",
+  "description": "template-ui/api isomorphic tools",
+  "scripts": {
+    "test": "tape src/**/*.test.js"
+  },
+  "dependencies": {
+    "moment": "^2.18.1",
+    "moment-range": "^3.0.3"
+  },
+  "devDependencies": {
+    "tape": "^4.6.3",
+    "js-yaml": "^3.9.0"
+  }
+}

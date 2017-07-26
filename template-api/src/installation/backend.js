@@ -1,6 +1,6 @@
 'use strict'
 
-const options = require('../utils/options')
+const options = require('template-tools/src/utils/options')
 const async = require('async')
 const tools = require('../transport/tools')
 

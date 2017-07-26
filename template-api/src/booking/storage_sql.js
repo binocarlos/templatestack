@@ -2,7 +2,7 @@
   
 // a bridge between the generic auth frontend and actual sql backend storage
 const async = require('async')
-const options = require('../utils/options')
+const options = require('template-tools/src/utils/options')
 const databaseTools = require('../database/tools')
 
 const SQL = require('./storage_sql_queries')

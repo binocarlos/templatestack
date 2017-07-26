@@ -1,6 +1,6 @@
 'use strict'
 
-const options = require('../utils/options')
+const options = require('template-tools/src/utils/options')
 const passport = require('passport')
 
 const REQUIRED = [
@@ -25,7 +25,9 @@ const Passport = (transport, opts) => {
       topic: 'auth',
       cmd: 'load',
       id
-    }, done)
+    }, (err, user) => {
+      done(null, user)
+    })
   })
     
   return passport

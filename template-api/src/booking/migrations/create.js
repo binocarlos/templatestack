@@ -16,10 +16,13 @@ const BookingMigration = (opts = {}) => {
         table.increments('id')
           .primary()
         if(opts.installationTablename) {
-          table.integer(opts.installationTablename)
-            .references('id')
-            .inTable(opts.installationTablename)
-            .onDelete('cascade')
+          const iField = table.integer(opts.installationTablename)
+          if(!opts.disableInstallationRef) {
+            iField
+              .references('id')
+              .inTable(opts.installationTablename)
+              .onDelete('cascade')
+          }
         }
         table.date('date')
           .notNullable()

@@ -1,6 +1,6 @@
 'use strict'
 
-const options = require('../utils/options')
+const options = require('template-tools/src/utils/options')
 const async = require('async')
 const authTools = require('./tools')
 const transportTools = require('../transport/tools')
@@ -42,7 +42,6 @@ const DEFAULTS = {
   }
 }
 
-
 const AuthBackend = (hemera, opts) => {
     const Joi = hemera.exposition['hemera-joi'].joi
 
@@ -55,6 +54,7 @@ const AuthBackend = (hemera, opts) => {
     required: REQUIRED_HOOKS
   })
 
+  const readOnly = opts.readOnly
   const TOPIC = opts.topic
   const STORAGE_TOPIC = opts.storageTopic
 
@@ -173,77 +173,80 @@ const AuthBackend = (hemera, opts) => {
     })
   })
 
-  /*
-  
-    ensure user - will return user if it exists
+  if(!readOnly) {
+
+    /*
     
-  */
-  createUserController({
-    cmd: 'ensure',
-    hook: hooks.create,
-    existsHandler: (user, done) => done(null, user)
-  })
+      ensure user - will return user if it exists
+      
+    */
+    createUserController({
+      cmd: 'ensure',
+      hook: hooks.create,
+      existsHandler: (user, done) => done(null, user)
+    })
 
-  /*
-  
-    register
+    /*
     
-  */
+      register
+      
+    */
 
-  createUserController({
-    cmd: 'register',
-    hook: hooks.register,
-    existsHandler: (user, done) => {
-      return done(null, {
-        error: user.username + ' already exists'
-      })
-    }
+    createUserController({
+      cmd: 'register',
+      hook: hooks.register,
+      existsHandler: (user, done) => {
+        return done(null, {
+          error: user.username + ' already exists'
+        })
+      }
 
-  })
-  
-
-
-  /*
-  
-    save
+    })
     
-  */
-  transportTools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'save'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'save'
-    },
-    query: {
-      id: Joi.number().required(),
-      data: Joi.object()
-    },
-    map: opts.displayUser
-  })
 
-  /*
-  
-    update
+
+    /*
     
-  */
-  transportTools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'update'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'update'
-    },
-    query: {
-      id: Joi.number().required(),
-      data: Joi.object()
-    },
-    map: opts.displayUser
-  })
+      save
+      
+    */
+    transportTools.backend(hemera, {
+      inbound: {
+        topic: TOPIC,
+        cmd: 'save'
+      },
+      outbound: {
+        topic: STORAGE_TOPIC,
+        cmd: 'save'
+      },
+      query: {
+        id: Joi.number().required(),
+        data: Joi.object()
+      },
+      map: opts.displayUser
+    })
+
+    /*
+    
+      update
+      
+    */
+    transportTools.backend(hemera, {
+      inbound: {
+        topic: TOPIC,
+        cmd: 'update'
+      },
+      outbound: {
+        topic: STORAGE_TOPIC,
+        cmd: 'update'
+      },
+      query: {
+        id: Joi.number().required(),
+        data: Joi.object()
+      },
+      map: opts.displayUser
+    })
+  }
 }
 
 module.exports = AuthBackend

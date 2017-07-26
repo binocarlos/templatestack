@@ -1,6 +1,6 @@
 'use strict'
 
-const options = require('../utils/options')
+const options = require('template-tools/src/utils/options')
 const urlparse = require('url').parse
 const async = require('async')
 

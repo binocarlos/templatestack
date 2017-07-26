@@ -3,8 +3,6 @@
 const async = require('async')
 
 const Hooks = (hemera) => {
-  const Joi = hemera.exposition['hemera-joi'].joi
-
   // triggered when a new user registers
   const authRegister = (user, done) => {
     async.series({

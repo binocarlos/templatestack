@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
 const autoprefixer = require('autoprefixer')
@@ -105,10 +106,9 @@ const getEntryPoints = () => {
 const getAliases = () => {
   return isDevelopment ?
     {
-      'template-ui': path.resolve(__dirname, 'src', 'template-ui')
+     
     } :
     {
-      'template-ui': path.resolve(__dirname, 'src', 'template-ui'),
       'react': 'react-lite',
       'react-dom': 'react-lite'
     }
@@ -131,7 +131,11 @@ module.exports = {
     modulesDirectories: [
       path.resolve(__dirname, 'node_modules')
     ],
-    root: path.resolve(__dirname, 'src')
+    root: path.resolve(__dirname, 'src'),
+    fallback: path.join(__dirname, 'node_modules')
+  },
+  resolveLoader: {
+    fallback: path.join(__dirname, 'node_modules')
   },
   module: {
     loaders: [
@@ -139,8 +143,37 @@ module.exports = {
         test: /\.js$/,
         include: [
           path.resolve(__dirname, 'src')
-        ],
-        loader: 'babel'
+        ].concat((appsConfig.linkedModules || [])
+          .map(moduleName => {
+            return fs.realpathSync(`./node_modules/${moduleName}`
+          })),
+        loader: 'babel',
+        query: {
+          presets: [
+            "es2015",
+            "stage-2",
+            "react"
+          ].map(dep => require.resolve(`babel-preset-${dep}`)),
+          plugins: [
+            "transform-runtime"
+          ].map(dep => require.resolve(`babel-plugin-${dep}`)),
+          env: {
+            development: {
+              plugins: [
+                ["react-transform", {
+                  "transforms": [{
+                    "transform": "react-transform-hmr",
+                    "imports": ["react"],
+                    "locals": ["module"]
+                  }, {
+                    "transform": "react-transform-catch-errors",
+                    "imports": ["react", "redbox-react"]
+                  }]
+                }]
+              ]
+            }
+          }
+        }
       }, {
         test: /\.json$/,
         include: [path.resolve(__dirname, 'src')],

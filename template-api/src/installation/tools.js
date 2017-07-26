@@ -11,8 +11,14 @@ const middleware = () => (req, res, next) => {
   next()
 }
 
+const injectInstallation = (id) => (req, res, next) => {
+  req.installationid = id
+  next()
+}
+
 module.exports = {
   headerName: HEADER_NAME,
   getHeader,
-  middleware
+  middleware,
+  injectInstallation
 }

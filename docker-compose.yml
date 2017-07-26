@@ -28,7 +28,11 @@ services:
       - MANUALRUN
     volumes:
       - ./frontend:/app/frontend
+      - ./shared:/app/shared
       - /app/frontend/node_modules/
+      - ./template-ui:/app/frontend/node_modules/template-ui
+      - ./template-ui:/app/frontend/node_modules/template-ui
+
     entrypoint:
       - "bash"
       - "run.sh"
@@ -45,7 +49,6 @@ services:
       - COOKIE_SECRET=apples
     volumes:
       - ./api:/app/api
-      - ./frontend/www:/app/frontend/www
       - /app/api/node_modules/
       - ./template-api:/app/api/node_modules/template-api
     entrypoint:
