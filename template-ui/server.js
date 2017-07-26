@@ -29,7 +29,10 @@ const DevServer = (opts = {}) => {
   const APISERVERS = appsConfig.apiServers || []
 
   const app = express()
-  app.use(morgan('tiny'))
+
+  if(!opts.disableLogging) {
+    app.use(morgan('tiny'))
+  }
 
   const isDevelopment = process.env.NODE_ENV !== "production"
 

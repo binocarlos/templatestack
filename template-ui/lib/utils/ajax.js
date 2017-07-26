@@ -6,15 +6,14 @@ export const request = (req = {}) => {
     method: req.method || 'get',
     url: req.url,
     responseType: req.responseType || 'json',
-    params: req.params || {}
+    params: req.params || {},
+    headers: req.headers || {}
   }
 
   if(req.data){
     reqOpts.transformRequest = [(data) => JSON.stringify(data)]
     reqOpts.data = req.data
-    reqOpts.headers = {
-      'Content-Type': 'application/json'
-    }
+    reqOpts.headers['Content-Type'] = 'application/json'
   }
 
   return axios(reqOpts)
