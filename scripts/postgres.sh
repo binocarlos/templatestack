@@ -12,7 +12,7 @@ POSTGRES_HOST="postgres"
 POSTGRES_USER="${STACKNAME}"
 POSTGRES_PASSWORD="${STACKNAME}"
 POSTGRES_DATABASE="${STACKNAME}"
-NETWORK_NAME="${STACKNAME}_default"
+NETWORK_NAME=`echo "${STACKNAME}" | sed 's/_//'`"_default"
 POSTGRES_NAME="${STACKNAME}_postgres"
 
 function connect() {

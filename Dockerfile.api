@@ -1,7 +1,7 @@
 FROM binocarlos/yarn-base
 MAINTAINER kaiyadavenport@gmail.com
 WORKDIR /app/api
-COPY ./template-api /app/template-api
+COPY ./shared /app/shared
 COPY ./api/package.json /app/api/package.json
 COPY ./api/yarn.lock /app/api/yarn.lock
 RUN yarn install

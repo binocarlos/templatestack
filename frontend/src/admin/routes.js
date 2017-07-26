@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
-import RouteFactory from 'template-ui/lib/containers/Route'
+import UserWrapper from 'template-ui/lib/plugins/auth/UserWrapper'
+import RouteFactory from 'template-ui/lib/plugins/router/Route'
 import { processRoutes } from 'template-ui/lib/utils/routes'
 
 import Section from 'template-ui/lib/components/Section'
@@ -21,6 +22,8 @@ export const routeConfig = processRoutes({
     triggers: []
   },
   '/about': {
+    //user: true,
+    //autoScroll: false,
   },
   '/login': {
   },
@@ -32,7 +35,14 @@ export const routes = (
   <div>
     <Application>
       <Route home>
-        <Home />
+        <Section>
+          <UserWrapper loggedIn={ false }>
+            <Home />
+          </UserWrapper>
+          <UserWrapper loggedIn={ true }>
+            Logged In!
+          </UserWrapper>
+        </Section>
       </Route>
 
       <Route path='/help'>

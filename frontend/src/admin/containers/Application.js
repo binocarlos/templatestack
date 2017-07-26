@@ -1,51 +1,38 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import Application from 'template-ui/lib/components/Application'
-import ListMenu from 'template-ui/lib/components/ListMenu'
-import IconMenu from 'template-ui/lib/components/IconMenu'
-
 import config from '../config'
 import * as actions from '../actions'
 
 import {
-  valueSelector
+  valueSelector,
+  router
 } from '../selectors'
+
+import Application from '../components/Application'
 
 class ApplicationContainer extends Component {
   render() {
-
-    const menuOptions = this.props.user ?
-      config.menu.user :
-      config.menu.guest
-
-    const applicationProps = {
-      ...this.props,
-      menu: (
-        <ListMenu
-          options={ menuOptions }
-          onClick={ this.props.onMenuClick }
-        />
-      ),
-      appbar: (
-        <IconMenu
-          options={ menuOptions }
-          onClick={ this.props.onOptionClick }
-        />
-      )
-    }
     return (
-      <Application {...applicationProps} />
+      <Application {...this.props} />
     )
   }
 }
 
 export default connect(
   (state, ownProps) => {
+    const user = valueSelector(state, 'user')
+    const menuOptions = user ?
+      config.menu.user :
+      config.menu.guest
+    const autoScroll = router.firstValue(state, 'autoScroll')
     return {
       title: config.title,
       menuOpen: valueSelector(state, 'menuOpen'),
-      user: valueSelector(state, 'user')
+      user: valueSelector(state, 'user'),
+      menuOptions,
+      autoScroll: autoScroll,
+      initialized: valueSelector(state, 'initialized')
     }
   },
   (dispatch) => {

@@ -8,13 +8,9 @@ import forms from '../forms'
 import * as selectors from '../selectors'
 import * as actions from '../actions'
 
-const FORM_NAME = 'register'
-const API_NAME = 'auth_register'
+const FORM = forms.authRegister
 
-const Fields = FormContainer({
-  name: FORM_NAME,
-  fields: forms.register
-})
+const Fields = FormContainer(FORM)
 
 class RegisterForm extends Component {
   render() {
@@ -33,10 +29,10 @@ class RegisterForm extends Component {
 
 export default connect(
   (state, ownProps) => ({
-    error: selectors.api.error(state, API_NAME),
-    loading: selectors.api.loading(state, API_NAME)
+    error: selectors.api.error(state, FORM.name),
+    loading: selectors.api.loading(state, FORM.name)
   }),
   (dispatch) => ({
-    submit: () => dispatch(actions.router.trigger('registerSubmit'))
+    submit: () => dispatch(actions.router.hook('authRegisterSubmit'))
   })
 )(RegisterForm)

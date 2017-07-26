@@ -1,0 +1,16 @@
+version: '2'
+services:
+  frontend:
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules/
+      - ./template-tools:/app/frontend/node_modules/template-tools
+      - ./template-ui:/app/frontend/node_modules/template-ui
+      - ./shared:/app/frontend/node_modules/shared
+  api:
+    volumes:
+      - ./api:/app/api
+      - /app/api/node_modules/
+      - ./template-tools:/app/frontend/node_modules/template-tools
+      - ./template-api:/app/api/node_modules/template-api
+      - ./shared:/app/frontend/node_modules/shared

@@ -1,12 +1,10 @@
-const APPS = [{
-  "name": "admin",
-  "title": "Admin Panel"
-}]
-
 const CONFIG = {
-  apps: APPS,
+  apps: [{
+    "name": "admin",
+    "title": "Admin Panel"
+  }],
   // node_modules to run through babel
-  babelModules: [
+  linkedModules: [
     'template-tools',
     'template-ui',
     'shared'

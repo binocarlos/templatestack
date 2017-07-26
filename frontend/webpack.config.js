@@ -8,7 +8,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const toolboxVariables = require('./toolbox-variables');
 
 const appsConfig = require('./apps.config')
-const APPS = appsConfig.apps
+const APPS = appsConfig.apps || []
+const LINKED_MODULES = appsConfig.linkedModules || [] 
 
 const isDevelopment = process.env.NODE_ENV !== "production"
 
@@ -22,7 +23,7 @@ const isExternalModule = (module) => {
 
 const devPlugins = () => {
   return [
-    new ExtractTextPlugin('[name].css', { allChunks: true }),
+    new ExtractTextPlugin('[name].[hash].css', { allChunks: true }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
@@ -37,7 +38,7 @@ const devPlugins = () => {
 
 const prodPlugins = () => {
   return [
-    new ExtractTextPlugin('[name].css', { allChunks: true }),
+    new ExtractTextPlugin('[name].[hash].css', { allChunks: true }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
@@ -117,11 +118,11 @@ const getAliases = () => {
 module.exports = {
   _apps: APPS,
   context: __dirname,
-  devtool: isDevelopment ? 'inline-source-map' : null,
+  devtool: isDevelopment ? 'eval-source-map' : null,
   entry: getEntryPoints(),
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
+    filename: '[name].[hash].js',
     publicPath: '/'
   },
   resolve: {
@@ -142,11 +143,16 @@ module.exports = {
       {
         test: /\.js$/,
         include: [
-          path.resolve(__dirname, 'src')
-        ].concat((appsConfig.linkedModules || [])
-          .map(moduleName => {
-            return fs.realpathSync(`./node_modules/${moduleName}`
-          })),
+          path.resolve(__dirname, 'src'),
+          fs.realpathSync('./node_modules/template-tools'),
+          fs.realpathSync('./node_modules/template-ui'),
+          fs.realpathSync('./node_modules/shared')
+        ]/*.concat(
+          LINKED_MODULES
+            .map(moduleName => {
+              return fs.realpathSync(`./node_modules/${moduleName}`)
+            })
+        )*/,
         loader: 'babel',
         query: {
           presets: [

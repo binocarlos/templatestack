@@ -18,8 +18,8 @@ const AuthSagas = (opts = {}) => {
     handleLogout: () => {
       document.location = opts.logoutUrl + '?redirect=' + opts.basepath
     },
-    loginForm: 'login',
-    registerForm: 'register'
+    loginForm: 'authLogin',
+    registerForm: 'authRegister'
   }, opts)
 
   const actions = opts.actions

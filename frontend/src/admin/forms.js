@@ -1,13 +1,13 @@
 import models from 'template-ui/lib/plugins/form/models'
-import fields from 'template-ui/lib/plugins/form/fields'
+import fields from 'template-ui/lib/plugins/form/Components'
 import validators from 'template-ui/lib/plugins/form/validators'
 
-const register = {
-  username: {
+const authLogin = {
+  username: models.string({
     title: 'Email',
     component: fields.input,
     validate: [validators.required,validators.email]
-  },
+  }),
   password: models.string({
     type: 'password',
     component: fields.input,
@@ -15,11 +15,12 @@ const register = {
   })
 }
 
-const login = {
-  username: {
+const authRegister = {
+  username: models.string({
+    title: 'Email',
     component: fields.input,
     validate: [validators.required,validators.email]
-  },
+  }),
   password: models.string({
     type: 'password',
     component: fields.input,
@@ -27,9 +28,17 @@ const login = {
   })
 }
 
-const forms = {
-  register,
-  login
+const formFields = {
+  authLogin,
+  authRegister
 }
+
+const forms = Object.keys(formFields).reduce((all, field) => {
+  all[field] = {
+    name: field,
+    fields: formFields[field]
+  }
+  return all
+}, {})
 
 export default forms

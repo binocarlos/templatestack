@@ -1,17 +1,16 @@
 import { request } from 'template-ui/lib/utils/ajax'
-import config from '../config'
-const url = (path) => config.api + path
+import tools from './tools'
 
 export const status = (payload) => {
   return request({
-    url: url('/auth/status')
+    url: tools.url('/auth/status')
   })
 }
 
 export const login = (payload) => {
   return request({
     method: 'post',
-    url: url('/auth/login'),
+    url: tools.url('/auth/login'),
     data: payload
   })
 }
@@ -19,7 +18,7 @@ export const login = (payload) => {
 export const register = (payload) => {
   return request({
     method: 'post',
-    url: url('/auth/register'),
+    url: tools.url('/auth/register'),
     data: payload
   })
 }
