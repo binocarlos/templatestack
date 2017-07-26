@@ -27,11 +27,11 @@ services:
     environment:
       - MANUALRUN
     volumes:
+      - ./template-ui:/app/template-ui
+      - ./template-tools:/app/template-tools
+      - ./shared:/app/shared
       - ./frontend:/app/frontend
       - /app/frontend/node_modules/
-      - ./template-ui:/app/frontend/node_modules/template-ui
-      - ./template-tools:/app/frontend/node_modules/template-tools
-      - ./shared:/app/frontend/node_modules/shared
     entrypoint:
       - "bash"
       - "run.sh"
@@ -47,11 +47,11 @@ services:
       - POSTGRES_SERVICE_DATABASE=template_stack
       - COOKIE_SECRET=apples
     volumes:
+      - ./template-ui:/app/template-ui
+      - ./template-tools:/app/template-tools
+      - ./shared:/app/shared
       - ./api:/app/api
       - /app/api/node_modules/
-      - ./template-api:/app/api/node_modules/template-api
-      - ./template-tools:/app/frontend/node_modules/template-tools
-      - ./shared:/app/api/node_modules/shared
     entrypoint:
       - "bash"
       - "run.sh"

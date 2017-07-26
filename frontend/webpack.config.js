@@ -107,7 +107,9 @@ const getEntryPoints = () => {
 const getAliases = () => {
   return isDevelopment ?
     {
-     
+      'template-tools': fs.realpathSync('../template-tools'),
+      'template-ui': fs.realpathSync('../template-ui'),
+      'shared': fs.realpathSync('../shared')
     } :
     {
       'react': 'react-lite',
@@ -144,9 +146,9 @@ module.exports = {
         test: /\.js$/,
         include: [
           path.resolve(__dirname, 'src'),
-          fs.realpathSync('./node_modules/template-tools'),
-          fs.realpathSync('./node_modules/template-ui'),
-          fs.realpathSync('./node_modules/shared')
+          fs.realpathSync('../template-tools'),
+          fs.realpathSync('../template-ui'),
+          fs.realpathSync('../shared')
         ]/*.concat(
           LINKED_MODULES
             .map(moduleName => {
