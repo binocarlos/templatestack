@@ -41,8 +41,8 @@ const isDateWithinRange = (dates, date) => {
     return dates.filter(singleDate => moment(singleDate).isSame(date, 'day')).length > 0
   }
 
-  const rangeStart = moment(dates.from).isSame(date, 'day') || moment(dates.from).isBefore(date, 'day')
-  const rangeEnd = moment(dates.to).isSame(date, 'day') || moment(dates.to).isAfter(date, 'day')
+  const rangeStart = dates.from && (moment(dates.from).isSame(date, 'day') || moment(dates.from).isBefore(date, 'day'))
+  const rangeEnd = dates.to && (moment(dates.to).isSame(date, 'day') || moment(dates.to).isAfter(date, 'day'))
 
   return rangeStart && rangeEnd ? true : false
 }

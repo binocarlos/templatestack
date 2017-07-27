@@ -66,10 +66,9 @@ const Range = (opts) => {
       if(!scheduleTemplate) throw new Error(`no schedule found for ${date}`)
       const schedule = Schedule(scheduleTemplate, {
         date,
-        schedule: scheduleName
+        name: scheduleName
       })
       const items = itemDates[sqlDate] || []
-
       items.forEach(item => {
         const slotIndexes = opts.getItemSlotIndexes(item)
         const block = schedule.blocks[slotIndexes.block]

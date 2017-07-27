@@ -1,5 +1,6 @@
 const tape = require('tape')
 const dateTools = require('../utils/date')
+const Calendar = require('./calendar')
 const Range = require('./range')
 const fixtures = require('./fixtures/schedule')
 
@@ -28,5 +29,17 @@ tape('3 day range with sparse items', (t) => {
   t.equal(dateTools.sqlDate(days[2].date, true), dateTools.sqlDate(end, true), 'start date is the same')
   t.equal(days[1].blocks[0].slots[1]._items.length, 1, 'the item is in the correct place')
 
+  t.end()
+})
+
+tape('test single date range', (t) => {
+  const data = fixtures.calendar
+
+  // Fri Aug 4th
+  const date = new Date(2017, 7, 27)
+  const day = Calendar(data, date)
+
+  console.dir(day)
+  
   t.end()
 })

@@ -3,7 +3,6 @@
 const dateTools = require('../utils/date')
 
 const doesCalendarMatchDay = (calendarItem, date) => {
-  
   const dayMatch = calendarItem.days ? 
     dateTools.isDateWithinDays(calendarItem.days, date) :
     true
