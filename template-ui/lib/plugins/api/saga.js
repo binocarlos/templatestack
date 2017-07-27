@@ -30,7 +30,7 @@ function* ApiSaga(opts = {}) {
   let apiResult = null, apiError = null
 
   try {
-    const data = yield call(api, payload, state)
+    const data = yield call(api, payload)
     yield put(actions.response(data))
     yield put(routerActions.hook('apiResponse', {
       name: opts.name,

@@ -26,11 +26,12 @@ const processLoaders = (loaders) => {
     .reduce((all, name) => {
       const handler = loaders[name]
       const actions = loaderActions[name]
-      function* loader() {
+      function* loader(payload) {
         const ret = yield call(apiSaga, {
           name,
           actions,
-          api: handler
+          api: handler,
+          payload
         })
         return ret
       }
