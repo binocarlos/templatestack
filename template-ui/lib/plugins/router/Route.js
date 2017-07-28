@@ -17,7 +17,7 @@ const RouteFactory = (basepath) => {
       const exact = ownProps.exact || false
 
       basepath = (basepath || '').replace(/\/^/, '')
-      const routerPath = (state.router.pathname || '').replace(/\/^/, '')
+      const routerPath = (state.router.route || '').replace(/\/^/, '')
 
       let visible = false
 

@@ -4,28 +4,21 @@ import { reduxForm } from 'redux-form'
 import Layout from './Layout'
 import { processSchema, getFields } from './schema'
 
-const FormContainer = (opts = {}) => {
-  if(!opts.name) throw new Error('FormContainer needs a name')
-  if(!opts.fields) throw new Error('FormContainer needs opts.fields')
-  const UseLayout = opts.layout || Layout
+const FormContainer = (form = {}) => {
+  if(!form.name) throw new Error('FormContainer needs a name')
+  if(!form.fields) throw new Error('FormContainer needs form.fields')
+  if(!form.reduxForm) throw new Error('FormContainer needs reduxForm')
 
-  // top level models
-  const schema = processSchema(opts.fields)
-
+  const UseLayout = form.layout || Layout
+  const reduxForm = form.reduxForm
+  const schema = processSchema(form.fields)
   const RenderForm = (props) => {
-
-    // generated redux-form Field using component from model
-    const fields = getFields(schema)
     return (
-      <UseLayout fields={fields} {...props} />
+      <UseLayout fields={ getFields(schema) } {...props} />
     )
   }
   
-  return reduxForm({
-    form: opts.name,
-    initialValues: opts.initialValues,
-    destroyOnUnmount: opts.destroyOnUnmount || false
-  })(RenderForm)
+  return reduxForm(RenderForm)
 }
 
 export default FormContainer

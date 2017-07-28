@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Field } from 'redux-form'
 
-import * as fields from './Components'
+import * as fields from './fields'
 
 export const processSchema = (fields = {}) => {
   return Object.keys(fields || {}).reduce((all, fieldname) => {

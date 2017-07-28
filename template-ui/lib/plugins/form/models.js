@@ -15,7 +15,12 @@ export const money = (opts = {}) => {
 
 export const number = (opts = {}) => {
   return Object.assign({}, {
-
+    normalize: (value) => {
+      if(value.match(/\.$/)) return value
+      const num = parseFloat(value)
+      return isNaN(num) ? value : num
+      return value
+    }
   }, opts)
 }
 

@@ -19,6 +19,19 @@ const phone = value =>
   value && !/^(0|[1-9][0-9]{9})$/i.test(value)
     ? 'Invalid phone number, must be 10 digits'
     : undefined
+const numeric = value => isNaN(parseFloat(value)) ? 'Must be a numeric value' : undefined
+const integer = value => value % 1 != 0 ? 'Must be an integer' : undefined
+const unsigned = value => value < 0 ? 'Must be a positive value' : undefined
+
+// wrap an array of other validators that will only apply if there is a value to check
+// useful for if you want a field that is validated only if a value is entered
+const optionalWrapper = (validators) => (value, allValues, props) => {
+  if(typeof(value) === 'undefined') return undefined
+  // return the first of any errors
+  return validators
+    .map(validator => validator(value, allValues, props))
+    .filter(v => v)[0]
+}
 
 const validators = {
   required,
@@ -28,7 +41,11 @@ const validators = {
   minValue,
   email,
   alphaNumeric,
-  phone
+  phone,
+  numeric,
+  integer,
+  unsigned,
+  optionalWrapper
 }
 
 module.exports = validators

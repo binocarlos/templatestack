@@ -6,6 +6,7 @@ import whiteIconMenuTheme from './theme/whiteIconMenu.css'
 export class IconMenuComponent extends Component {
 
   getMenuItem(option, i) {
+    if(!option) return null
     const id = option[0]
     const title = option[1]
     const icon = option[2]
