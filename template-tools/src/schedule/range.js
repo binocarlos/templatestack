@@ -66,7 +66,10 @@ const Range = (opts) => {
       if(!scheduleTemplate) throw new Error(`no schedule found for ${date}`)
       const schedule = Schedule(scheduleTemplate, {
         date,
-        name: scheduleName
+        schedule: scheduleName,
+        name: calendarDay.name
+      }, {
+        schedule: scheduleName
       })
       const items = itemDates[sqlDate] || []
       items.forEach(item => {
