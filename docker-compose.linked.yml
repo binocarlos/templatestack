@@ -4,14 +4,14 @@ services:
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules/
-      - ./template-ui:/app/frontend/node_modules/template-ui
-      - ./template-tools:/app/frontend/node_modules/template-tools
+      - ./template-ui/lib:/app/frontend/node_modules/template-ui/lib
+      - ./template-tools/src:/app/frontend/node_modules/template-tools/src
       - ./shared:/app/frontend/node_modules/shared
   api:
     volumes:
       - ./api:/app/api
       - /app/api/node_modules/
-      - ./template-api:/app/api/node_modules/template-api
-      - ./template-tools:/app/api/node_modules/template-tools
+      - ./template-api/src:/app/api/node_modules/template-api/src
+      - ./template-tools/src:/app/api/node_modules/template-tools/src
       - ./shared:/app/api/node_modules/shared
     

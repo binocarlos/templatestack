@@ -3,6 +3,8 @@
 // a bridge between the generic auth frontend and actual sql backend storage
 const async = require('async')
 const options = require('template-tools/src/utils/options')
+const Range = require('template-tools/src/schedule/range')
+ 
 const databaseTools = require('../database/tools')
 
 const REQUIRED = [
@@ -21,7 +23,9 @@ const DEFAULTS = {
   // a function to check if a slot has any space
   // return an error if the booking cannot be made
   checkBookingSlot: (booking, done) => done(),
-  getSummary: booking => booking
+  getSummary: booking => booking,
+  getCalendarConfig: type => [],
+  getScheduleConfig: type => {}
 }
 
 /*
@@ -110,6 +114,50 @@ const BookingBackend = (hemera, opts) => {
         bookings.map(opts.getSummary) :
         bookings
       done(null, bookings)
+    })
+  })
+
+
+  /*
+  
+    range
+
+    * installationid
+    * type
+    * start
+    * end
+    
+  */
+  hemera.add({
+    topic: TOPIC,
+    cmd: 'range',
+    installationid: Joi.number().required(),
+    type: Joi.string(),
+    start: Joi.string(),
+    end: Joi.string()
+  }, (req, done) => {
+
+    const calendarConfig = opts.getCalendarConfig(req.type)
+    const scheduleConfig = opts.getScheduleConfig(req.type)
+
+    storage.search({
+      installationid: req.installationid,
+      type: req.type,
+      start: req.start,
+      end: req.end,
+      summary: true
+    }, (err, bookings) => {
+      if(err) return done(err)
+
+      const results = Range({
+        items: bookings,
+        start: req.start,
+        end: req.end,
+        calendar: opts.getCalendarConfig(req.type),
+        schedule: opts.getScheduleConfig(req.type)
+      })
+
+      done(null, results)
     })
   })
 

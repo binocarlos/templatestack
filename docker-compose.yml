@@ -30,7 +30,7 @@ services:
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules/
-      - ./shared:/app/frontend/node_modules/shared
+      - ./shared/src:/app/frontend/node_modules/shared/src
     environment:
       - MANUALRUN
       - LINKMODULES
@@ -45,7 +45,7 @@ services:
     volumes:
       - ./api:/app/api
       - /app/api/node_modules/
-      - ./shared:/app/frontend/node_modules/shared
+      - ./shared/src:/app/frontend/node_modules/shared/src
     environment:
       - MANUALRUN
       - POSTGRES_SERVICE_USER=templatestack

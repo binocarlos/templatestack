@@ -66,6 +66,24 @@ const BookingRoutes = (transport, opts) => {
     })
   }
 
+  const range = (req, res, next) => {
+    const installationid = opts.extractInstallationId(req)
+    if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
+    transport.act({
+      topic: TOPIC,
+      cmd: 'range',
+      installationid,
+      type: req.qs.type,
+      start: req.qs.start,
+      end: req.qs.end
+    }, (err, results) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(200)
+        .json(results)
+    })
+  }
+
   // COMMANDS
   const create = (req, res, next) => {
     const installationid = opts.extractInstallationId(req)
@@ -129,7 +147,8 @@ const BookingRoutes = (transport, opts) => {
     search,
     create,
     save,
-    del
+    del,
+    range
   }
 }
 

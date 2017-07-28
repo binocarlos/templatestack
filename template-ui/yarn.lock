@@ -4343,9 +4343,9 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-template-tools@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/template-tools/-/template-tools-1.0.0.tgz#4874a00aca64d5ec543f9f37e01a429c1b7af7b2"
+template-tools@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/template-tools/-/template-tools-1.0.2.tgz#521303803bff10df3f12287d97755e1919dbc11b"
   dependencies:
     moment "^2.18.1"
     moment-range "^3.0.3"
