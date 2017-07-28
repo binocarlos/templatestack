@@ -16,7 +16,7 @@ const sqlDate = (date, trim = false) => {
 }
 
 // turn 16.3 into {hour:16,minute:30}
-const getTime = (t) => {
+const getTime = (t = 0) => {
   const h = Math.round(t)
   const m = (t % 1) * 100
   return {
@@ -25,9 +25,21 @@ const getTime = (t) => {
   }
 }
 
+// given a number like 16.3 add some minutes then return an object with hour, minutes
+const addTime = (t, delta) => getTime(t + (delta / 60))
+
+const convertTimeToDate = (t) => {
+  const ret = new Date()
+  ret.setHours(t.hour)
+  ret.setMinutes(t.minute)
+  ret.setSeconds(0)
+  return ret
+}
 
 module.exports = {
   utcParts,
   sqlDate,
-  getTime
+  getTime,
+  addTime,
+  convertTimeToDate
 }

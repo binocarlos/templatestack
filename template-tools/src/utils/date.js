@@ -6,6 +6,8 @@ const dateLight = require('./dateLight')
 const utcParts = dateLight.utcParts
 const sqlDate = dateLight.sqlDate
 const getTime = dateLight.getTime
+const addTime = dateLight.addTime
+const convertTimeToDate = dateLight.convertTimeToDate
 
 const getDateTitle = (date) => moment(date).format("ddd Do MMM, YYYY")
 
@@ -96,6 +98,8 @@ module.exports = {
   isDateWithinRange,
   dateDelta,
   getTime,
+  addTime,
+  convertTimeToDate,
   timeRange,
   timeRangeTitle,
   isBeforeToday,
