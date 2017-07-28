@@ -19,7 +19,7 @@ class Application extends Component {
         </NavDrawer>
         <AppBar
           fixed
-          leftIcon={ this.props.leftIcon || 'menu' }
+          leftIcon={ this.props.menu ? (this.props.leftIcon || 'menu') : null }
           onLeftIconClick={ this.props.toggleMenu }
           title={ this.props.title }
         >
