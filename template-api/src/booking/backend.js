@@ -134,18 +134,21 @@ const BookingBackend = (hemera, opts) => {
     installationid: Joi.number().required(),
     type: Joi.string(),
     start: Joi.string(),
-    end: Joi.string()
+    end: Joi.string(),
+    summary: Joi.bool()
   }, (req, done) => {
 
     const calendarConfig = opts.getCalendarConfig(req.type)
     const scheduleConfig = opts.getScheduleConfig(req.type)
 
-    storage.search({
+    hemera.act({
+      topic: TOPIC,
+      cmd: 'search',
       installationid: req.installationid,
-      type: req.type,
       start: req.start,
       end: req.end,
-      summary: true
+      type: req.type,
+      summary: req.summary
     }, (err, bookings) => {
       if(err) return done(err)
 

@@ -75,7 +75,8 @@ const BookingRoutes = (transport, opts) => {
       installationid,
       type: req.qs.type,
       start: req.qs.start,
-      end: req.qs.end
+      end: req.qs.end,
+      summary: req.qs.summary == 'y' ? true : false
     }, (err, results) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
