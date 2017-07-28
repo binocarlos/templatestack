@@ -1,4 +1,8 @@
-const info = (state) => state.router.result
+const info = (state, name) => {
+  return name ?
+    state.router.result[name] :
+    state.router.result
+}
 const params = (state) => state.router.params
 const param = (state, name) => (params(state) || {})[name]
 
