@@ -20,7 +20,8 @@ const DEFAULTS = {
   topic: 'booking',
   // a function to check if a slot has any space
   // return an error if the booking cannot be made
-  checkBookingSlot: (booking, done) => done()
+  checkBookingSlot: (booking, done) => done(),
+  getSummary: booking => booking
 }
 
 /*
@@ -56,13 +57,19 @@ const BookingBackend = (hemera, opts) => {
     topic: TOPIC,
     cmd: 'load',
     installationid: Joi.number().required(),
-    id: Joi.number().required()
+    id: Joi.number().required(),
+    summary: Joi.bool()
   }, (req, done) => {
-
     storage.get({
       id: req.id,
       installationid: req.installationid
-    }, done)
+    }, (err, booking) => {
+      if(err) return done(err)
+      booking = req.summary ?
+        opts.getSummary(booking) :
+        booking
+      done(null, booking)
+    })
 
   })
 
@@ -76,6 +83,7 @@ const BookingBackend = (hemera, opts) => {
     * end
     * type
     * limit
+    * summary
     
   */
   hemera.add({
@@ -86,7 +94,8 @@ const BookingBackend = (hemera, opts) => {
     start: Joi.string(),
     end: Joi.string(),
     type: Joi.string(),
-    limit: Joi.number()
+    limit: Joi.number(),
+    summary: Joi.bool()
   }, (req, done) => {
     storage.search({
       installationid: req.installationid,
@@ -95,7 +104,13 @@ const BookingBackend = (hemera, opts) => {
       end: req.end,
       type: req.type,
       limit: req.limit
-    }, done)
+    }, (err, bookings) => {
+      if(err) return done(err)
+      bookings = req.summary ?
+        bookings.map(opts.getSummary) :
+        bookings
+      done(null, bookings)
+    })
   })
 
   /*

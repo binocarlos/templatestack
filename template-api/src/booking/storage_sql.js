@@ -20,7 +20,7 @@ const DEFAULTS = {
   
 }
 
-const BookingStorageSQL = (knex, opts) => {
+const BookingStorageSQL = (knex, transport, opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS

@@ -34,7 +34,8 @@ const BookingRoutes = (transport, opts) => {
       topic: TOPIC,
       cmd: 'load',
       installationid,
-      id
+      id,
+      summary: req.qs.summary == 'y' ? true : false
     }, (err, booking) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!booking) return webserverTools.errorReply(next, res, 'booking not found', 404)
@@ -55,7 +56,8 @@ const BookingRoutes = (transport, opts) => {
       search: req.qs.search,
       start: req.qs.start,
       end: req.qs.end,
-      limit: req.qs.limit
+      limit: req.qs.limit,
+      summary: req.qs.summary == 'y' ? true : false
     }, (err, bookings) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
