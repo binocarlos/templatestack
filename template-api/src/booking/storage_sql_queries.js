@@ -38,6 +38,7 @@ const BookingSQL = (opts = {}) => {
     * start
     * end
     * type
+    * limit
     
   */
   const search = (query) => {
@@ -68,6 +69,13 @@ const BookingSQL = (opts = {}) => {
       params.push(query.type)
     }
 
+    let limit = ''
+
+    if(query.limit) {
+      limit = 'limit ?'
+      params.push(query.limit)
+    }
+    
     const clause = parts.join("\nand\n")
 
     const sql = `select *
@@ -77,6 +85,7 @@ where
 ${clause}
 order by
   date ASC
+${limit}
 `
 
     const ret = {

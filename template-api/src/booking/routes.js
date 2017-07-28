@@ -54,7 +54,8 @@ const BookingRoutes = (transport, opts) => {
       type: req.qs.type,
       search: req.qs.search,
       start: req.qs.start,
-      end: req.qs.end
+      end: req.qs.end,
+      limit: req.qs.limit
     }, (err, bookings) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res

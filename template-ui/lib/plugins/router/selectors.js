@@ -1,4 +1,6 @@
 const info = (state) => state.router.result
+const params = (state) => state.router.params
+const param = (state, name) => (params(state) || {})[name]
 
 // an array of route info starting at the lowest route
 const infoArray = (state) => {
@@ -21,6 +23,8 @@ const firstValue = (state, name) => {
 
 const routerSelectors = {
   info,
+  params,
+  param,
   infoArray,
   firstValue
 }

@@ -75,6 +75,7 @@ const BookingBackend = (hemera, opts) => {
     * start
     * end
     * type
+    * limit
     
   */
   hemera.add({
@@ -84,15 +85,16 @@ const BookingBackend = (hemera, opts) => {
     search: Joi.string(),
     start: Joi.string(),
     end: Joi.string(),
-    type: Joi.string()
+    type: Joi.string(),
+    limit: Joi.number()
   }, (req, done) => {
-
     storage.search({
       installationid: req.installationid,
       search: req.search,
       start: req.start,
       end: req.end,
-      type: req.type
+      type: req.type,
+      limit: req.limit
     }, done)
   })
 
