@@ -1,0 +1,11 @@
+.container {
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+}
+
+.col {  
+  height: 100%;
+  min-height: 100%;
+  flex-direction: column;
+}

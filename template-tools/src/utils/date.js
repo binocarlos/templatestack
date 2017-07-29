@@ -7,7 +7,9 @@ const utcParts = dateLight.utcParts
 const sqlDate = dateLight.sqlDate
 const getTime = dateLight.getTime
 const addTime = dateLight.addTime
+const today = dateLight.today
 const convertTimeToDate = dateLight.convertTimeToDate
+
 
 const getDateTitle = (date) => moment(date).format("ddd Do MMM, YYYY")
 
@@ -49,11 +51,10 @@ const isDateWithinRange = (dates, date) => {
   return rangeStart && rangeEnd ? true : false
 }
 
-
 const dateDelta = (date, days) => {
-  const d = moment(date)
-  d.add(days, 'day')
-  return new Date(d.valueOf())
+  const d = moment.utc(date)
+  d.add(days-1, 'd')
+  return sqlDate(new Date(d.valueOf()), true)
 }
 
 // return two dates X minutes apart
@@ -89,6 +90,7 @@ const getRange = (start, end) => {
 const timeTitle = (t) => getTimeTitle(convertTimeToDate(t))
 
 module.exports = {
+  today,
   utcParts,
   sqlDate,
   getDateTitle,

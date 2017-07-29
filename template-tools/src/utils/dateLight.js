@@ -1,3 +1,4 @@
+const today = new Date()
 const utcParts = (date) => {
   date = date || new Date()
   const year = date.getUTCFullYear()
@@ -37,6 +38,7 @@ const convertTimeToDate = (t) => {
 }
 
 module.exports = {
+  today,
   utcParts,
   sqlDate,
   getTime,
