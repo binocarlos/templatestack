@@ -75,8 +75,7 @@ const Range = (opts) => {
       })
       const schedule = Schedule(scheduleTemplate, {
         mergeSchedule,
-        mergeSlot,
-        mapSlot: opts.mapSlot
+        mergeSlot
       })
       const items = itemDates[sqlDate] || []
       items.forEach(item => {

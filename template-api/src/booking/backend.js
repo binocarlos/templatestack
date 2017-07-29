@@ -160,8 +160,7 @@ const BookingBackend = (hemera, opts) => {
         schedule: opts.getScheduleConfig(req.type),
         mergeSlot: {
           type: req.type
-        },
-        processSlot: opts.processSlot
+        }
       })
 
       done(null, results)

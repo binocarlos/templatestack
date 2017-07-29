@@ -18,13 +18,11 @@ const Schedule = (schedule, opts = {}) => {
       ].join('-')
 
       // we allow the slot to override it's own index if it wants
-      let slot = Object.assign({}, dayMerge, blockMerge, opts.slotMerge, {
+      return Object.assign({}, dayMerge, blockMerge, opts.mergeSlot, {
         index
       }, slot, {
         _items: []
       })
-      slot = opts.mapSlot ? opts.mapSlot(slot) : slot
-      return slot
     })
 
     return {
@@ -33,19 +31,12 @@ const Schedule = (schedule, opts = {}) => {
     }
   })
   
-  let schedule = {
-    meta,
-    blocks: processedBlocks
-  }
-
-  schedule = opts.mapSchedule ? opts.mapSchedule(schedule) : schedule
-
   const ret = Object.assign({}, {
     meta,
     blocks: processedBlocks
   }, opts.mergeSchedule)
 
-  return schedule
+  return ret
 }
 
 module.exports = Schedule
