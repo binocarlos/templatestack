@@ -20,6 +20,11 @@ const RouterSaga = (opts = {}) => {
 
   function* runHook(name, payload) {    
     if(name.indexOf('/') == 0) {
+      // replace `:param` with values from state
+      const routerParams = yield select(state => state.router.params)
+      name = name.replace(/:(\w+)/g, name => {
+        return routerParams[name.replace(/^:/, '')]
+      })
       yield put(actions.push(getRoute(name)))
     }
     else {

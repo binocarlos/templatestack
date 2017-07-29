@@ -14,17 +14,24 @@ const RouteFactory = (basepath) => {
     (state, ownProps) => {
       
       const ownPath = ownProps.path || ''
+      const ownRoute = ownProps.route || ''
       const exact = ownProps.exact || false
 
       basepath = (basepath || '').replace(/\/^/, '')
-      const routerPath = (state.router.route || '').replace(/\/^/, '')
+      const routerRoute = (state.router.route || '').replace(/\/^/, '')
+      const routerPath = (state.router.pathname || '').replace(/\/^/, '')
 
       let visible = false
 
-      if(ownProps.path) {
+      if(ownPath) {
         visible = exact ?
           routerPath == basepath + ownPath :
           routerPath.indexOf(basepath + ownPath) == 0
+      }
+      else if(ownRoute) {
+        visible = exact ?
+          routerRoute == basepath + ownRoute :
+          routerRoute.indexOf(basepath + ownRoute) == 0
       }
 
       if(ownProps.home) {
