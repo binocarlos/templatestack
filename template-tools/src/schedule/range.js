@@ -66,7 +66,7 @@ const Range = (opts) => {
       const scheduleTemplate = opts.schedule[scheduleName]
       if(!scheduleTemplate) throw new Error(`no schedule found for ${date}`)
       const mergeSchedule = Object.assign({}, opts.mergeSchedule, {
-        date,
+        date: dateTools.sqlDate(date, true),
         schedule: scheduleName,
         name: calendarDay.name
       })
