@@ -6,10 +6,6 @@ tape('peak schedule', (t) => {
   const data = fixtures.schedule_templates.peak
   const day = schedule(data)
 
-  console.log('-------------------------------------------');
-  console.log('-------------------------------------------');
-  console.dir(day.blocks[0].slots[0])
-  console.log(JSON.stringify(day, null, 4))
   t.equal(day.meta, data.meta, 'meta is the same')
   t.equal(day.blocks.length, data.blocks.length, 'blocks same length')
   t.equal(day.blocks[0].slots[0].price, data.merge.price, 'price was inherited')

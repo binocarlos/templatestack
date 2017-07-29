@@ -24,7 +24,8 @@ const DEFAULTS = {
       block: parts[0],
       slot: parts[1]
     }
-  }
+  },
+  processSlot: (slot) => slot
 }
 
 /*
@@ -64,12 +65,18 @@ const Range = (opts) => {
       const scheduleName = opts.extractCalendarScheduleName(calendarDay)
       const scheduleTemplate = opts.schedule[scheduleName]
       if(!scheduleTemplate) throw new Error(`no schedule found for ${date}`)
-      const schedule = Schedule(scheduleTemplate, {
+      const mergeSchedule = Object.assign({}, opts.mergeSchedule, {
         date,
         schedule: scheduleName,
         name: calendarDay.name
-      }, {
+      })
+      const mergeSlot = Object.assign({}, opts.mergeSlot, {
         schedule: scheduleName
+      })
+      const schedule = Schedule(scheduleTemplate, {
+        mergeSchedule,
+        mergeSlot,
+        mapSlot: opts.mapSlot
       })
       const items = itemDates[sqlDate] || []
       items.forEach(item => {

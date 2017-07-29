@@ -1,7 +1,7 @@
 "use strict";
 
 // return block array based on the schedule values
-const Schedule = (schedule, merge = {}, slotMerge = {}) => {
+const Schedule = (schedule, opts = {}) => {
   const blocks = schedule.blocks || []
   const dayMerge = schedule.merge || {}
   const meta = schedule.meta || {}
@@ -18,11 +18,13 @@ const Schedule = (schedule, merge = {}, slotMerge = {}) => {
       ].join('-')
 
       // we allow the slot to override it's own index if it wants
-      return Object.assign({}, dayMerge, blockMerge, slotMerge, {
+      let slot = Object.assign({}, dayMerge, blockMerge, opts.slotMerge, {
         index
       }, slot, {
         _items: []
       })
+      slot = opts.mapSlot ? opts.mapSlot(slot) : slot
+      return slot
     })
 
     return {
@@ -30,13 +32,20 @@ const Schedule = (schedule, merge = {}, slotMerge = {}) => {
       slots
     }
   })
+  
+  let schedule = {
+    meta,
+    blocks: processedBlocks
+  }
+
+  schedule = opts.mapSchedule ? opts.mapSchedule(schedule) : schedule
 
   const ret = Object.assign({}, {
     meta,
     blocks: processedBlocks
-  }, merge)
+  }, opts.mergeSchedule)
 
-  return ret
+  return schedule
 }
 
 module.exports = Schedule

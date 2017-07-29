@@ -86,11 +86,14 @@ const getRange = (start, end) => {
   return days.map(day => day.toDate())
 }
 
+const timeTitle = (t) => getTimeTitle(convertTimeToDate(t))
+
 module.exports = {
   utcParts,
   sqlDate,
   getDateTitle,
   getTimeTitle,
+  timeTitle,
   isSameDay,
   isDateAfter,
   isDateBefore,
