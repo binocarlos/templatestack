@@ -71,6 +71,45 @@ export const checkbox = ({
   />
 )
 
+export const multipleCheckbox = ({
+  input,
+  label,
+  meta: { touched, error },
+  ...custom
+}) => {
+
+  const currentValue = input.value || []
+
+  return (
+    <div>
+      {
+        (custom.source || []).map((item, i) => {
+          const isChecked = currentValue.indexOf(item.value) >= 0
+          const checkOnChange = (val) => {
+            currentValue = currentValue.filter(v => v != val)
+            if(val) {
+              currentValue.push(val)
+            }
+            input.onChange(currentValue)
+          }
+          return (
+            <Checkbox
+              key={ key }
+              label={item.label}
+              {...input}
+              {...custom}
+              value={item.value}
+              checked={isChecked}
+              onChange={checkOnChange}
+            />
+          )
+        })
+      }
+    </div>
+    
+  )
+}
+
 export const date = ({
   input,
   label,
@@ -104,9 +143,11 @@ export const time = ({
 const fields = {
   input,
   select,
+  radio,
   checkbox,
   date,
-  time
+  time,
+  multipleCheckbox
 }
 
 export default fields

@@ -37,11 +37,18 @@ export const time = (opts = {}) => {
   }, opts)
 }
 
+export const raw = (opts = {}) => {
+  return Object.assign({}, {
+
+  }, opts)
+}
+
 const Models = {
   string,
   number,
   date,
-  time
+  time,
+  raw
 }
 
 export default Models
