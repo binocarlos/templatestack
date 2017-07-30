@@ -19,6 +19,8 @@ const RouterSaga = (opts = {}) => {
   const getRoute = (path) => basepath + path
 
   function* runHook(name, payload) {    
+    if(opts.trigger) opts.trigger(name, payload)
+    
     if(name.indexOf('/') == 0) {
       // replace `:param` with values from state
       const routerParams = yield select(state => state.router.params)

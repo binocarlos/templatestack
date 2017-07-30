@@ -165,6 +165,9 @@ const BookingBackend = (hemera, opts) => {
         mergeSchedule: {
           type: req.type
         },
+        mergeDay: {
+          type: req.type
+        },
         processSlot: opts.processSlot
       })
 

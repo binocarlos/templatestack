@@ -71,11 +71,11 @@ const Range = (opts) => {
           name: calendarDay.name
         }),
         mergeSlot: Object.assign({}, opts.mergeSlot, {
-          day: {
+          day: Object.assign({}, {
             name: calendarDay.name,
             schedule: scheduleName,
             meta: scheduleTemplate.meta
-          }
+          }, opts.mergeDay)
         }),
         processSlot: opts.processSlot
       })
