@@ -6,7 +6,7 @@ export class SideBar extends Component {
   render () {
 
     const width = this.props.width || '25%'
-    const minWidth = this.props.minWidth || '200px'
+    const minWidth = this.props.minWidth || '250px'
 
     return (
       <div className={ theme.container }>

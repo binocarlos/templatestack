@@ -65,17 +65,19 @@ const Range = (opts) => {
       const scheduleName = opts.extractCalendarScheduleName(calendarDay)
       const scheduleTemplate = opts.schedule[scheduleName]
       if(!scheduleTemplate) throw new Error(`no schedule found for ${date}`)
-      const mergeSchedule = Object.assign({}, opts.mergeSchedule, {
-        date: dateTools.sqlDate(date, true),
-        schedule: scheduleName,
-        name: calendarDay.name
-      })
-      const mergeSlot = Object.assign({}, opts.mergeSlot, {
-        schedule: scheduleName
-      })
       const schedule = Schedule(scheduleTemplate, {
-        mergeSchedule,
-        mergeSlot
+        mergeSchedule: Object.assign({}, opts.mergeSchedule, {
+          date: dateTools.sqlDate(date, true),
+          id: scheduleName,
+          name: calendarDay.name
+        }),
+        mergeSlot: Object.assign({}, opts.mergeSlot, {
+          _day: {
+            name: calendarDay.name,
+            schedule: scheduleName,
+            meta: scheduleTemplate.meta
+          }
+        })
       })
       const items = itemDates[sqlDate] || []
       items.forEach(item => {

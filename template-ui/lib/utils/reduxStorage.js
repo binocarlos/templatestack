@@ -15,10 +15,10 @@ const Storage = (name) => {
     return data
   }
 
-  const setupSave = (store, functionName = '_save') => {
+  const setupSave = (store, functionName = '_storage') => {
     if(process.env.NODE_ENV == 'production') return
-    const handler = (action) => {
-      const state = action == 'delete' ? {} : store.getState()
+    const handler = (deleteMode) => {
+      const state = deleteMode ? {} : store.getState()
       const dataString = JSON.stringify(state)
       localStorage.setItem(name, dataString)
       console.log('-------------------------------------------');
