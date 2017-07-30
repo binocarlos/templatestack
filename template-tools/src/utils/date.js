@@ -16,15 +16,15 @@ const getDateTitle = (date) => moment(date).format("ddd Do MMM, YYYY")
 const getTimeTitle = (date) => moment(date).format("HH:mm")
 
 const isSameDay = (date1, date2) => {
-  return moment(date1).format('YYYY-MM-DD') == moment(date2).format('YYYY-MM-DD')
+  return moment.utc(date1).format('YYYY-MM-DD') == moment.utc(date2).format('YYYY-MM-DD')
 }
 
 const isDateAfter = (date1, date2) => {
-  return moment(date1).isAfter(date2, 'day')
+  return moment.utc(date1).isAfter(date2, 'day')
 }
 
 const isDateBefore = (date1, date2) => {
-  return moment(date1).isBefore(date2, 'day')
+  return moment.utc(date1).isBefore(date2, 'day')
 }
 
 // days is an array like 'Mon', 'Tue', 'Wed'

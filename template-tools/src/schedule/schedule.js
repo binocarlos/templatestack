@@ -18,11 +18,15 @@ const Schedule = (schedule, opts = {}) => {
       ].join('-')
 
       // we allow the slot to override it's own index if it wants
-      return Object.assign({}, scheduleMerge, blockMerge, opts.mergeSlot, {
+      const createdSlot = Object.assign({}, scheduleMerge, blockMerge, opts.mergeSlot, {
         index
       }, slot, {
         _items: []
       })
+
+      return opts.processSlot ?
+        opts.processSlot(createdSlot) :
+        createdSlot
     })
 
     return {

@@ -24,8 +24,7 @@ const DEFAULTS = {
       block: parts[0],
       slot: parts[1]
     }
-  },
-  processSlot: (slot) => slot
+  }
 }
 
 /*
@@ -68,16 +67,17 @@ const Range = (opts) => {
       const schedule = Schedule(scheduleTemplate, {
         mergeSchedule: Object.assign({}, opts.mergeSchedule, {
           date: dateTools.sqlDate(date, true),
-          id: scheduleName,
+          schedule: scheduleName,
           name: calendarDay.name
         }),
         mergeSlot: Object.assign({}, opts.mergeSlot, {
-          _day: {
+          day: {
             name: calendarDay.name,
             schedule: scheduleName,
             meta: scheduleTemplate.meta
           }
-        })
+        }),
+        processSlot: opts.processSlot
       })
       const items = itemDates[sqlDate] || []
       items.forEach(item => {

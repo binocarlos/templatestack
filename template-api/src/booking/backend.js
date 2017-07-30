@@ -25,7 +25,8 @@ const DEFAULTS = {
   checkBookingSlot: (booking, done) => done(),
   getSummary: booking => booking,
   getCalendarConfig: type => [],
-  getScheduleConfig: type => {}
+  getScheduleConfig: type => {},
+  processSlot: slot => slot
 }
 
 /*
@@ -160,7 +161,11 @@ const BookingBackend = (hemera, opts) => {
         schedule: opts.getScheduleConfig(req.type),
         mergeSlot: {
           type: req.type
-        }
+        },
+        mergeSchedule: {
+          type: req.type
+        },
+        processSlot: opts.processSlot
       })
 
       done(null, results)
