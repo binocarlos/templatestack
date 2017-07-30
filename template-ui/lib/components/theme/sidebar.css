@@ -4,8 +4,16 @@
   display: flex;
 }
 
-.col {  
+.sidebar {  
   height: 100%;
   min-height: 100%;
   flex-direction: column;
+  flex: 0;
+}
+
+.content {  
+  height: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  flex: 1;
 }

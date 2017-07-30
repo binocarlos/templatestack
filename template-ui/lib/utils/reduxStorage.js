@@ -7,9 +7,6 @@ const Storage = (name) => {
     if(dataString) {
       console.log('-------------------------------------------');
       console.log('-------------------------------------------');
-      console.log(JSON.stringify(data, null, 4))
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
       console.log('redux data loaded')
     }
     return data

@@ -17,7 +17,6 @@ export const input = ({
     error={touched && error ? error : null}
     spellCheck={false}
     {...input}
-    {...custom}
   />
 )
 
@@ -33,7 +32,6 @@ export const select = ({
     label={label}
     error={touched && error ? error : null}
     {...input}
-    {...custom}
   />
 )
 
@@ -46,7 +44,6 @@ export const radio = ({
 }) => (
   <RadioGroup
     {...input}
-    {...custom}
   >
     {
       (custom.source || []).map((item, i) => {
@@ -67,7 +64,6 @@ export const checkbox = ({
   <Checkbox
     label={label}
     {...input}
-    {...custom}
   />
 )
 
@@ -78,7 +74,7 @@ export const multipleCheckbox = ({
   ...custom
 }) => {
 
-  const currentValue = input.value || []
+  let currentValue = input.value || []
 
   return (
     <div>
@@ -94,10 +90,8 @@ export const multipleCheckbox = ({
           }
           return (
             <Checkbox
-              key={ key }
+              key={ i }
               label={item.label}
-              {...input}
-              {...custom}
               value={item.value}
               checked={isChecked}
               onChange={checkOnChange}
@@ -121,7 +115,6 @@ export const date = ({
     label={label}
     error={touched && error ? error : null}
     {...input}
-    {...custom}
   />
 )
 
@@ -131,11 +124,10 @@ export const time = ({
   meta: { touched, error },
   ...custom
 }) => (
-  <DatePicker
+  <TimePicker
     label={label}
     error={touched && error ? error : null}
     {...input}
-    {...custom}
   />
 )
 

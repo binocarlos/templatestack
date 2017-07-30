@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column; 
+}
+
+.content > div {
+  flex-grow: 1;
+  background-color: green;
+}
+
+.topbar {
+  background-color: red;
+}
