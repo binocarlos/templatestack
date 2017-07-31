@@ -9,16 +9,12 @@ export class TopBar extends Component {
     const maxHeight = height
 
     return (
-      <div className={ theme.container }>
-        <div className={ theme.topbar } style={{ flex: `0 1 ${height}`, height, minHeight, maxHeight }}>
-          { this.props.content }
-        </div>
-        <div className={ theme.content }>
-          <div>
+      <section className={ theme.container }>
+        <header className={ theme.header }>{ this.props.content }</header>
+        <article className={ theme.content }>
             { this.props.children }
-          </div>
-        </div>
-      </div>
+        </article>
+      </section>
     )
   }
 }

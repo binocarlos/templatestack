@@ -1,20 +1,17 @@
 .container {
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   height: 100%;
+  min-height: 100%;
 }
 
-.content {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column; 
+
+.container .header {
+  height: 64px;
+  min-height: 64px;
 }
 
-.content > div {
-  flex-grow: 1;
-  background-color: green;
-}
-
-.topbar {
-  background-color: red;
+.container .content {
+  -webkit-flex: 1 1 auto;
+  overflow-y: scroll;
 }

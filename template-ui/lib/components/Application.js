@@ -7,6 +7,15 @@ class Application extends Component {
     const bodyScroll = typeof(this.props.autoScroll) == 'boolean' ?
       !this.props.autoScroll :
       false
+
+    const useStyle = this.props.fitPage ?
+      {
+        maxHeight: 'calc(100% - 64px)', 
+        height: 'calc(100% - 64px)'
+      }
+      :
+      {}
+
     return (
       <Layout>
         <NavDrawer
@@ -25,7 +34,7 @@ class Application extends Component {
         >
           { this.props.appbar }
         </AppBar>
-        <Panel bodyScroll={ bodyScroll }>
+        <Panel bodyScroll={ bodyScroll } style={ useStyle }>
           { this.props.children }
         </Panel>        
       </Layout>
