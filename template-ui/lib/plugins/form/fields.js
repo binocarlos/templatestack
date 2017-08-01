@@ -60,12 +60,15 @@ export const checkbox = ({
   label,
   meta: { touched, error },
   ...custom
-}) => (
-  <Checkbox
-    label={label}
-    {...input}
-  />
-)
+}) => {
+  return (
+    <Checkbox
+      label={label}
+      {...input}
+      checked={input.value ? true : false}
+    />
+  )
+}
 
 export const multipleCheckbox = ({
   input,
