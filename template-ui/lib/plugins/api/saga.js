@@ -39,7 +39,13 @@ function* ApiSaga(opts = {}) {
     apiResult = data
   }
   catch(error) { 
-    apiError = getErrorText(error)
+    if(opts.processError) {
+      apiError = opts.processError(error)
+    }
+    else {
+      apiError = getErrorText(error)  
+    }
+    
     yield put(actions.error(apiError))
     yield put(routerActions.hook('apiError', {
       name: opts.name,

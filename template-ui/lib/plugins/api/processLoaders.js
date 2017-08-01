@@ -24,15 +24,20 @@ const processLoaders = (loaders) => {
   const apis = Object
     .keys(loaders)
     .reduce((all, name) => {
-      const handler = loaders[name]
+      let handler = loaders[name]
+      let handlerOptions = {}
+      if(typeof(handler) == 'object') {
+        handlerOptions = handler.options
+        handler = handler.handler
+      }
       const actions = loaderActions[name]
       function* loader(payload) {
-        const ret = yield call(apiSaga, {
+        const ret = yield call(apiSaga, Object.assign({}, handlerOptions, {
           name,
           actions,
           api: handler,
           payload
-        })
+        }))
         return ret
       }
       all[name] = {
