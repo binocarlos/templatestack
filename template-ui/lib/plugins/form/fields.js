@@ -81,13 +81,16 @@ export const multipleCheckbox = ({
 
   return (
     <div>
+      <div style={{marginBottom: '10px' }}>
+        { label }
+      </div>
       {
         (custom.source || []).map((item, i) => {
           const isChecked = currentValue.indexOf(item.value) >= 0
           const checkOnChange = (val) => {
-            currentValue = currentValue.filter(v => v != val)
+            currentValue = currentValue.filter(v => v != item.value)
             if(val) {
-              currentValue.push(val)
+              currentValue.push(item.value)
             }
             input.onChange(currentValue)
           }
@@ -96,7 +99,7 @@ export const multipleCheckbox = ({
               key={ i }
               label={item.label}
               value={item.value}
-              checked={isChecked}
+              checked={isChecked ? true : false}
               onChange={checkOnChange}
             />
           )

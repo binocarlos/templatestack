@@ -1,5 +1,6 @@
 import {
-  initialize
+  initialize,
+  touch
 } from 'redux-form'
 
 const FormActions = (forms) => {
@@ -10,6 +11,11 @@ const FormActions = (forms) => {
       const formDesc = forms[name]
       if(!formDesc) throw new Error(`form not found ${name}`)
       return formActions.initialize(name, formDesc.initialValues || {})
+    },
+    touchAll: (name) => {
+      const formDesc = forms[name]
+      if(!formDesc || !formDesc.fields) return {}
+      return touch.apply(null, [name].concat(Object.keys(formDesc.fields)))
     }
   }
   return formActions
