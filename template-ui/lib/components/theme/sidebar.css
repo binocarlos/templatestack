@@ -21,37 +21,18 @@
 
 .container {
   height: 100%;
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-box;
-  display: box;
-  
-  -ms-flex-direction: row;
-  -webkit-box-orient: horizontal;
-  -moz-box-orient: horizontal;
-  -ms-box-orient: horizontal;
-  box-orient: horizontal;
+  display: flex;
+  flex-direction: row;
 }
 
 
 .container .sidebar {
   width: 200px;
   max-width: 200px;
-  -ms-flex: 0 200px;
-  -webkit-box-flex:  0;
-  -moz-box-flex:  0;
-  -ms-box-flex:  0;
-  box-flex:  0;  
-  box-flex: 0;
+  flex: 0;
   overflow-y: scroll;
 }
 
 .container .content {
-  -ms-flex: 1;
-   -webkit-box-flex: 1;
-   -moz-box-flex: 1;
-   -ms-box-flex: 1;
-   box-flex: 1;
-  overflow-y: scroll;
+  flex: 1;
 }
