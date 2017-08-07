@@ -63,7 +63,7 @@ const Range = (opts) => {
       const calendarDay = Calendar(opts.calendar, date)
       const scheduleName = opts.extractCalendarScheduleName(calendarDay)
       const scheduleTemplate = opts.schedule[scheduleName]
-      if(!scheduleTemplate) throw new Error(`no schedule found for ${date}`)
+      if(!scheduleTemplate) throw new Error(`no schedule found for ${date} - ${scheduleName}`)
       const schedule = Schedule(scheduleTemplate, {
         mergeSchedule: Object.assign({}, opts.mergeSchedule, {
           date: dateTools.sqlDate(date, true),
