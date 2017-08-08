@@ -1,6 +1,6 @@
 const title = (num, currency = '£') => {
   if(isNaN(num)) num = 0
-  if(num<0) num = num * -1
+  //if(num<0) num = num * -1
   return currency + format(num/100)
 }
 
