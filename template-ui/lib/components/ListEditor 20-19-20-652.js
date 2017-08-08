@@ -28,8 +28,10 @@ export class ListEditor extends Component {
         <Navigation type='horizontal'>
           <Button
             label='Add'
+            icon='plus'
+            onClick={ this.props.onClick }
           />
-          { this.props.children }
+          { this.props.buttons }
         </Navigation>
         <List 
           selectable
