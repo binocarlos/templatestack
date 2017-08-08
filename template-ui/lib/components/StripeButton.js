@@ -4,10 +4,6 @@ import { Button } from 'react-toolbox/lib/button'
 class StripeButton extends Component {
 
   createStripeHandler() {
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('making handler')
-    console.dir(this.props)
     if(this.handler) return
     if(!this.props.stripeKey) return
     this.handler = window.StripeCheckout.configure({
@@ -22,12 +18,7 @@ class StripeButton extends Component {
       zipCode: false,
       billingAddress: false,
       allowRememberMe: false,
-      token: function(token) {
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.log('hello: ')
-        console.dir(token)
-      }
+      token: this.props.onToken
     })
   }
 

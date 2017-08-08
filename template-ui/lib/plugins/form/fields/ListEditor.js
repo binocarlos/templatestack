@@ -29,8 +29,10 @@ class ListEditor extends Component {
 
   render () {
     const input = this.props.input || {}
+    const meta = this.props.meta || {}
     const items = input.value || []
-
+    const error = meta.touched && meta.error ? meta.error : null
+    
     return (
       <div>
         <List 
@@ -54,6 +56,11 @@ class ListEditor extends Component {
             (items || []).map(this.getItem.bind(this))
           }
         </List>
+        {
+          error ? (
+            <div className={ theme.errorText }>{ error }</div>
+          ) : null
+        }
       </div>
     )
     
