@@ -3,9 +3,9 @@ import { Button } from 'react-toolbox/lib/button'
 import Navigation from 'react-toolbox/lib/navigation'
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list'
 
-import theme from './listEditor.css'
+import theme from './listEditorTheme.css'
 
-export class ListEditor extends Component {
+class ListEditor extends Component {
 
   getItem(item, i) {
     const name = this.props.getName ? this.props.getName(item) : null
@@ -19,7 +19,9 @@ export class ListEditor extends Component {
         legend={ summary }
         leftIcon={ icon }
         rightIcon='edit'
-        onClick={ () => this.props.onClick(id) }
+        onClick={ () => this.props.onAction('edit', {
+          index: i
+        }) }
         key={ i }
       />
     )
@@ -28,6 +30,7 @@ export class ListEditor extends Component {
   render () {
     const input = this.props.input || {}
     const items = input.value || []
+
     return (
       <div>
         <List 
@@ -53,6 +56,7 @@ export class ListEditor extends Component {
         </List>
       </div>
     )
+    
   }
 }
 

@@ -7,6 +7,8 @@ const number = value =>
   value && isNaN(Number(value)) ? 'Must be a number' : undefined
 const minValue = min => value =>
   value && value < min ? `Must be at least ${min}` : undefined
+const maxValue = max => value =>
+  value && value > max ? `Must not be more than ${max}` : undefined
 const email = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
     ? 'Invalid email address'
@@ -39,6 +41,7 @@ const validators = {
   minLength,
   number,
   minValue,
+  maxValue,
   email,
   alphaNumeric,
   phone,
