@@ -1,0 +1,10 @@
+.itemText {
+  font-size: 0.85em !important;
+  color: #999  !important;
+}
+
+.primary {
+  font-weight: bold;
+  font-size: 1em !important;
+  color: #000  !important;
+}

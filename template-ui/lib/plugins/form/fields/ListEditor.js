@@ -3,19 +3,22 @@ import { Button } from 'react-toolbox/lib/button'
 import Navigation from 'react-toolbox/lib/navigation'
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list'
 
+import theme from './listEditor.css'
+
 export class ListEditor extends Component {
 
-  getItem(option, i) {
-    if(!option) return null
-    const id = option[0]
-    const title = option[1]
-    const icon = option[2]
- 
+  getItem(item, i) {
+    const name = this.props.getName ? this.props.getName(item) : null
+    const summary = this.props.getSummary ? this.props.getSummary(item) : null
+    const icon = this.props.getIcon ? this.props.getIcon(item) : null
     return (
       <ListItem 
+        theme={ theme }
         ripple
-        caption={ title }
+        caption={ name }
+        legend={ summary }
         leftIcon={ icon }
+        rightIcon='edit'
         onClick={ () => this.props.onClick(id) }
         key={ i }
       />
@@ -23,6 +26,8 @@ export class ListEditor extends Component {
   }
 
   render () {
+    const input = this.props.input || {}
+    const items = input.value || []
     return (
       <div>
         <List 
@@ -37,12 +42,13 @@ export class ListEditor extends Component {
           <Button
             label='Add'
             icon='add'
+            accent
             onClick={ () => this.props.onAction('add') }
           />
           { this.props.buttons }
         </Navigation>
           {
-            (this.props.items || []).map(this.getItem.bind(this))
+            (items || []).map(this.getItem.bind(this))
           }
         </List>
       </div>
