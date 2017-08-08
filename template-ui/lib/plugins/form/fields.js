@@ -10,7 +10,17 @@ import radioTheme from './theme/radio.css'
 
 const STYLES = {
   radioTitle: {
+    marginTop: '20px',
     marginBottom: '10px',
+    color: '#999'
+  },
+  notesTitle: {
+    marginTop: '20px',
+    marginBottom: '10px',
+    color: '#999'
+  },
+  notesContent: {
+    fontSize: '.85em',
     color: '#999'
   }
 }
@@ -75,6 +85,24 @@ export const radio = ({
           })
         }
       </RadioGroup>
+    </div>
+  )
+}
+
+
+// needs 'source' to power options
+export const notes = ({
+  input,
+  label,
+  meta: { touched, error },
+  ...custom
+}) => {
+  const config = custom.config || {}
+  
+  return (
+    <div>
+      <div style={ STYLES.notesTitle }>{ label }</div>
+      <div style={ STYLES.notesContent }>{ config.notes }</div>
     </div>
   )
 }
@@ -166,6 +194,7 @@ const fields = {
   input,
   select,
   radio,
+  notes,
   checkbox,
   date,
   time,
