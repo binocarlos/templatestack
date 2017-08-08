@@ -6,6 +6,8 @@ import TimePicker from 'react-toolbox/lib/time_picker'
 import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio'
 import Dropdown from 'react-toolbox/lib/dropdown'
 
+import radioTheme from './theme/radio.css'
+
 const STYLES = {
   radioTitle: {
     marginBottom: '10px',
@@ -48,22 +50,34 @@ export const radio = ({
   label,
   meta: { touched, error },
   ...custom
-}) => (
-  <div>
-    <div style={ STYLES.radioTitle }>{ label }</div>
-    <RadioGroup
-      {...input}
-    >
-      {
-        (custom.source || []).map((item, i) => {
-          return (
-            <RadioButton label={ item.label } value={ item.value } key={ i } />
-          )
-        })
-      }
-    </RadioGroup>
-  </div>
-)
+}) => {
+  const config = custom.config || {}
+  const useTheme = config.horizontal ?
+    { 
+      field: radioTheme.horizontal
+    } :
+    { }
+
+  return (
+    <div>
+      <div style={ STYLES.radioTitle }>{ label }</div>
+      <RadioGroup {...input}>
+        {
+          (custom.source || []).map((item, i) => {
+            return (
+              <RadioButton 
+                theme={ useTheme }
+                label={ item.label }
+                value={ item.value }
+                key={ i }
+              />
+            )
+          })
+        }
+      </RadioGroup>
+    </div>
+  )
+}
 
 export const checkbox = ({
   input,
