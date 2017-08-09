@@ -8,11 +8,3 @@
   font-size: 1em !important;
   color: #000  !important;
 }
-
-.errorText {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 12px;
-  line-height: 20px;
-  color: rgb(222, 50, 38) !important;
-}

@@ -3,6 +3,8 @@ import { Button } from 'react-toolbox/lib/button'
 import Navigation from 'react-toolbox/lib/navigation'
 import { List, ListItem, ListSubHeader, ListDivider } from 'react-toolbox/lib/list'
 
+import ErrorText from '../../../components/ErrorText'
+
 import theme from './listEditorTheme.css'
 
 class ListEditor extends Component {
@@ -56,11 +58,7 @@ class ListEditor extends Component {
             (items || []).map(this.getItem.bind(this))
           }
         </List>
-        {
-          error ? (
-            <div className={ theme.errorText }>{ error }</div>
-          ) : null
-        }
+        <ErrorText error={ error } />
       </div>
     )
     

@@ -1,7 +1,7 @@
 .errorText {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  color: #cc0000;
-  font-weight: bold;
-  text-decoration: underline;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 20px;
+  color: rgb(222, 50, 38) !important;
 }
