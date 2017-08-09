@@ -18,6 +18,8 @@ const RouterSaga = (opts = {}) => {
 
   const getRoute = (path) => basepath + path
 
+  // a named hook might actually have multiple handler functions
+  // run each handler function with the same payload in series
   function* runHook(name, payload) {    
     if(opts.trigger) opts.trigger(name, payload)
     
@@ -36,12 +38,13 @@ const RouterSaga = (opts = {}) => {
         return
       }
       const hookHandlerArray = hookHandlers.constructor === Array ?
-        hookHandlers :
+        [].concat(hookHandlers) :
         [hookHandlers]
 
-      yield all(hookHandlerArray.map(handler => {
-        return call(handler, payload)
-      }))
+      while(hookHandlerArray.length > 0) {
+        const nextHandler = hookHandlerArray.shift()
+        yield call(nextHandler, payload)
+      }
     }
   }
 
@@ -50,6 +53,10 @@ const RouterSaga = (opts = {}) => {
     yield call(runHook, action.name, action.payload)
   }
 
+  // the route config may list an array of handler names
+  // if the handler is a string - it is turned into {name}
+  // this way - the router can also pass a payload {name,payload}
+  // each name/payload combo is run in series
   function* routerChanged(action) {
     const router = yield select(state => state.router)
     const routeInfo = router.result || {}
@@ -58,14 +65,16 @@ const RouterSaga = (opts = {}) => {
     const redirect = routeInfo.redirect
     if(redirect) hookArray.push(redirect)
     if(hookArray && hookArray.length > 0) {
-      const hookHandlers = hookArray
+      const hookHandlerArray = hookArray
         .map(hook => {
-          hook = typeof(hook) == 'string' ?
+          return typeof(hook) == 'string' ?
             {name:hook,payload:null} :
-            hook     
-          return call(runHook, hook.name, hook.payload)
+            hook
         })
-      yield all(hookHandlers)
+      while(hookHandlerArray.length > 0) {
+        const nextHook = hookHandlerArray.shift()
+        yield call(runHook, nextHook.name, nextHook.payload)
+      }
     }
     yield put(actions.hook('routerChanged'))
   }
