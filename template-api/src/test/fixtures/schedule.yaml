@@ -1,0 +1,219 @@
+schedule_templates:
+  peak:
+    meta:
+      description: Weekends and school holidays are peak. We offer standard parties at £11.95 and exclusive after-hour parties at £14.95 per child
+      advert:
+        link: /exclusive.html
+        title: Exclusive after-hours use of the barn
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "cow pen"
+          - start: 10.30
+            location: "zoo lodge"
+          - start: 11.00
+            location: "pig sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "cow pen"
+          - start: 13.00
+            location: "zoo lodge"
+          - start: 13.30
+            location: "pig sty"
+      - name: Afternoon
+        slots:
+          - start: 15.00
+            location: "cow pen"
+          - start: 15.30
+            location: "zoo lodge"
+          - start: 16.00
+            location: "pig sty"
+      - name: Exclusive
+        slots:
+          - start: 18.30
+            location: "zoo lodge"
+            price: 'exclusive'
+  offpeak:
+    meta:
+      description: Weekday parties are charged at a lower price except during school holidays.
+    merge:
+      duration: 120
+      price: 'offpeak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "cow pen"
+          - start: 10.30
+            location: "zoo lodge"
+          - start: 11.00
+            location: "pig sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "cow pen"
+          - start: 13.30
+            location: "pig sty"
+      - name: Afternoon
+        merge:
+          notes: You can arrive any time between 15.30 and 16.30
+        slots:
+          - start: 16.00
+            location: "cow pen"
+          - start: 16.00
+            location: "zoo lodge"
+          - start: 16.00
+            location: "pig pen"
+  christmasPeak:
+    meta:
+      description: Weekends and school holidays are peak price parties.
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "cow pen"
+          - start: 11.00
+            location: "pig sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "cow pen"
+          - start: 13.30
+            location: "pig sty"
+      - name: Afternoon
+        slots:
+          - start: 15.00
+            location: "cow pen"
+          - start: 16.00
+            location: "pig sty"            
+  christmasOffPeak:
+    meta:
+      description: Weekday parties are charged at a lower price except during school holidays
+    merge:
+      duration: 120
+      price: 'offpeak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "cow pen"
+          - start: 11.00
+            location: "pig sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "cow pen"
+          - start: 13.30
+            location: "pig sty"
+      - name: Afternoon
+        merge:
+          notes: You can arrive any time between 15.30 and 16.30
+        slots:
+          - start: 16.00
+            location: "cow pen"
+          - start: 16.00
+            location: "pig sty"
+  christmasEve:
+    meta:
+      description: We are closed a little earlier on Christmas Eve!
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "cow pen"
+          - start: 11.00
+            location: "pig sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "cow pen"
+  closure:
+    description: Sorry, we are closed.
+
+calendar:
+  # any weekday (the default)
+  - name: Weekday
+    schedule: 'offpeak'
+    days:
+      - 'Mon'
+      - 'Tue'
+      - 'Wed'
+      - 'Thu'
+      - 'Fri'
+  - name: Weekend
+    schedule: 'peak'
+    days:
+      - 'Sat'
+      - 'Sun'
+  # custom blocks of time
+  # HOLIDAYS
+  - name: Birmingham Easter Holidays
+    schedule: 'peak'
+    dates:
+      from: 2017-04-08
+      to: 2017-04-23
+  - name: Birmingham Summer Half Term
+    schedule: 'peak'
+    dates:
+      from: 2017-05-28
+      to: 2017-06-03
+  - name: Birmingham Summer Holidays
+    schedule: 'peak'
+    dates:
+      from: 2017-07-26
+      to: 2017-09-03
+  - name: Birmingham Autumn Half Term
+    schedule: 'peak'
+    dates:
+      from: 2017-10-23
+      to: 2017-10-28
+  - name: Birmingham Christmas Holidays
+    schedule: 'peak'
+    dates:
+      from: 2017-12-23
+      to: 2018-01-07
+  #santa overrides 
+  - name: Christmas Peak
+    schedule: 'christmasPeak'
+    dates:
+      - 2017-12-02
+      - 2017-12-03
+      - 2017-12-09
+      - 2017-12-10
+      - 2017-12-16
+      - 2017-12-17
+      - 2017-12-23
+  - name: Christmas Off Peak
+    schedule: 'christmasOffPeak'
+    dates: 
+      - 2017-12-01
+      - 2017-12-08
+      - 2017-12-14
+      - 2017-12-15
+      - 2017-12-18
+      - 2017-12-19
+      - 2017-12-20
+      - 2017-12-21
+      - 2017-12-22
+  - name: Santa Schedule Christmas Eve
+    schedule: 'christmasEve'
+    dates: 2017-12-24
+  # CLOSURES
+  - name: Christmas Closures
+    schedule: 'closure'
+    dates: 
+      - 2017-12-25
+      - 2017-12-26
+      - 2018-01-01
+
