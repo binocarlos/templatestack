@@ -52,6 +52,7 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
+        filename: '[name].[chunkhash].js',
         minChunks: Infinity
       }),
       new webpack.optimize.UglifyJsPlugin({
@@ -80,7 +81,7 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
     return APPS.map(app => {
       return new HtmlWebpackPlugin({
         inject: false,
-        chunks: [app.name],
+        chunks: ['vendor', app.name],
         title: app.title,
         template: 'template.ejs',
         filename: `${app.name}/index.html`
