@@ -52,9 +52,7 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
-        minChunks: (module) => {
-          return isExternalModule(module)
-        }
+        minChunks: Infinity
       }),
       new webpack.optimize.UglifyJsPlugin({
         mangle: true,
