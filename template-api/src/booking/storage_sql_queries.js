@@ -11,10 +11,10 @@ const REQUIRED = [
 
 const DEFAULTS = {
   search_paths: [
-    `booking.meta#>>'{contact,name}'`,
-    `booking.meta#>>'{contact,child_name}'`,
-    `booking.meta#>>'{contact,email}'`,
-    `booking.meta#>>'{contact,mobile}'`,
+    `booking.meta#>>'{info,name}'`,
+    `booking.meta#>>'{info,child_name}'`,
+    `booking.meta#>>'{info,email}'`,
+    `booking.meta#>>'{info,mobile}'`,
     `booking_reference`
   ]
 }

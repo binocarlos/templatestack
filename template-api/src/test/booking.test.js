@@ -98,10 +98,6 @@ const BookingTests = (opts = {}) => {
         t.equal(result.statusCode, 200, '200 code')
         t.equal(bookings.length, overlays.length, 'correct count')
 
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.dir(bookings)
-
         const bookingDates = bookings.map(booking => dateTools.sqlDate(booking.date, true))
         const overlayDates = overlays.map(overlay => dateTools.sqlDate(overlay.date, true))
 
@@ -112,7 +108,7 @@ const BookingTests = (opts = {}) => {
       
     })
   })
-/*
+
   tape('booking - search start', (t) => {
 
     const MAX = 10
@@ -289,7 +285,7 @@ const BookingTests = (opts = {}) => {
     const data = fixtures.createMany(overlays, {})[0]
 
     async.waterfall([
-      (next) => authQueries.register(next),
+      (next) => createAccount(next),
 
       (u, next) => {
         user = u.body      
@@ -312,7 +308,6 @@ const BookingTests = (opts = {}) => {
 
   })
 
-*/
   tape('close database', (t) => {
     
     knex.destroy()
