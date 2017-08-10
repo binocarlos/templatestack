@@ -50,11 +50,6 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
       new webpack.optimize.AggressiveMergingPlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        filename: '[name].[chunkhash].js',
-        minChunks: Infinity
-      }),
       new webpack.optimize.UglifyJsPlugin({
         mangle: true,
         compress: {
@@ -81,7 +76,7 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
     return APPS.map(app => {
       return new HtmlWebpackPlugin({
         inject: false,
-        chunks: ['vendor', app.name],
+        chunks: [app.name],
         title: app.title,
         template: 'template.ejs',
         filename: `${app.name}/index.html`
