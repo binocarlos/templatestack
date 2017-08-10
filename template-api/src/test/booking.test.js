@@ -5,14 +5,14 @@ const async = require('async')
 const options = require('template-tools/src/utils/options')
 const tools = require('./tools')
 const queries = require('./queries/booking')
-//const fixtures = require('./fixtures/booking')
+const authQueries = require('./queries/auth')
+const defaultFixtures = require('./fixtures/booking')
 
-const dateTools = require('template-api/src/utils/date')
+const dateTools = require('template-tools/src/utils/date')
 
 const REQUIRED = [
   'knex',
   'transport',
-  'fixtures',
   'createAccount'
 ]
 
@@ -22,7 +22,9 @@ const BookingTests = (opts = {}) => {
     throwError: true
   })
 
-  const { knex, transport, fixtures, createAccount } = opts
+  const { knex, transport, createAccount } = opts
+
+  const fixtures = opts.fixtures || defaultFixtures
 
   const getFixtureData = (i, overlays, bookingOpts) => {
     overlays = overlays.map(overlay => {
@@ -39,6 +41,13 @@ const BookingTests = (opts = {}) => {
       (next) => createAccount(next),
 
       (user, next) => {
+        knex('booking').del()
+          .then(() => {
+            next(null, user)
+          })
+      },
+
+      (user, next) => {
         user = user.body      
         const i = user.meta.activeInstallation
         const data = getFixtureData(i, overlays, bookingOpts)
@@ -47,11 +56,14 @@ const BookingTests = (opts = {}) => {
           .returning('*')
           .asCallback((err, results) => {
             if(err) return done(err)
-            done(null, {
+            let ret = {
               bookings: results,
-              user,
-              i
-            })
+              user
+            }
+            if(!opts.noInstallation) {
+              ret.i = i
+            }
+            done(null, ret)
           })
       }
     ], done)
@@ -78,12 +90,17 @@ const BookingTests = (opts = {}) => {
         t.end()
         return
       }
+
       queries.search(base.i, {}, (err, result) => {
         if(err) t.error(err)
 
         const bookings = result.body
         t.equal(result.statusCode, 200, '200 code')
         t.equal(bookings.length, overlays.length, 'correct count')
+
+        console.log('-------------------------------------------');
+        console.log('-------------------------------------------');
+        console.dir(bookings)
 
         const bookingDates = bookings.map(booking => dateTools.sqlDate(booking.date, true))
         const overlayDates = overlays.map(overlay => dateTools.sqlDate(overlay.date, true))
@@ -95,7 +112,7 @@ const BookingTests = (opts = {}) => {
       
     })
   })
-
+/*
   tape('booking - search start', (t) => {
 
     const MAX = 10
@@ -295,7 +312,7 @@ const BookingTests = (opts = {}) => {
 
   })
 
-
+*/
   tape('close database', (t) => {
     
     knex.destroy()
@@ -304,4 +321,11 @@ const BookingTests = (opts = {}) => {
         t.end()
       })
   })
+}
+
+module.exports = BookingTests
+
+module.exports.queries = {
+  auth: authQueries,
+  booking: queries
 }

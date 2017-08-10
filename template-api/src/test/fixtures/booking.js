@@ -1,8 +1,7 @@
 "use strict";
 const async = require('async')
-const idTools = require('template-api/src/utils/id')
-const dateTools = require('template-api/src/utils/date')
-const tools = require('../tools')
+const idTools = require('template-tools/src/utils/id')
+const dateTools = require('template-tools/src/utils/date')
 
 const create = (opts = {}) => {
   const email = (new Date().getTime()) + (Math.floor(Math.random()*1000000)) + 'test@test.com'
