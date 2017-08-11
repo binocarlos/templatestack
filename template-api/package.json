@@ -1,6 +1,6 @@
 {
   "name": "template-api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "useful tools to create a node.js API server using hemera",
   "scripts": {
     "test": "tape src/**/schedule.test.js"
