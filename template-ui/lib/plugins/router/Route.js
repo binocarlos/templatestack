@@ -35,7 +35,7 @@ const RouteFactory = (basepath) => {
       }
 
       if(ownProps.home) {
-        visible = routerPath == basepath
+        visible = routerPath == basepath || routerPath == basepath + '/'
       }
 
       return {

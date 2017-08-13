@@ -20,7 +20,7 @@ const RouterSaga = (opts = {}) => {
 
   // a named hook might actually have multiple handler functions
   // run each handler function with the same payload in series
-  function* runHook(name, payload) {    
+  function* runHook(name, payload) {
     if(opts.trigger) opts.trigger(name, payload)
     
     if(name.indexOf('/') == 0) {
@@ -41,9 +41,23 @@ const RouterSaga = (opts = {}) => {
         [].concat(hookHandlers) :
         [hookHandlers]
 
+      const useHandlers = hookHandlerArray.filter(h => h)
+
+      if(useHandlers.length <= 0) {
+        devLogger(`no hooks found for ${name}`, 'error')
+        return
+      }
+      
       while(hookHandlerArray.length > 0) {
         const nextHandler = hookHandlerArray.shift()
-        yield call(nextHandler, payload)
+        // allow hooks to call other hooks with the same payload
+        if(typeof(nextHandler) == 'string') {
+          yield call(runHook, nextHandler, payload)  
+        }
+        else {
+          yield call(nextHandler, payload)  
+        }
+        
       }
     }
   }

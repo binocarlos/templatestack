@@ -6,6 +6,7 @@ import TimePicker from 'react-toolbox/lib/time_picker'
 import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio'
 import Dropdown from 'react-toolbox/lib/dropdown'
 
+import fieldTheme from './theme/field.css'
 import radioTheme from './theme/radio.css'
 
 const STYLES = {
@@ -114,11 +115,13 @@ export const checkbox = ({
   ...custom
 }) => {
   return (
-    <Checkbox
-      label={label}
-      {...input}
-      checked={input.value ? true : false}
-    />
+    <div className={ fieldTheme.padded }>
+      <Checkbox
+        label={label}
+        {...input}
+        checked={input.value ? true : false}
+      />
+    </div>
   )
 }
 
