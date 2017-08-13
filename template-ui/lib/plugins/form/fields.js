@@ -31,14 +31,17 @@ export const input = ({
   label,
   meta: { touched, error },
   ...custom
-}) => (
-  <Input
-    label={label}
-    error={touched && error ? error : null}
-    spellCheck={false}
-    {...input}
-  />
-)
+}) => {
+  return (
+    <Input
+      label={label}
+      error={touched && error ? error : null}
+      spellCheck={false}
+      type={ custom.type }
+      {...input}
+    />
+  )
+}
 
 // needs 'source' to power options
 export const select = ({
