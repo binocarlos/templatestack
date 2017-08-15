@@ -26,7 +26,7 @@ class FormWrapper extends Component {
         {
           this.props.title ?
             (
-              <div className={ formTheme.title }>{ this.props.title }</div>
+              <div id="title" className={ formTheme.title }>{ this.props.title }</div>
             ) :
             null
         }
@@ -35,6 +35,7 @@ class FormWrapper extends Component {
         </div>
         <Loading loading={this.props.loading}>
           <Navigation
+            className='formWrapperNavigation'
             type='horizontal'
             actions={actions}
           />
