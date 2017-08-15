@@ -92,6 +92,11 @@ const RouterSaga = (opts = {}) => {
     const router = yield select(state => state.router)
     const routeInfo = router.result || {}
 
+    if(opts.authenticate) {
+      const authResult = yield call(opts.authenticate)
+      if(!authResult) return
+    }
+
     // run the onLeave hooks for the previous route (if any)
     const previousRouteInfo = router.previous || {}
     const previousRouteHooks = (previousRouteInfo.result || {}).onLeave
@@ -105,13 +110,8 @@ const RouterSaga = (opts = {}) => {
       return
     }
 
-    const routeHooks = routeInfo.onEnter || routeInfo.hooks || []
-
-    // run the hooks for the route
+    const routeHooks = (routeInfo.onEnter || routeInfo.hooks || [])
     yield call(runRouteHooks, routeHooks)
-    
-    // always trigger the routerChanged hook
-    yield put(actions.hook('routerChanged'))
   }
 
   // called once we have loaded user info
