@@ -19,8 +19,8 @@ const InstallationMigration = (opts = {}) => {
       */
       knex.schema.createTable(opts.installationTablename, function(table) {
 
-        table.increments('id')
-          .primary()
+        table.specificType('id', 'serial primary key not null')
+        table.specificType('created_at', 'timestamp default now()')
 
         table.string('name')
           .notNullable()
@@ -35,8 +35,8 @@ const InstallationMigration = (opts = {}) => {
       */
       knex.schema.createTable(opts.collaborationTablename, function(table) {
 
-        table.increments('id')
-          .primary()
+        table.specificType('id', 'serial primary key not null')
+        table.specificType('created_at', 'timestamp default now()')
 
         table.integer(opts.userTablename)
           .references('id')

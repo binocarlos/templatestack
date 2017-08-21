@@ -201,9 +201,9 @@ const BookingBackend = (hemera, opts) => {
     cmd: 'create',
     installationid: Joi.number().required(),
     data: Joi.object().keys({
-      name: Joi.string().required(),
       date: Joi.string().required(),
       type: Joi.string().required(),
+      booking_reference: Joi.string().required(),
       slot: Joi.string().required(),
       meta: Joi.object()
     })

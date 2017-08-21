@@ -13,8 +13,7 @@ const BookingMigration = (opts = {}) => {
   const up = (knex, Promise) => {
    return Promise.all([
       knex.schema.createTable(opts.bookingTablename, (table) => {
-        table.increments('id')
-          .primary()
+        table.specificType('id', 'serial primary key not null')
         if(opts.installationTablename) {
           const iField = table.integer(opts.installationTablename)
           if(!opts.disableInstallationRef) {
@@ -24,6 +23,7 @@ const BookingMigration = (opts = {}) => {
               .onDelete('cascade')
           }
         }
+        table.specificType('created_at', 'timestamp default now()')
         table.date('date')
           .notNullable()
         table.string('type')

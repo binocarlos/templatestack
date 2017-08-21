@@ -13,8 +13,8 @@ const DiggerMigration = (opts = {}) => {
       knex.schema.raw("CREATE EXTENSION ltree"),
 
       knex.schema.createTable(opts.resourceTablename, (table) => {
-        table.increments('id')
-          .primary()
+        table.specificType('id', 'serial primary key not null')
+        table.specificType('created_at', 'timestamp default now()')
         if(opts.installationTablename) {
           table.integer(opts.installationTablename)
             .references('id')
@@ -37,8 +37,7 @@ const DiggerMigration = (opts = {}) => {
       }),
 
       knex.schema.createTable(`${opts.resourceTablename}_link`, (table) => {
-        table.increments('id')
-          .primary()
+        table.specificType('id', 'serial primary key not null')
         table.integer('parent')
           .references('id')
           .inTable(opts.resourceTablename)

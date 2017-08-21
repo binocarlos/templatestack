@@ -1,10 +1,11 @@
 'use strict'
 const async = require('async')
+const fs = require('fs')
 const options = require('template-tools/src/utils/options')
 const Mailgun = require('mailgun-js')
 
 const REQUIRED = [
-  
+  'filepath'
 ]
 
 const REQUIRED_HOOKS = [
@@ -30,6 +31,15 @@ const MailgunTestBackend = (hemera, opts) => {
   const TOPIC = opts.topic
   let messages = []
 
+  const saveMessages = () => {
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('saving email messages')
+    console.log(opts.filepath)
+    console.log(JSON.stringify(messages, null, 4))
+    fs.writeFileSync(opts.filepath, JSON.stringify(messages), 'utf8')
+  }
+
   /*
   
     send
@@ -49,6 +59,7 @@ const MailgunTestBackend = (hemera, opts) => {
     content: Joi.string().required()
   }, (req, done) => {
     messages.push(req)
+    saveMessages()
     done(null, messages)
   })
 

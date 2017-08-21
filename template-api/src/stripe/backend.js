@@ -57,6 +57,12 @@ const StripeBackend = (hemera, opts) => {
   
     payment
 
+    returns {
+      ok: bool,
+      error: 'desc'
+    }
+
+    if an actual error is returned it is a lower level system error (like cannot connect to remote api etc)
   */
   hemera.add({
     topic: TOPIC,
@@ -72,7 +78,20 @@ const StripeBackend = (hemera, opts) => {
       receipt_email: req.email,
       source: req.token,
       description: req.description
-    }, done)
+    }, (err, result) => {
+      if(err) return done(null, {
+        ok: false,
+        error: err.toString()
+      })
+      if(!result) return done(null, {
+        ok: false,
+        error: 'no payment result found'
+      })
+      done(null, {
+        ok: true,
+        charge: result
+      })
+    })
   })
 
 }
