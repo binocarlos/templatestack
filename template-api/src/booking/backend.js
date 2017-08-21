@@ -102,6 +102,7 @@ const BookingBackend = (hemera, opts) => {
     limit: Joi.number(),
     summary: Joi.bool()
   }, (req, done) => {
+
     storage.search({
       installationid: req.installationid,
       search: req.search,
