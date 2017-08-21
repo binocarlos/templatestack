@@ -1,11 +1,9 @@
 'use strict'
 const async = require('async')
 const options = require('template-tools/src/utils/options')
-const Twilio = require('twilio')
 
 const REQUIRED = [
-  'sid',
-  'token'
+  
 ]
 
 const REQUIRED_HOOKS = [
@@ -16,7 +14,7 @@ const DEFAULTS = {
   topic: 'sms'
 }
 
-const TwilioBackend = (hemera, opts) => {
+const TwilioTestBackend = (hemera, opts) => {
   let Joi = hemera.exposition['hemera-joi'].joi
 
   opts = options.processor(opts, {
@@ -29,11 +27,7 @@ const TwilioBackend = (hemera, opts) => {
   })
 
   const TOPIC = opts.topic
-  const client = Twilio(
-    opts.sid,
-    opts.token
-  )
-
+  let messages = []
   /*
   
     send
@@ -50,19 +44,10 @@ const TwilioBackend = (hemera, opts) => {
     to: Joi.string().required(),
     content: Joi.string().required()
   }, (req, done) => {
-    if(opts.testHandler) {
-      done(null, opts.testHandler(req))
-    }
-    else {
-      client.messages.create({
-        from: req.from,
-        to: req.to,
-        body: req.content
-      }, done)  
-    }
-    
+    messages.push(req)
+    done(null, messages)
   })
 
 }
 
-module.exports = TwilioBackend
+module.exports = TwilioTestBackend

@@ -1,11 +1,10 @@
 'use strict'
 const async = require('async')
 const options = require('template-tools/src/utils/options')
-const Twilio = require('twilio')
+const Mailgun = require('mailgun-js')
 
 const REQUIRED = [
-  'sid',
-  'token'
+  
 ]
 
 const REQUIRED_HOOKS = [
@@ -13,10 +12,10 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  topic: 'sms'
+  topic: 'email'
 }
 
-const TwilioBackend = (hemera, opts) => {
+const MailgunTestBackend = (hemera, opts) => {
   let Joi = hemera.exposition['hemera-joi'].joi
 
   opts = options.processor(opts, {
@@ -29,10 +28,7 @@ const TwilioBackend = (hemera, opts) => {
   })
 
   const TOPIC = opts.topic
-  const client = Twilio(
-    opts.sid,
-    opts.token
-  )
+  let messages = []
 
   /*
   
@@ -40,6 +36,7 @@ const TwilioBackend = (hemera, opts) => {
 
     * from
     * to
+    * subject
     * message
     
   */
@@ -48,21 +45,13 @@ const TwilioBackend = (hemera, opts) => {
     cmd: 'send',
     from: Joi.string().required(),
     to: Joi.string().required(),
+    subject: Joi.string().required(),
     content: Joi.string().required()
   }, (req, done) => {
-    if(opts.testHandler) {
-      done(null, opts.testHandler(req))
-    }
-    else {
-      client.messages.create({
-        from: req.from,
-        to: req.to,
-        body: req.content
-      }, done)  
-    }
-    
+    messages.push(req)
+    done(null, messages)
   })
 
 }
 
-module.exports = TwilioBackend
+module.exports = MailgunTestBackend
