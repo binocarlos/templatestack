@@ -1,5 +1,6 @@
 'use strict'
 const async = require('async')
+const options = require('template-tools/src/utils/options')
 const Twilio = require('twilio')
 
 const REQUIRED = [
