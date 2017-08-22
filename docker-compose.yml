@@ -14,9 +14,6 @@ services:
     container_name: templatestack_redis
     volumes:
       - ./.data/redis:/data
-  nats:
-    image: nats
-    container_name: templatestack_nats
   frontend:
     build:
       context: ./

@@ -2,16 +2,21 @@ version: '2'
 services:
   frontend:
     volumes:
-      - ./frontend:/app/frontend
-      - /app/frontend/node_modules/
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/www:/app/frontend/www
+      - ./frontend/package.json:/app/frontend/package.json
+      - ./frontend/yarn.lock:/app/frontend/yarn.lock
+      - ./frontend/template.ejs:/app/frontend/template.ejs
+      - ./shared/src:/app/frontend/node_modules/shared/src
       - ./template-ui/lib:/app/frontend/node_modules/template-ui/lib
       - ./template-tools/src:/app/frontend/node_modules/template-tools/src
-      - ./shared:/app/frontend/node_modules/shared
   api:
     volumes:
-      - ./api:/app/api
-      - /app/api/node_modules/
+      - ./api/src:/app/api/src
+      - ./api/test:/app/api/test
+      - ./api/migrations:/app/api/migrations
+      - ./api/package.json:/app/api/package.json
+      - ./api/yarn.lock:/app/api/yarn.lock
+      - ./shared/src:/app/api/node_modules/shared/src
       - ./template-api/src:/app/api/node_modules/template-api/src
       - ./template-tools/src:/app/api/node_modules/template-tools/src
-      - ./shared:/app/api/node_modules/shared
-    

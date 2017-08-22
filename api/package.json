@@ -8,7 +8,7 @@
     "serve": "node src/index.js",
     "knex": "knex",
     "test2": "tape test/**/*.test.js",
-    "test": "tape test/schedule.test.js"
+    "test": "tape test/auth.test.js"
   },
   "dependencies": {
     "body-parser": "^1.17.2",

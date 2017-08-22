@@ -1,5 +1,7 @@
 'use strict'
 
+const Client = require('template-api/src/grpc/client')
+
 const SystemBackend = require('template-api/src/system/backend')
 const AuthBackend = require('template-api/src/auth/backend')
 const InstallationBackend = require('template-api/src/installation/backend')
@@ -26,12 +28,9 @@ const Backends = () => {
   const auth = AuthBackend({
     storage: AuthStorage({knex}),
     hooks: {
-      register: (user, done) => {
-        const installationClient = Client(installation)
-        installationClient.createDefault({
-          userid: user.id
-        }, done)
-      },
+      register: (user, done) => Client('installation', installation).createDefault({
+        userid: user.id
+      }, done),
       create: (user, done) => done()
     }
   })
@@ -39,8 +38,8 @@ const Backends = () => {
   const installation = InstallationBackend({
     storage: InstallationStorage({knex}),
     hooks: {
-      authUpdate: (req, done) => Client(auth).update(req, done),
-      authEnsure: (req, done) => Client(auth).ensure(req, done)
+      authUpdate: (req, done) => Client('auth', auth).update(req, done),
+      authEnsure: (req, done) => Client('auth', auth).ensure(req, done)
     }
   })
 

@@ -81,7 +81,7 @@ const AuthBackend = (opts) => {
     const handler = (call, done) => {
 
       async.waterfall([
-        (next) => storage.loadByUsername(call.request.username, next),
+        (next) => storage.loadByUsername({username:call.request.username}, next),
           
         (user, next) => {
           if(user) {

@@ -66,6 +66,7 @@ const StorageSQL = (opts) => {
     knex
       .insert(req.data)
       .into(opts.table)
+      .returning('*')
       .asCallback(tools.singleExtractor(done))
   }
 
@@ -81,6 +82,7 @@ const StorageSQL = (opts) => {
     knex(opts.table)
       .where({id: req.id})
       .update(req.data)
+      .returning('*')
       .asCallback(tools.singleExtractor(done))
   }
 
@@ -97,10 +99,11 @@ const StorageSQL = (opts) => {
     loadById({id:req.id}, (err, user) => {
       if(err) return done(err)
       const meta = Object.assign({}, user.meta, req.data)
-      update({
-        id: req.id,
-        data: {meta}
-      }, done)
+      knex(opts.table)
+        .where({id: req.id})
+        .update({meta})
+        .returning('*')
+        .asCallback(tools.singleExtractor(done))
     })
   }
 

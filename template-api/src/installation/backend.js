@@ -47,6 +47,8 @@ const InstallationBackend = (opts) => {
     required: REQUIRED_HOOKS
   })
 
+  const storage = opts.storage
+
   const TOPIC = opts.topic
   const STORAGE_TOPIC = opts.storageTopic
   const AUTH_TOPIC = opts.authTopic
