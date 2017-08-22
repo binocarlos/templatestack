@@ -19,7 +19,9 @@ const Routes = (app, rpcClients) => {
     client: rpcClients.auth
   })
 
-  const system = SystemRoutes()
+  const system = SystemRoutes({
+    client: rpcClients.system
+  })
   const installation = InstallationRoutes({
     client: rpcClients.installation
   })

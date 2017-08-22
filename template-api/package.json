@@ -3,7 +3,7 @@
   "version": "1.3.0",
   "description": "useful tools to create a node.js API server using hemera",
   "scripts": {
-    "test": "tape src/**/schedule.test.js"
+    
   },
   "dependencies": {
     "async": "^2.4.1",

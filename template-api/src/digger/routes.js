@@ -35,7 +35,7 @@ const DiggerRoutes = (opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     if(!id) return webserverTools.errorReply(next, res, 'resource id required')
-    client.get({
+    client.loadById({
       installationid,
       id
     }, (err, resource) => {
@@ -72,6 +72,8 @@ const DiggerRoutes = (opts) => {
     client.children({
       installationid,
       id,
+      type: req.qs.type,
+      search: req.qs.search,
       withLinks: req.qs.links ? true : false
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
@@ -86,7 +88,7 @@ const DiggerRoutes = (opts) => {
     const installationid = opts.extractInstallationId(req)
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
-    if(!id) return webserverTools.errorReply(next, res, 'resource id required')
+    //if(!id) return webserverTools.errorReply(next, res, 'resource id required')
 
     client.descendents({      
       installationid,

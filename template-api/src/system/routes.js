@@ -7,25 +7,24 @@ const async = require('async')
 const webserverTools = require('../webserver/tools')
 
 const REQUIRED = [
-  
+  'client'
 ]
 
 const DEFAULTS = {
   
 }
 
-const SystemRoutes = (transport, opts) => {
+const SystemRoutes = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
 
+  const client = opts.client
+
   const version = (req, res) => {
-    transport.act({
-      topic: 'system',
-      cmd: 'version'
-    }, (err, version) => {
+    client.version({}, (err, version) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res
         .status(200)

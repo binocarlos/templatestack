@@ -241,9 +241,7 @@ const InstallationBackend = (opts) => {
   const add_user = (call, done) => {
     async.waterfall([
       (next) => {
-        hooks.authEnsure({
-          data: call.request.userdata
-        }, next)
+        hooks.authEnsure(call.request.userdata, next)
       },
 
       (user, next) => {

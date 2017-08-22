@@ -3,8 +3,6 @@ const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
 
-const packageJSON = require('../package.json')
-
 const headers = tools.headers
 
 const SystemTests = (opts = {}) => {
@@ -19,7 +17,7 @@ const SystemTests = (opts = {}) => {
       if(err) t.error(err)
 
       t.equal(result.statusCode, 200, '200 code')
-      t.equal(result.body.version, packageJSON.version, 'versions same')
+      t.equal(result.body.version, opts.version, 'versions same')
       t.end()
     }))
     

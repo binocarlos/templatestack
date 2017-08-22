@@ -82,6 +82,8 @@ const DiggerBackend = (opts) => {
 
       * installationid
       * id
+      * type
+      * search
       * withLinks
     
   */
@@ -90,7 +92,9 @@ const DiggerBackend = (opts) => {
 
     const query = {
       installationid: req.installationid,
-      id: req.id
+      id: req.id,
+      type: req.type,
+      search: req.search
     }
 
     async.waterfall([

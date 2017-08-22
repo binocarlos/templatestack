@@ -1,7 +1,7 @@
 'use strict'
 
 const options = require('template-tools/src/utils/options')
-const knex = require('knex')
+const Knex = require('knex')
 
 const REQUIRED_CONNECTION = [
   'host',
@@ -22,7 +22,7 @@ const DEFAULT_OPTS = {
   }
 }
 
-const Knex = (opts) => {
+const KnexFactory = (opts) => {
   opts = opts || {}
   opts = options.processor(opts, {
     default: DEFAULT_OPTS,
@@ -32,8 +32,9 @@ const Knex = (opts) => {
     required: REQUIRED_CONNECTION,
     default: DEFAULT_CONNECTION
   })
-
-  return knex(opts)
+  
+  opts.debug = typeof(opts.debug) == 'boolean' ? opts.debug : process.env.NODE_ENV != 'production'
+  return Knex(opts)
 }
 
-module.exports = Knex
+module.exports = KnexFactory

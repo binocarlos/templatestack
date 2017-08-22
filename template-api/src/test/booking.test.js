@@ -12,17 +12,24 @@ const databaseTools = require('../database/tools')
 const dateTools = require('template-tools/src/utils/date')
 
 const REQUIRED = [
-  'knex',
-  'createAccount'
+  'knex'
 ]
+
+const DEFAULTS = {
+  createAccount: (done) => {
+    authQueries.registerAccount(done)
+  }
+}
 
 const BookingTests = (opts = {}) => {
   opts = options.processor(opts, {
     required: REQUIRED,
+    defaults: DEFAULTS,
     throwError: true
   })
 
-  const { knex, createAccount } = opts
+  const knex = opts.knex
+  const createAccount = opts.createAccount
 
   const fixtures = opts.fixtures || defaultFixtures
 
@@ -48,7 +55,7 @@ const BookingTests = (opts = {}) => {
       },
 
       (user, next) => {
-        user = user.body      
+        user = user.body ? user.body : user  
         const i = user.meta.activeInstallation
         const data = getFixtureData(i, overlays, bookingOpts)
         knex('booking')
@@ -84,7 +91,7 @@ const BookingTests = (opts = {}) => {
       count++
     }
 
-    createFixtureBookings(overlays, {}, (err, base) => {
+    createFixtureBookings(overlays, {}, (err, base) => {      
       if(err) {
         t.error(err)
         t.end()
@@ -288,7 +295,7 @@ const BookingTests = (opts = {}) => {
       (next) => createAccount(next),
 
       (u, next) => {
-        user = u.body      
+        user = u.body ? u.body : u   
         i = user.meta.activeInstallation
         const insertData = Object.assign({}, data, {
           installation: i

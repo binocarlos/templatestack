@@ -225,7 +225,6 @@ const InstallationTests = (opts = {}) => {
     })
   })
 
-
   tape('installations - activate installation', (t) => {
     
     const INSTALLATION_NAME = 'apples install'

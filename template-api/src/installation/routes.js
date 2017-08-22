@@ -112,7 +112,7 @@ const InstallationRoutes = (opts) => {
   const del = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
-    client.delete({
+    client.del({
       id
     }, (err) => {
       if(err) return webserverTools.errorReply(next, res, err)

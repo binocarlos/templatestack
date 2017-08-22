@@ -32,7 +32,6 @@ const DiggerTests = (opts = {}) => {
     ], done)
   }
 
-
   tape('resourceflat - create resource', (t) => {
     const userData = authQueries.UserData()
 
@@ -92,7 +91,6 @@ const DiggerTests = (opts = {}) => {
 
     })
   })
-
 
   tape('resourceflat - save resource', (t) => {
 
@@ -307,7 +305,7 @@ const DiggerTests = (opts = {}) => {
     })
     
   })
-
+/*
   tape('resourceflat - order resources', (t) => {
 
     const userData = authQueries.UserData()
@@ -388,7 +386,7 @@ const DiggerTests = (opts = {}) => {
 
 
   })
-
+*/
 }
 
 module.exports = DiggerTests

@@ -12,7 +12,7 @@ const Client = (channel, backend) => {
         request: req
       }, (err, answer) => {
         if(err) {
-          console.error(`RPC error ${channel} : ${name} : ${ err.toString }`)
+          console.error(`RPC error ${channel} : ${name} : ${ err.toString() }`)
           return done(err)
         }
         else {

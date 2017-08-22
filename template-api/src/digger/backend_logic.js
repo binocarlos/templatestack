@@ -385,7 +385,7 @@ const BackendLogic = (storage, opts = {}) => {
       (next) => {
         async.parallel(ids.map(id => nextresource => {
           async.waterfall([
-            (nextpart) => getResource(id, next),
+            (nextpart) => getResource(id, nextpart),
             (resource, nextpart) => {
 
               tree({
