@@ -15,7 +15,7 @@ const DEFAULTS = {
   
 }
 
-const TwilioTestBackend = (hemera, opts) => {
+const TwilioTestBackend = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

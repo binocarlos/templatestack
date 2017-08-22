@@ -52,6 +52,10 @@ const MailgunTestBackend = (opts) => {
     saveMessages()
     done(null, messages)
   }
+
+  return {
+    send
+  }
   
 }
 
