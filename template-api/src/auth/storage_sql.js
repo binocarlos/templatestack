@@ -10,7 +10,6 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  topic: 'auth-storage',
   table: 'useraccount',
   usernameField: 'username'
 }
@@ -20,9 +19,8 @@ const DEFAULTS = {
   user namespace
   
 */
-const StorageSQL = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
-
+const StorageSQL = (opts) => {
+  
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -30,115 +28,89 @@ const StorageSQL = (hemera, opts) => {
 
   const knex = opts.knex
 
-  const TOPIC = opts.topic
 
   /*
   
     loadById
+
+      * id
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'loadById',
-    id: Joi.number().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'findById',
-      collection: opts.table,
-      id: req.id
-    }, tools.singleExtractor(done))
-  })
+  const loadById = (req, done) => {
+    knex(opts.table)
+      .where('id', req.id)
+      .asCallback(tools.singleExtractor(done))
+  }
 
   /*
   
     loadByUsername
+
+      * username
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'loadByUsername',
-    username: Joi.string().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'find',
-      collection: opts.table,
-      query: {
-        [opts.usernameField]: req.username
-      },
-      options: {}
-    }, tools.singleExtractor(done))
-  })
+  const loadByUsername = (req, done) => {
+    knex(opts.table)
+      .where(opts.usernameField, req.username)
+      .asCallback(tools.singleExtractor(done))
+  }
 
   /*
   
     create
+
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'create',
-    data: Joi.object().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store-addons',
-      cmd: 'create',
-      collection: opts.table,
-      data: req.data
-    }, tools.singleExtractor(done))
-  })
+  const create = (req, done) => {
+    knex
+      .insert(req.data)
+      .into(opts.table)
+      .asCallback(tools.singleExtractor(done))
+  }
 
   /*
   
     save
+
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'save',
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store-addons',
-      cmd: 'update',
-      collection: opts.table,
-      query: { id: req.id },
-      data: req.data
-    }, tools.singleExtractor(done))
-    
-  })
+  const save = (req, done) => {
+    knex(opts.table)
+      .where({id: req.id})
+      .update(req.data)
+      .asCallback(tools.singleExtractor(done))
+  }
+
 
   /*
   
     update - merges meta data top-level keys
+
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'update',
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'findById',
-      collection: opts.table,
-      id: req.id
-    }, tools.singleExtractor((err, user) => {
-      if(err) return done(new Error(err))
+  const update = (req, done) => {
+    loadById({id:req.id}, (err, user) => {
+      if(err) return done(err)
       const meta = Object.assign({}, user.meta, req.data)
-      hemera.act({
-        topic: 'sql-store-addons',
-        cmd: 'update',
-        collection: opts.table,
-        query: { id: req.id },
-        data: { meta }
-      }, tools.singleExtractor(done))
-    }))
-    
-  })
+      update({
+        id: req.id,
+        data: {meta}
+      }, done)
+    })
+  }
+
+  return {
+    loadById,
+    loadByUsername,
+    create,
+    save,
+    update
+  }
 }
 
 module.exports = StorageSQL

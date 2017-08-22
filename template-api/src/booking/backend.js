@@ -19,7 +19,6 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  topic: 'booking',
   // a function to check if a slot has any space
   // return an error if the booking cannot be made
   checkBookingSlot: (booking, done) => done(),
@@ -34,9 +33,7 @@ const DEFAULTS = {
   user namespace
   
 */
-const BookingBackend = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
-
+const BookingBackend = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -46,8 +43,6 @@ const BookingBackend = (hemera, opts) => {
     required: REQUIRED_HOOKS
   })
 
-  const TOPIC = opts.topic
-
   const storage = opts.storage
   const checkBookingSlot = opts.checkBookingSlot
 
@@ -55,16 +50,14 @@ const BookingBackend = (hemera, opts) => {
   
     load
 
-    * id
+      * installationid
+      * id
+      * summary
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'load',
-    installationid: Joi.number().required(),
-    id: Joi.number().required(),
-    summary: Joi.bool()
-  }, (req, done) => {
+  const load = (call, done) => {
+    const req = call.request
+  
     storage.get({
       id: req.id,
       installationid: req.installationid
@@ -82,27 +75,18 @@ const BookingBackend = (hemera, opts) => {
   
     search
 
-    * installationid
-    * search
-    * start
-    * end
-    * type
-    * limit
-    * summary
-    
+      * installationid
+      * search
+      * start
+      * end
+      * type
+      * limit
+      * summary
+      
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'search',
-    installationid: Joi.number().required(),
-    search: Joi.string(),
-    start: Joi.string(),
-    end: Joi.string(),
-    type: Joi.string(),
-    limit: Joi.number(),
-    summary: Joi.bool()
-  }, (req, done) => {
-
+  const search = (call, done) => {
+    const req = call.request
+  
     storage.search({
       installationid: req.installationid,
       search: req.search,
@@ -124,22 +108,16 @@ const BookingBackend = (hemera, opts) => {
   
     range
 
-    * installationid
-    * type
-    * start
-    * end
+      * installationid
+      * type
+      * start
+      * end
+      * summary
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'range',
-    installationid: Joi.number().required(),
-    type: Joi.string(),
-    start: Joi.string(),
-    end: Joi.string(),
-    summary: Joi.bool()
-  }, (req, done) => {
-
+  const range = (call, done) => {
+    const req = call.request
+  
     const calendarConfig = opts.getCalendarConfig(req.type)
     const scheduleConfig = opts.getScheduleConfig(req.type)
 
@@ -187,27 +165,17 @@ const BookingBackend = (hemera, opts) => {
 
     fields:
 
-    * installationid
-    * data
-      * name
-      * date
-      * type
-      * slot
-      * meta
+      * installationid
+      * data
+        * name
+        * date
+        * type
+        * slot
+        * meta
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'create',
-    installationid: Joi.number().required(),
-    data: Joi.object().keys({
-      date: Joi.string().required(),
-      type: Joi.string().required(),
-      booking_reference: Joi.string().required(),
-      slot: Joi.string().required(),
-      meta: Joi.object()
-    })
-  }, (req, done) => {
+  const create = (call, done) => {
+    const req = call.request
     storage.transaction((trx, finish) => {
       async.waterfall([
         (next) => {
@@ -230,18 +198,14 @@ const BookingBackend = (hemera, opts) => {
   
     save
 
-    * id
-    * data
+      * installationid
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'save',
-    installationid: Joi.number().required(),
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
-
+  const save = (call, done) => {
+    const req = call.request
+  
     storage.transaction((trx, finish) => {
       async.waterfall([
         (next) => {
@@ -268,17 +232,12 @@ const BookingBackend = (hemera, opts) => {
     del
 
     * id
-    * data
+    * installationid
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'del',
-    installationid: Joi.number().required(),
-    id: Joi.number().required()
-  }, (req, done) => {
-
-
+  const del = (call, done) => {
+    const req = call.request
+  
     storage.transaction((trx, finish) => {
       async.waterfall([
         (next) => {

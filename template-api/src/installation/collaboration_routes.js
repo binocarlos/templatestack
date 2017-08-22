@@ -8,7 +8,9 @@ const webserverTools = require('../webserver/tools')
 const tools = require('./tools')
 
 const REQUIRED = [
-  'collaboration_template'
+  'collaboration_template',
+  'client',
+  'authClient'
 ]
 
 const DEFAULTS = {
@@ -33,6 +35,8 @@ const CollaborationRoutes = (transport, opts) => {
   const AUTH_TOPIC = opts.authTopic
   const extractInstallation = opts.extractInstallation
   const collaboration_template = opts.collaboration_template
+  const client = opts.client
+  const authClient = opts.authClient
 
   // QUERIES
   const list = (req, res, next) => {
@@ -40,9 +44,7 @@ const CollaborationRoutes = (transport, opts) => {
     const i = extractInstallation(req, res, next)
     if(!i) return webserverTools.errorReply(next, res, 'installation required')
     
-    transport.act({
-      topic: TOPIC,
-      cmd: 'list_users',
+    client.list_users({
       id: i,
       meta: collaboration_template
     }, (err, users) => {
@@ -58,9 +60,7 @@ const CollaborationRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'id required')
     
-    transport.act({
-      topic: AUTH_TOPIC,
-      cmd: 'load',
+    authClient.load({
       id
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
@@ -86,9 +86,7 @@ const CollaborationRoutes = (transport, opts) => {
     if(!username) return webserverTools.errorReply(next, res, 'no username given', 400)
     if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'add_user',
+    client.add_user({
       id: i,
       userdata: user,
       collaboration
@@ -104,9 +102,7 @@ const CollaborationRoutes = (transport, opts) => {
   const save = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'id required')
-    transport.act({
-      topic: AUTH_TOPIC,
-      cmd: 'save',
+    authClient.save({
       id,
       data: req.body || {}
     }, (err, users) => {
@@ -121,9 +117,7 @@ const CollaborationRoutes = (transport, opts) => {
   const update = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'id required')
-    transport.act({
-      topic: AUTH_TOPIC,
-      cmd: 'update',
+    authClient.update({
       id,
       data: req.body || {}
     }, (err, users) => {
@@ -139,9 +133,7 @@ const CollaborationRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!i) return webserverTools.errorReply(next, res, 'installation required')
     if(!id) return webserverTools.errorReply(next, res, 'id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'delete_user',
+    client.delete_user({
       id: i,
       userid: id
     }, (err, users) => {

@@ -7,11 +7,10 @@ const async = require('async')
 const webserverTools = require('../webserver/tools')
 
 const REQUIRED = [
-  
+  'client'
 ]
 
 const DEFAULTS = {
-  topic: 'booking',
   extractInstallationId: (req) => webserverTools.getIdParam(req, 'installationid')
 }
 
@@ -22,7 +21,7 @@ const BookingRoutes = (transport, opts) => {
     defaults: DEFAULTS
   })
 
-  const TOPIC = opts.topic
+  const client = opts.client
 
   // QUERIES
   const load = (req, res, next) => {
@@ -30,9 +29,7 @@ const BookingRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     if(!id) return webserverTools.errorReply(next, res, 'booking id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'load',
+    client.load({
       installationid,
       id,
       summary: req.qs.summary == 'y' ? true : false
@@ -48,9 +45,7 @@ const BookingRoutes = (transport, opts) => {
   const search = (req, res, next) => {
     const installationid = opts.extractInstallationId(req)
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'search',
+    client.search({
       installationid,
       type: req.qs.type,
       search: req.qs.search,
@@ -69,9 +64,7 @@ const BookingRoutes = (transport, opts) => {
   const range = (req, res, next) => {
     const installationid = opts.extractInstallationId(req)
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'range',
+    client.range({
       installationid,
       type: req.qs.type,
       start: req.qs.start,
@@ -91,9 +84,7 @@ const BookingRoutes = (transport, opts) => {
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     const data = req.body
     if(!data) return webserverTools.errorReply(next, res, 'no data given', 400)
-    transport.act({
-      topic: TOPIC,
-      cmd: 'create',
+    client.create({
       installationid,
       data
     }, (err, booking) => {
@@ -111,9 +102,7 @@ const BookingRoutes = (transport, opts) => {
     if(!id) return webserverTools.errorReply(next, res, 'booking id required')
     const data = req.body
     if(!data) return webserverTools.errorReply(next, res, 'no data given', 400)
-    transport.act({
-      topic: TOPIC,
-      cmd: 'save',
+    client.save({
       installationid,
       id,
       data
@@ -130,9 +119,7 @@ const BookingRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     if(!id) return webserverTools.errorReply(next, res, 'booking id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'del',
+    client.del({
       installationid,
       id
     }, (err, booking) => {

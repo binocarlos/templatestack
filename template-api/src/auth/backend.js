@@ -3,10 +3,10 @@
 const options = require('template-tools/src/utils/options')
 const async = require('async')
 const authTools = require('./tools')
-const transportTools = require('../transport/tools')
 
 const REQUIRED = [
-  'hooks'
+  'hooks',
+  'storage'
 ]
 
 const REQUIRED_HOOKS = [
@@ -14,11 +14,15 @@ const REQUIRED_HOOKS = [
   'create'
 ]
 
+const REQUIRE_STORAGE_METHODS = [
+  'loadById',
+  'loadByUsername',
+  'create',
+  'save',
+  'update'
+]
+
 const DEFAULTS = {
-
-  topic: 'auth',
-  storageTopic: 'auth-storage',
-
   checkUserPassword: (user, check_password) => {
     const salt = user.salt
     const password = user.hashed_password
@@ -38,70 +42,52 @@ const DEFAULTS = {
     user = Object.assign({}, user)
     delete(user.salt)
     delete(user.hashed_password)
+    delete(user.created_at)
     return user
   }
 }
 
-const AuthBackend = (hemera, opts) => {
-    const Joi = hemera.exposition['hemera-joi'].joi
-
+const AuthBackend = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
+  })
+
+  options.processor(opts.storage, {
+    required: REQUIRE_STORAGE_METHODS
   })
 
   const hooks = options.processor(opts.hooks, {
     required: REQUIRED_HOOKS
   })
 
-  const readOnly = opts.readOnly
-  const TOPIC = opts.topic
-  const STORAGE_TOPIC = opts.storageTopic
-
-  const loadUser = (username, done) => {
-    hemera.act({
-      topic: STORAGE_TOPIC,
-      cmd: 'loadByUsername',
-      username: username
-    }, done)
-  }
+  const storage = opts.storage
 
   const createUser = (data, done) => {
     data = opts.processNewUser(data)
-    hemera.act({
-      topic: STORAGE_TOPIC,
-      cmd: 'create',
-      data
-    }, done)
+    storage.create({data}, done)
   }
 
   // refactor the create user code to be re-used in various situations (e.g. register vs user add by admin)
   const createUserController = (subopts = {}) => {
-    if(!subopts.cmd) throw new Error('cmd opt required')
     if(!subopts.existsHandler) throw new Error('existsHandler opt required')
     if(!subopts.hook) throw new Error('hook opt required')
 
-    const cmd = subopts.cmd
     const existsHandler = subopts.existsHandler
     const hook = subopts.hook
 
-    hemera.add({
-      topic: TOPIC,
-      cmd: cmd,
-      data: Joi.object().keys({
-        username: Joi.string().required(),
-        password: Joi.string().required()
-      })
-    }, (req, done) => {
+    // * username
+    // * password
+    const handler = (call, done) => {
 
       async.waterfall([
-        (next) => loadUser(req.data.username, next),
+        (next) => storage.loadByUsername(call.request.username, next),
           
         (user, next) => {
           if(user) {
             return existsHandler(user, done)
           }
-          createUser(req.data, next)
+          createUser(call.request, next)
         },
 
         (user, next) => {
@@ -114,138 +100,129 @@ const AuthBackend = (hemera, opts) => {
         },
 
         (user, next) => {
-
-          hemera.act({
-            topic: STORAGE_TOPIC,
-            cmd: 'loadById',
+          storage.loadById({
             id: user.id
           }, next)
         }
 
       ], (err, user) => {
-        if(err) return done(new Error(err))
+        if(err) return done(err)
         done(null, opts.displayUser(user))
       })
-    })
+    }
+
+    return handler
   }
 
   /*
   
     load
+
+      * id
     
   */
-  transportTools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'load'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'loadById'
-    },
-    query: {
-      id: Joi.number().required()
-    },
-    map: opts.displayUser
-  })
+  const load = (call, done) => {
+    storage.loadById({
+      id: call.request.id
+    }, (err, user) => {
+      if(err) return done(err)
+      done(null, opts.displayUser(user))
+    })
+  }
 
   /*
   
     login
+
+      * username
+      * password
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'login',
-    username: Joi.string().required(),
-    password: Joi.string().required()
-
-  }, (req, done) => {
-    loadUser(req.username, (err, user) => {
-      if(err) return done(new Error(err))
+  const login = (call, done) => {
+    storage.loadByUsername({
+      username: call.request.username
+    }, (err, user) => {
+      if(err) return done(err)
       if(!user) return done(null, {
         error: 'incorrect details'
       })
-      if(!opts.checkUserPassword(user, req.password)) return done(null, {
+      if(!opts.checkUserPassword(user, call.request.password)) return done(null, {
         error: 'incorrect details'
       })
       done(null, opts.displayUser(user))
     })
+  }
+
+  /*
+  
+    ensure user - will return user if it exists
+
+      * username
+      * password
+    
+  */
+
+  const ensure = createUserController({
+    hook: hooks.create,
+    existsHandler: (user, done) => done(null, user)
   })
 
-  if(!readOnly) {
+  /*
+  
+    register
 
-    /*
+      * username
+      * password
     
-      ensure user - will return user if it exists
-      
-    */
-    createUserController({
-      cmd: 'ensure',
-      hook: hooks.create,
-      existsHandler: (user, done) => done(null, user)
+  */
+  const register = createUserController({
+    hook: hooks.register,
+    existsHandler: (user, done) => {
+      return done(null, {
+        error: user.username + ' already exists'
+      })
+    }
+  })
+  
+
+
+  /*
+  
+    save
+
+      * id
+      * data
+    
+  */
+  const save = (call, done) => {
+    storage.save(call.request, (err, user) => {
+      if(err) return done(err)
+      done(null, opts.displayUser(user))
     })
+  }
 
-    /*
+  /*
+  
+    update
+
+      * id
+      * data
     
-      register
-      
-    */
-
-    createUserController({
-      cmd: 'register',
-      hook: hooks.register,
-      existsHandler: (user, done) => {
-        return done(null, {
-          error: user.username + ' already exists'
-        })
-      }
-
+  */
+  const update = (call, done) => {
+    storage.update(call.request, (err, user) => {
+      if(err) return done(err)
+      done(null, opts.displayUser(user))
     })
-    
+  }
 
-
-    /*
-    
-      save
-      
-    */
-    transportTools.backend(hemera, {
-      inbound: {
-        topic: TOPIC,
-        cmd: 'save'
-      },
-      outbound: {
-        topic: STORAGE_TOPIC,
-        cmd: 'save'
-      },
-      query: {
-        id: Joi.number().required(),
-        data: Joi.object()
-      },
-      map: opts.displayUser
-    })
-
-    /*
-    
-      update
-      
-    */
-    transportTools.backend(hemera, {
-      inbound: {
-        topic: TOPIC,
-        cmd: 'update'
-      },
-      outbound: {
-        topic: STORAGE_TOPIC,
-        cmd: 'update'
-      },
-      query: {
-        id: Joi.number().required(),
-        data: Joi.object()
-      },
-      map: opts.displayUser
-    })
+  return {
+    load,
+    login,
+    ensure,
+    register,
+    save,
+    update
   }
 }
 

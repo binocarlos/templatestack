@@ -5,17 +5,29 @@ const async = require('async')
 const tools = require('../transport/tools')
 
 const REQUIRED = [
-  'hooks'
+  'hooks',
+  'authClient'
+  'storage'
 ]
 
 const REQUIRED_HOOKS = [
   
 ]
 
+const REQUIRE_STORAGE_METHODS = [
+  'loadById',
+  'list',
+  'create',
+  'save',
+  'update',
+  'del',
+  'user_collaborations',
+  'list_users',
+  'add_user_collaboration',
+  'delete_user_collaboration'
+]
+
 const DEFAULTS = {
-  topic: 'installation',
-  storageTopic: 'installation-storage',
-  authTopic: 'auth',
   installationTemplate: {
     name: 'default installation',
     meta: {}
@@ -44,241 +56,242 @@ const InstallationBackend = (hemera, opts) => {
   const INSTALLATION_TEMPLATE = opts.installationTemplate
   const COLLABORATION_TEMPLATE = opts.collaborationTemplate
 
-  // get
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'get'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'loadById'
-    },
-    query: {
-      id: Joi.number().required()
-    }
-  })
+  const authClient = opts.authClient
 
-  // list
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'list'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'list'
-    },
-    query: {
-      userid: Joi.number().required()
-    }
-  })
+  /*
+  
+    get
+
+      * id
+
+    
+  */
+
+  const get = (call, done) => {
+    storage.loadById({
+      id: call.request.id
+    }, done)
+  }
 
 
+  /*
+  
+    list
 
-  // create
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'create',
-    userid: Joi.number().required(),
-    data: Joi.object().keys({
-      name: Joi.string().required(),
-      meta: Joi.object().required()
-    })
-  }, (req, done) => {
+      * userid
+    
+  */
+  const list = (call, done) => {
+    storage.list({
+      userid: call.request.userid
+    }, done)
+  }
 
-    hemera.act({
-      topic: STORAGE_TOPIC,
-      cmd: 'create',
-      userid: req.userid,
-      data: req.data,
+
+  /*
+  
+    call
+
+      * userid
+      * data
+        * name
+        * meta
+    
+  */
+  const create = (call, done) => {
+    storage.create({
+      userid: call.request.userid,
+      data: call.request.data,
       collaboration: COLLABORATION_TEMPLATE
     }, done)
+  }
+  
+  /*
+  
+    createDefault
 
-  })
-
-  // createDefault
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'createDefault',
-    userid: Joi.number().required()
-  }, (req, done) => {
-
-    hemera.act({
-      topic: TOPIC,
-      cmd: 'create',
-      userid: req.userid,
-      data: INSTALLATION_TEMPLATE
+      * userid
+    
+  */
+  const createDefault = (call, done) => {
+    create({
+      request: {
+        userid: call.request.userid,
+        data: INSTALLATION_TEMPLATE
+      }
     }, (err, installation) => {
-      if(err) return done(new Error(err))
-
-      hemera.act({
-        topic: TOPIC,
-        cmd: 'activate',
-        userid: req.userid,
-        id: installation.id
+      if(err) return done(err)
+      if(!installation) return done('no installation created')
+      activate({
+        request: {
+          userid: call.request.userid,
+          id: installation.id
+        }
       }, done)
     })
-  })
+  }
 
-  // activate
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'activate',
-    id: Joi.number().required(),
-    userid: Joi.number().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: AUTH_TOPIC,
-      cmd: 'update',
-      id: req.userid,
+
+  /*
+  
+    activate
+
+      * id
+      * userid
+    
+  */
+  const activate = (call, done) => {
+    authClient.update({
+      id: call.request.userid,
       data: {
-        activeInstallation: req.id
+        activeInstallation: call.request.id
       }
     }, done)
-  })
+  }
 
 
-  // save
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'save'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'save'
-    },
-    query: {
-      id: Joi.number().required(),
-      data: Joi.object().keys({
-        name: Joi.string(),
-        meta: Joi.object()
-      })
-    }
-  })
-
-  // update
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'update'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'update'
-    },
-    query: {
-      id: Joi.number().required(),
-      data: Joi.object()
-    }
-  })
-
-
-  // delete
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'delete'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'delete'
-    },
-    query: {
-      id: Joi.number().required()
-    }
-  })
-
-
-  // load all collaborations for a given user / installation
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'user_collaborations'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'user_collaborations'
-    },
-    query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
-    }
-  })
-
-
-  // list users with matching collab meta for a given installation
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'list_users'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'list_users'
-    },
-    query: {
-      id: Joi.number().required(),
-      meta: Joi.object().required()
-    }
-  })
+  /*
   
-  // add a new user to an installation
-  // this means ensuring the useraccount with auth
-  // then adding a collaboration of the given meta to the installation
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'add_user',
-    id: Joi.number().required(),
-    userdata: Joi.object().keys({
-      username: Joi.string().required(),
-      password: Joi.string().required()
-    }),
-    collaboration: Joi.object().required()
-  }, (req, done) => {
+    save
+
+      * id
+      * data
+        * name
+        * meta
+    
+  */
+  const save = (call, done) => {
+    storage.save({
+      id: call.request.id,
+      data: call.request.data
+    }, done)
+  }
+
+  /*
+  
+    update
+
+      * id
+      * data
+    
+  */
+  const update = (call, done) => {
+    storage.update({
+      id: call.request.id,
+      data: call.request.data
+    }, done)
+  }
+  
+  /*
+  
+    del
+
+      * id
+    
+  */
+  const del = (call, done) => {
+    storage.del({
+      id: call.request.id
+    }, done)
+  }
+
+  /*
+  
+    user_collaborations
+
+      * id
+      * userid
+    
+  */
+  const user_collaborations = (call, done) => {
+    storage.user_collaborations({
+      id: call.request.id,
+      userid: call.request.userid
+    }, done)
+  }
+
+  /*
+  
+    list_users
+    list users with matching collab meta for a given installation
+
+      * id
+      * meta
+    
+  */
+  const list_users = (call, done) => {
+    storage.list_users({
+      id: call.request.id,
+      meta: call.request.meta
+    }, done)
+  }
+
+  /*
+  
+    add_user
+
+    add a new user to an installation
+    this means ensuring the useraccount with auth
+    then adding a collaboration of the given meta to the installation
+
+      * id
+      * userdata
+        * username
+        * password
+      * collaboration
+    
+  */
+  const add_user = (call, done) => {
 
     async.waterfall([
       (next) => {
-        hemera.act({
-          topic: AUTH_TOPIC,
-          cmd: 'ensure',
-          data: req.userdata
+        authClient.ensure({
+          data: call.request.userdata
         }, next)
       },
 
       (user, next) => {
-        hemera.act({
-          topic: STORAGE_TOPIC,
-          cmd: 'add_user_collaboration',
-          id: req.id,
+        storage.add_user_collaboration({
+          id: call.request.id,
           userid: user.id,
-          meta: req.collaboration
+          meta: call.request.collaboration
         }, (err) => {
           if(err) return next(err)
           next(null, user)
         })
       }
-    ], (err, user) => {
-      if(err) return done(new Error(err))
-      done(null, user)
-    })
-  })
+    ], done)
+  }
+  
+  /*
+  
+    delete_user
 
-  tools.backend(hemera, {
-    inbound: {
-      topic: TOPIC,
-      cmd: 'delete_user'
-    },
-    outbound: {
-      topic: STORAGE_TOPIC,
-      cmd: 'delete_user_collaboration'
-    },
-    query: {
-      id: Joi.number().required(),
-      userid: Joi.number().required()
-    }
-  })
+      * id
+      * userid
+    
+  */
+  const delete_user = (call, done) => {
+    storage.delete_user_collaboration({
+      id: call.request.id,
+      userid: call.request.userid
+    }, done)
+  }
+
+  return {
+    get,
+    list,
+    create,
+    createDefault,
+    activate,
+    save,
+    update,
+    del,
+    user_collaborations,
+    list_users,
+    add_user,
+    delete_user
+  }
 }
 
 module.exports = InstallationBackend

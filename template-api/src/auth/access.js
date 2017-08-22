@@ -11,7 +11,7 @@ const DEFAULTS = {
   
 }
 
-const AuthAccess = (transport, opts) => {
+const AuthAccess = (backends, opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

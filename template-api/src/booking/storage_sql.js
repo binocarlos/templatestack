@@ -8,7 +8,7 @@ const databaseTools = require('../database/tools')
 const SQL = require('./storage_sql_queries')
 
 const REQUIRED = [
-  
+  'knex'
 ]
 
 const DEFAULT_TABLES = {
@@ -20,12 +20,13 @@ const DEFAULTS = {
   
 }
 
-const BookingStorageSQL = (knex, transport, opts) => {
+const BookingStorageSQL = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
 
+  const knex = opts.knex
   const tables = options.processor(opts.tables, {
     defaults: DEFAULT_TABLES
   })

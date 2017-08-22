@@ -5,7 +5,7 @@ const webserverTools = require('template-api/src/webserver/tools')
 const tools = require('./tools')
 
 const REQUIRED = [
-  
+  'client'
 ]
 
 const DEFAULTS = {
@@ -24,6 +24,8 @@ const InstallationAccess = (transport, opts) => {
     required: REQUIRED,
     defaults: DEFAULTS
   })
+
+  const client = opts.client
 
   const extractId = (req, extractor) => {
     extractor = extractor || 'installationid'
@@ -47,9 +49,7 @@ const InstallationAccess = (transport, opts) => {
     const id = parseInt(extractId(req, extractor))
     if(isNaN(id)) return webserverTools.errorReply(next, res, 'access denied - no installation id present', 403)
 
-    transport.act({
-      topic: 'installation',
-      cmd: 'user_collaborations',
+    client.user_collaborations({
       id: id,
       userid: userid
     }, (err, collaborations) => {

@@ -13,7 +13,7 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  topic: 'digger'
+  
 }
 
 /*
@@ -21,15 +21,11 @@ const DEFAULTS = {
   user namespace
   
 */
-const DiggerBackend = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
-
+const DiggerBackend = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
-
-  const TOPIC = opts.topic
 
   const storage = opts.storage
   const logic = Logic(storage)
@@ -37,16 +33,14 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     loadById
+
+      * installationid
+      * id
+      * withLinks
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'get',
-    installationid: Joi.number().required(),
-    id: Joi.number().required(),
-    withLinks: Joi.boolean()
-  }, (req, done) => {
-
+  const loadById = (call, done) => {
+    const req = call.request
     async.waterfall([
       (next) => logic.getResource(req.id, next),
       (resource, next) => {
@@ -61,42 +55,38 @@ const DiggerBackend = (hemera, opts) => {
         })
       }
     ], done)
-    
-  })
+  }
+  
 
   /*
   
     search
+
+      * installationid
+      * type
+      * search
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'search',
-    installationid: Joi.number().required(),
-    type: Joi.string(),
-    search: Joi.string()
-  }, (req, done) => {
-
+  const search = (call, done) => {
+    const req = call.request
     logic.search({
       installationid: req.installationid,
       type: req.type,
       search: req.search
     }, done)
-    
-  })
-
+  }
+  
   /*
   
     children
+
+      * installationid
+      * id
+      * withLinks
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'children',
-    installationid: Joi.number().required(),
-    id: Joi.number().required(),
-    withLinks: Joi.boolean()
-  }, (req, done) => {
+  const children = (call, done) => {
+    const req = call.request
 
     const query = {
       installationid: req.installationid,
@@ -123,18 +113,17 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     descendents
+
+      * installationid
+      * id
+      * type
+      * search
+      * withLinks
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'descendents',
-    installationid: Joi.number().required(),
-    id: Joi.number().required(),
-    type: Joi.string(),
-    search: Joi.string(),
-    withLinks: Joi.boolean()
-  }, (req, done) => {
-
+  const descendents = (call, done) => {
+    const req = call.request
+  
     const query = {
       installationid: req.installationid,
       id: req.id,
@@ -161,16 +150,15 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     links
+
+      * installationid
+      * id
+      * follow
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'links',
-    installationid: Joi.number().required(),
-    id: Joi.number(),
-    follow: Joi.boolean()
-  }, (req, done) => {
-
+  const links = (call, done) => {
+    const req = call.request
+  
     const linkQuery = {
       installationid: req.installationid,
       id: req.id
@@ -186,16 +174,15 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     create
+
+      * installationid
+      * parentid
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'create',
-    installationid: Joi.number().required(),
-    parentid: Joi.number(),
-    data: Joi.object().required()
-  }, (req, done) => {
-
+  const create = (call, done) => {
+    const req = call.request
+  
     const {
       installationid,
       parentid,
@@ -216,15 +203,14 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     save
+
+      * installationid
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'save',
-    installationid: Joi.number().required(),
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
+  const save = (call, done) => {
+    const req = call.request
 
     const {
       installationid,
@@ -247,15 +233,13 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     delete
+
+      * installationid
+      * id
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'delete',
-    installationid: Joi.number().required(),
-    id: Joi.number().required()
-  }, (req, done) => {
-
+  const del = (call, done) => {
+    const req = call.request
     const {
       installationid,
       id
@@ -274,17 +258,15 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     paste
+
+      * installationid
+      * parentid
+      * ids
+      * mode
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'paste',
-    installationid: Joi.number().required(),
-    parentid: Joi.number().required(),
-    ids: Joi.array().required(),
-    mode: Joi.string()
-  }, (req, done) => {
-
+  const paste = (call, done) => {
+    const req = call.request
     const {
       installationid,
       parentid,
@@ -307,17 +289,16 @@ const DiggerBackend = (hemera, opts) => {
   /*
   
     swap
+
+      * installationid
+      * source
+      * target
+      * mode
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'swap',
-    installationid: Joi.number().required(),
-    source: Joi.number().required(),
-    target: Joi.number().required(),
-    mode: Joi.string()
-  }, (req, done) => {
-
+  const swap = (call, done) => {
+    const req = call.request
+  
     const {
       installationid,
       source,
@@ -335,6 +316,19 @@ const DiggerBackend = (hemera, opts) => {
     }, done)
     
   })
+
+  return {
+    loadById,
+    search,
+    children,
+    descendents,
+    links,
+    create,
+    save,
+    del,
+    paste,
+    swap
+  }
 
 }
 

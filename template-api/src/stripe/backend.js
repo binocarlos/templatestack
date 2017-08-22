@@ -12,11 +12,10 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  topic: 'stripe'
+
 }
 
-const StripeBackend = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
+const StripeBackend = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,
@@ -28,17 +27,13 @@ const StripeBackend = (hemera, opts) => {
   })
 
   const stripe = Stripe(opts.secretKey)
-  const TOPIC = opts.topic
 
   /*
   
     testToken
 
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'testToken'
-  }, (req, done) => {
+  const testToken = (call, done) => {
     // + 2 months
     const nowDate = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 60))
     const year = nowDate.getFullYear()
@@ -51,7 +46,7 @@ const StripeBackend = (hemera, opts) => {
         "cvc": '123'
       }
     }, done)
-  })
+  }
 
   /*
   
@@ -64,20 +59,13 @@ const StripeBackend = (hemera, opts) => {
 
     if an actual error is returned it is a lower level system error (like cannot connect to remote api etc)
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'payment',
-    amount: Joi.number().required(),
-    email: Joi.string().required(),
-    token: Joi.string().required(),
-    description: Joi.string().required()
-  }, (req, done) => {
+  const payment = (call, done) => {
     stripe.charges.create({
-      amount: req.amount,
+      amount: call.request.amount,
       currency: "gbp",
-      receipt_email: req.email,
-      source: req.token,
-      description: req.description
+      receipt_email: call.request.email,
+      source: call.request.token,
+      description: call.request.description
     }, (err, result) => {
       if(err) return done(null, {
         ok: false,
@@ -92,7 +80,12 @@ const StripeBackend = (hemera, opts) => {
         charge: result
       })
     })
-  })
+  }
+  
+  return {
+    testToken,
+    payment
+  }
 
 }
 

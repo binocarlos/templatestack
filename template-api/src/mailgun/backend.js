@@ -13,11 +13,10 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  topic: 'email'
+  
 }
 
-const MailgunBackend = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
+const MailgunBackend = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,
@@ -33,8 +32,6 @@ const MailgunBackend = (hemera, opts) => {
     domain: opts.domain
   })
 
-  const TOPIC = opts.topic
-
   /*
   
     send
@@ -45,27 +42,23 @@ const MailgunBackend = (hemera, opts) => {
     * message
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'send',
-    from: Joi.string().required(),
-    to: Joi.string().required(),
-    subject: Joi.string().required(),
-    content: Joi.string().required()
-  }, (req, done) => {
+  const send = (call, done) => {
     if(opts.testHandler) {
-      done(null, opts.testHandler(req))
+      done(null, opts.testHandler(call.request))
     }
     else {
       mailgun.messages().send({
-        from: req.from,
-        to: req.to,
-        subject: req.subject,
-        text: req.content
+        from: call.request.from,
+        to: call.request.to,
+        subject: call.request.subject,
+        text: call.request.content
       }, done)  
     }
-    
-  })
+  }
+
+  return {
+    send
+  }
 
 }
 

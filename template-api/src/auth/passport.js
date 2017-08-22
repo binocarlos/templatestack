@@ -4,13 +4,15 @@ const options = require('template-tools/src/utils/options')
 const passport = require('passport')
 
 const REQUIRED = [
-
+  'authClient'
 ]
 
-const Passport = (transport, opts) => {
+const Passport = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED
   })
+
+  const authClient = opts.authClient
 
   passport.serializeUser((req, user, done) => {
     const id = opts.extractUserId ?
@@ -21,13 +23,9 @@ const Passport = (transport, opts) => {
 
   // the backend handler should not expose sensitive data
   passport.deserializeUser((req, id, done) => {
-    transport.act({
-      topic: 'auth',
-      cmd: 'load',
+    authClient.load({
       id
-    }, (err, user) => {
-      done(null, user)
-    })
+    }, done)
   })
     
   return passport

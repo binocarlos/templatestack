@@ -12,11 +12,10 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  topic: 'sms'
+  
 }
 
 const TwilioTestBackend = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
 
   opts = options.processor(opts, {
     required: REQUIRED,
@@ -27,7 +26,6 @@ const TwilioTestBackend = (hemera, opts) => {
     required: REQUIRED_HOOKS
   })
 
-  const TOPIC = opts.topic
   let messages = []
 
   const saveMessages = () => {
@@ -48,17 +46,15 @@ const TwilioTestBackend = (hemera, opts) => {
     * message
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'send',
-    from: Joi.string().required(),
-    to: Joi.string().required(),
-    content: Joi.string().required()
-  }, (req, done) => {
-    messages.push(req)
+  const send = (call, done) => {
+    messages.push(call.request)
     saveMessages()
     done(null, messages)
-  })
+  }
+  
+  return {
+    send
+  }
 
 }
 

@@ -33,7 +33,6 @@ services:
       - ./shared/src:/app/frontend/node_modules/shared/src
     environment:
       - MANUALRUN
-      - LINKMODULES
   api:
     build:
       context: ./

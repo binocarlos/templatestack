@@ -1,6 +1,7 @@
 'use strict'
 
 const options = require('template-tools/src/utils/options')
+const Client = require('../grpc/client')
 const urlparse = require('url').parse
 const async = require('async')
 
@@ -8,11 +9,11 @@ const webserverTools = require('../webserver/tools')
 const tools = require('./tools')
 
 const REQUIRED = [
-  
+  'client'
 ]
 
 const DEFAULTS = {
-  topic: 'installation'
+  
 }
 
 const InstallationRoutes = (transport, opts) => {
@@ -22,16 +23,14 @@ const InstallationRoutes = (transport, opts) => {
     defaults: DEFAULTS
   })
 
-  const TOPIC = opts.topic
+  const client = opts.client
 
   // QUERIES
 
   const get = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'get',
+    client.get({
       id,
       userid: req.userid
     }, (err, installation) => {
@@ -44,9 +43,7 @@ const InstallationRoutes = (transport, opts) => {
   }
 
   const list = (req, res, next) => {
-    transport.act({
-      topic: TOPIC,
-      cmd: 'list',
+    client.list({
       userid: req.userid
     }, (err, installations) => {
       if(err) return webserverTools.errorReply(next, res, err)
@@ -59,9 +56,7 @@ const InstallationRoutes = (transport, opts) => {
   // COMMANDS
 
   const create = (req, res, next) => {
-    transport.act({
-      topic: TOPIC,
-      cmd: 'create',
+    client.create({
       data: req.body || {},
       userid: req.userid
     }, (err, installation) => {
@@ -75,9 +70,7 @@ const InstallationRoutes = (transport, opts) => {
   const save = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'save',
+    client.save({
       id,
       data: req.body || {}
     }, (err, installation) => {
@@ -91,9 +84,7 @@ const InstallationRoutes = (transport, opts) => {
   const update = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'update',
+    client.update({
       id,
       data: req.body || {}
     }, (err, installation) => {
@@ -107,9 +98,7 @@ const InstallationRoutes = (transport, opts) => {
   const activate = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'activate',
+    client.activate({
       id,
       userid: req.userid
     }, (err, user) => {
@@ -123,9 +112,7 @@ const InstallationRoutes = (transport, opts) => {
   const del = (req, res, next) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!id) return webserverTools.errorReply(next, res, 'installation id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'delete',
+    client.delete({
       id
     }, (err) => {
       if(err) return webserverTools.errorReply(next, res, err)

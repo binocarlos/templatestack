@@ -1,33 +1,31 @@
 'use strict'
 
 const options = require('template-tools/src/utils/options')
+const Client = require('../grpc/client')
 const urlparse = require('url').parse
 const async = require('async')
 
 const webserverTools = require('../webserver/tools')
 
 const REQUIRED = [
-  
+  'client'
 ]
 
 const DEFAULTS = {
-  topic: 'auth',
-  
   extractUsername: (req) => req.body.username,
   extractPassword: (req) => req.body.password
 }
 
-const AuthRoutes = (transport, opts) => {
+const AuthRoutes = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
 
-  const TOPIC = opts.topic
+  const client = opts.client
 
   // QUERIES
-
   const status = (req, res) => {
     res
       .status(200)
@@ -46,9 +44,7 @@ const AuthRoutes = (transport, opts) => {
     if(!username) return webserverTools.errorReply(next, res, 'no username given', 400)
     if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'login',
+    client.login({
       username,
       password
     }, (err, user) => {
@@ -68,7 +64,6 @@ const AuthRoutes = (transport, opts) => {
             .json(user)
         })  
       }
-      
     })
   }
 
@@ -80,11 +75,9 @@ const AuthRoutes = (transport, opts) => {
 
     if(!username) return webserverTools.errorReply(next, res, 'no username given', 400)
     if(!password) return webserverTools.errorReply(next, res, 'no password given', 400)
-    
-    transport.act({
-      topic: TOPIC,
-      cmd: 'register',
-      data
+    client.register({
+      username,
+      password
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!user) return webserverTools.errorReply(next, res, err, 400)
@@ -109,9 +102,7 @@ const AuthRoutes = (transport, opts) => {
     const id = req.user.id
     const data = req.body || {}
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'save',
+    client.save({
       id,
       data
     }, (err, user) => {
@@ -128,9 +119,7 @@ const AuthRoutes = (transport, opts) => {
     const id = req.user.id
     const data = req.body || {}
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'update',
+    client.update({
       id,
       data
     }, (err, user) => {

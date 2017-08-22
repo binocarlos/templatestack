@@ -12,22 +12,21 @@ const DEFAULTS = {
 }
 
 
-const SystemBackend = (hemera, opts) => {
+const SystemBackend = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
 
-  const Joi = hemera.exposition['hemera-joi'].joi
-
-  hemera.add({
-    topic: 'system',
-    cmd: 'version'
-  }, (req, done) => {
+  const version = (call, done) => {
     done(null, {
       version: opts.version
     })
-  })
+  }
+  
+  return {
+    version
+  }
 
 }
 

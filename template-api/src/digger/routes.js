@@ -8,11 +8,10 @@ const webserverTools = require('../webserver/tools')
 const tools = require('./tools')
 
 const REQUIRED = [
-  
+  'client'
 ]
 
 const DEFAULTS = {
-  topic: 'digger',
   extractInstallationId: (req) => webserverTools.getIdParam(req, 'installationid')
 }
 
@@ -23,7 +22,7 @@ const DiggerRoutes = (transport, opts) => {
     defaults: DEFAULTS
   })
 
-  const TOPIC = opts.topic
+  const client = opts.client
 
   const areResourcesFromDifferentInstallation = (i, resources) => {
     return resources.filter(r => r.installation != i).length > 0
@@ -36,9 +35,7 @@ const DiggerRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     if(!id) return webserverTools.errorReply(next, res, 'resource id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'get',
+    client.get({
       installationid,
       id
     }, (err, resource) => {
@@ -54,9 +51,7 @@ const DiggerRoutes = (transport, opts) => {
   const search = (req, res, next) => {
     const installationid = opts.extractInstallationId(req)
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
-    transport.act({
-      topic: TOPIC,
-      cmd: 'search',
+    client.search({
       installationid,
       type: req.qs.type,
       search: req.qs.search
@@ -74,9 +69,7 @@ const DiggerRoutes = (transport, opts) => {
     const id = webserverTools.getIdParam(req, 'id')
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     
-    transport.act({
-      topic: TOPIC,
-      cmd: 'children',
+    client.children({
       installationid,
       id,
       withLinks: req.qs.links ? true : false
@@ -95,9 +88,7 @@ const DiggerRoutes = (transport, opts) => {
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     if(!id) return webserverTools.errorReply(next, res, 'resource id required')
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'descendents',
+    client.descendents({      
       installationid,
       id,
       type: req.qs.type,
@@ -118,9 +109,7 @@ const DiggerRoutes = (transport, opts) => {
     if(!installationid) return webserverTools.errorReply(next, res, 'installationid id required')
     if(!id) return webserverTools.errorReply(next, res, 'resource id required')
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'links',
+    client.links({
       installationid,
       id,
       follow: req.qs.follow ? true : false
@@ -140,9 +129,7 @@ const DiggerRoutes = (transport, opts) => {
 
     const data = req.body
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'create',
+    client.create({
       installationid,
       parentid,
       data
@@ -162,9 +149,7 @@ const DiggerRoutes = (transport, opts) => {
 
     const data = req.body
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'save',
+    client.save({
       installationid,
       id,
       data
@@ -184,9 +169,7 @@ const DiggerRoutes = (transport, opts) => {
 
     const data = req.body
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'delete',
+    client.del({
       installationid,
       id
     }, (err, result) => {
@@ -218,9 +201,7 @@ const DiggerRoutes = (transport, opts) => {
 
     const data = req.body
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'paste',
+    client.paste({
       installationid,
       parentid,
       ids,
@@ -244,9 +225,7 @@ const DiggerRoutes = (transport, opts) => {
     if(!source) return next('source id required')
     if(!target) return next('target id required')
 
-    transport.act({
-      topic: TOPIC,
-      cmd: 'swap',
+    client.swap({
       installationid,
       source,
       target,

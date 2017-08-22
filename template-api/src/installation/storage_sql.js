@@ -10,8 +10,6 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  topic: 'installation-storage',
-
   installationTable: 'installation',
   collaborationTable: 'collaboration',
   userTablename: 'useraccount'
@@ -22,16 +20,11 @@ const DEFAULTS = {
   user namespace
   
 */
-const InstallationStorageSQL = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
-
-
+const InstallationStorageSQL = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
   })
-
-  const TOPIC = opts.topic
 
   const tables = {
     installation: opts.installationTable,
@@ -89,54 +82,43 @@ where
   /*
   
     loadById
+
+      * id
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'loadById',
-    id: Joi.number().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'findById',
-      collection: tables.installation,
-      id: req.id
-    }, tools.singleExtractor(done))
-  })
+  const loadById = (req, done) => {
+    knex(tables.installation)
+      .where('id', req.id)
+      .asCallback(tools.singleExtractor(done))
+  }
 
   /*
   
     list
+
+      * userid
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'list',
-    userid: Joi.number().required()
-  }, (req, done) => {
-
+  const list = (req, done) => {
     knex
       .raw(LIST_INSTALLATION_QUERY(), [req.userid])
       .asCallback(tools.allExtractor(done))
-
-  })
+  }
+  
 
   /*
   
     create
+
+      * userid
+      * data
+        * name
+        * meta
+      * collaboration
+        * ?
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'create',
-    userid: Joi.number().required(),
-    data: Joi.object().keys({
-      name: Joi.string().required(),
-      meta: Joi.object().required()
-    }),
-    collaboration: Joi.object()
-  }, (req, done) => {
-
+  const create = (req, done) => {
     knex.transaction(function(trx) {
       return knex
         .insert(req.data)
@@ -158,98 +140,75 @@ where
       done(null, installation)
     })
     .catch(done)
-  })
+  }
 
   /*
   
     save
+
+      * id
+      * data
+        * name
+        * meta
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'save',
-    id: Joi.number().required(),
-    data: Joi.object().keys({
-      name: Joi.string().required(),
-      meta: Joi.object().required()
-    })
-  }, (req, done) => {
 
-    hemera.act({
-      topic: 'sql-store-addons',
-      cmd: 'update',
-      collection: tables.installation,
-      query: { id: req.id },
-      data: req.data
-    }, tools.singleExtractor(done))
-
-  })
-
+  const save = (req, done) => {
+    knex(tables.installation)
+      .where({id: req.id})
+      .update(req.data)
+      .asCallback(tools.singleExtractor(done))
+  }
 
   /*
   
     update - merges meta data top-level keys
+
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'update',
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'findById',
-      collection: tables.installation,
+  const update = (req, done) => {
+    loadById({
       id: req.id
-    }, tools.singleExtractor((err, installation) => {
-      if(err) return done(new Error(err))
+    }, (err, installation) => {
+      if(err) return done(err)
       const meta = Object.assign({}, installation.meta, req.data)
-      hemera.act({
-        topic: 'sql-store-addons',
-        cmd: 'update',
-        collection: tables.installation,
-        query: { id: req.id },
-        data: { meta }
-      }, tools.singleExtractor(done))
-    }))
-    
-  })
-
+      knex(tables.installation)
+        .where({id: req.id})
+        .update({
+          meta
+        })
+        .asCallback(tools.singleExtractor(done))
+    })
+  }
 
   /*
   
     delete
+
+      * id
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'delete',
-    id: Joi.number().required()
-  }, (req, done) => {
-
-    hemera.act({
-      topic: 'sql-store',
-      cmd: 'removeById',
-      collection: tables.installation,
-      id: req.id
-    }, done)
-
-  })
+  const del = (req, done) => {
+    knex(tables.installation)
+      .where({
+        id: req.id
+      })
+      .del()
+      .asCallback(done)
+  }
 
 
   /*
   
-     list_user_collaborations
+    list_user_collaborations
+
+      * id
+      * userid
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'user_collaborations',
-    id: Joi.number().required(),
-    userid: Joi.number().required()
-  }, (req, done) => {
-
+  const user_collaborations = (req, done) => {
     knex
       .select()
       .from(tables.collaboration)
@@ -258,60 +217,48 @@ where
         [tables.user]: req.userid
       })
       .asCallback(tools.allExtractor(done))
-
-  })
-
+  }
 
   /*
   
     list_users
+
+      * id
+      * meta
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'list_users',
-    id: Joi.number().required(),
-    meta: Joi.object().required()
-  }, (req, done) => {
+  const list_users = (req, done) => {
     knex
       .raw(LIST_USERS_QUERY(req.meta), [req.id].concat(Object.values(req.meta)))
       .asCallback(tools.allExtractor(done))
-  })
-
+  }
 
   /*
   
-     add_user_collaboration
+    add_user_collaboration
+
+      * id
+      * userid
+      * meta
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'add_user_collaboration',
-    id: Joi.number().required(),
-    userid: Joi.number().required(),
-    meta: Joi.object().required()
-  }, (req, done) => {
-
+  const add_user_collaboration = (req, done) => {
     createCollaboration({
       installationid: req.id,
       userid: req.userid,
       meta: req.meta
     }).asCallback(tools.singleExtractor(done))
-
-  })
+  }
 
   /*
   
-     delete_user_collaboration
+    delete_user_collaboration
+
+      * id
+      * userid
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'delete_user_collaboration',
-    id: Joi.number().required(),
-    userid: Joi.number().required()
-  }, (req, done) => {
-
+  const delete_user_collaboration = (req, done) => {
     knex(tables.collaboration)
     .where({
       [tables.installation]: req.id,
@@ -319,8 +266,20 @@ where
     })
     .del()
     .asCallback(tools.singleExtractor(done))
-
-  })
+  }
+  
+  return {
+    loadById,
+    list,
+    create,
+    save,
+    update,
+    del,
+    user_collaborations,
+    list_users,
+    add_user_collaboration,
+    delete_user_collaboration
+  }
 
 
 }

@@ -13,12 +13,11 @@ const REQUIRED_HOOKS = [
 ]
 
 const DEFAULTS = {
-  topic: 'sms'
+
 }
 
-const TwilioBackend = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
-
+const TwilioBackend = (opts) => {
+  
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -28,7 +27,6 @@ const TwilioBackend = (hemera, opts) => {
     required: REQUIRED_HOOKS
   })
 
-  const TOPIC = opts.topic
   const client = Twilio(
     opts.sid,
     opts.token
@@ -43,25 +41,22 @@ const TwilioBackend = (hemera, opts) => {
     * message
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'send',
-    from: Joi.string().required(),
-    to: Joi.string().required(),
-    content: Joi.string().required()
-  }, (req, done) => {
+  const send = (call, done) => {
     if(opts.testHandler) {
-      done(null, opts.testHandler(req))
+      done(null, opts.testHandler(call.request))
     }
     else {
       client.messages.create({
-        from: req.from,
-        to: req.to,
-        body: req.content
+        from: call.request.from,
+        to: call.request.to,
+        body: call.request.content
       }, done)  
     }
-    
-  })
+  }
+
+  return {
+    send
+  }
 
 }
 

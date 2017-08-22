@@ -11,12 +11,10 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  topic: 'auth-storage'
+  
 }
 
-const StorageMemory = (hemera, opts) => {
-  let Joi = hemera.exposition['hemera-joi'].joi
-
+const StorageMemory = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS
@@ -27,69 +25,57 @@ const StorageMemory = (hemera, opts) => {
   /*
   
     loadById
+
+      * id
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'loadById',
-    id: Joi.number().required()
-  }, (req, done) => {
-    opts.loadById(req.id, done)
-  })
+  const loadById = (req, done) => opts.loadById(req.id, done)
 
   /*
   
     loadByUsername
+
+      * username
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'loadByUsername',
-    username: Joi.string().required()
-  }, (req, done) => {
-    opts.loadByUsername(req.username, done)
-  })
+  const loadByUsername = (req, done) => opts.loadByUsername(req.username, done)
 
   /*
   
     create
+
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'create',
-    data: Joi.object().required()
-  }, (req, done) => {
-    done('not implemented in memory storage')
-  })
-
+  const create = (req, done) => done('not implemented in memory storage')
+  
   /*
   
     save
+
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'save',
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
-    done('not implemented in memory storage')
-  })
-
+  const save = (req, done) => done('not implemented in memory storage')
+  
   /*
   
     update - merges meta data top-level keys
+
+      * id
+      * data
     
   */
-  hemera.add({
-    topic: TOPIC,
-    cmd: 'update',
-    id: Joi.number().required(),
-    data: Joi.object().required()
-  }, (req, done) => {
-    done('not implemented in memory storage')
-  })
+  const update = (req, done) => done('not implemented in memory storage')
+
+  return {
+    loadById,
+    loadByUsername,
+    create,
+    save,
+    update
+  }
 }
 
 module.exports = StorageMemory
