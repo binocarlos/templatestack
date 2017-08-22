@@ -69,7 +69,7 @@ const BookingBackend = (opts) => {
       done(null, booking)
     })
 
-  })
+  }
 
   /*
   
@@ -101,7 +101,7 @@ const BookingBackend = (opts) => {
         bookings
       done(null, bookings)
     })
-  })
+  }
 
 
   /*
@@ -152,7 +152,7 @@ const BookingBackend = (opts) => {
 
       done(null, results)
     })
-  })
+  }
 
   /*
   
@@ -192,7 +192,7 @@ const BookingBackend = (opts) => {
         }
       ], finish)
     }, done)
-  })
+  }
 
   /*
   
@@ -224,7 +224,7 @@ const BookingBackend = (opts) => {
       ], finish)
     }, done)
 
-  })
+  }
 
 
   /*
@@ -255,7 +255,16 @@ const BookingBackend = (opts) => {
       ], finish)
     }, done)
 
-  })
+  }
+
+  return {
+    load,
+    search,
+    range,
+    create,
+    save,
+    del
+  }
 
 }
 

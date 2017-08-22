@@ -16,7 +16,7 @@ const DEFAULTS = {
   
 }
 
-const InstallationRoutes = (transport, opts) => {
+const InstallationRoutes = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

@@ -14,7 +14,7 @@ const DEFAULTS = {
   extractInstallationId: (req) => webserverTools.getIdParam(req, 'installationid')
 }
 
-const BookingRoutes = (transport, opts) => {
+const BookingRoutes = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

@@ -27,7 +27,6 @@ const SystemBackend = (opts) => {
   return {
     version
   }
-
 }
 
 module.exports = SystemBackend

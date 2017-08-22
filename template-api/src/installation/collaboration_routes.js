@@ -14,8 +14,6 @@ const REQUIRED = [
 ]
 
 const DEFAULTS = {
-  topic: 'installation',
-  authTopic: 'auth',
   extractInstallation: (req) => {
     const ret = parseInt(req.params.installationid)
     return isNaN(ret) ? null : ret
@@ -24,7 +22,7 @@ const DEFAULTS = {
   extractCollaboration: (body) => body.collaboration || {}
 }
 
-const CollaborationRoutes = (transport, opts) => {
+const CollaborationRoutes = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

@@ -2,7 +2,6 @@
 
 const options = require('template-tools/src/utils/options')
 const async = require('async')
-const tools = require('../transport/tools')
 
 const REQUIRED = [
   'hooks',
@@ -38,9 +37,7 @@ const DEFAULTS = {
   }
 }
 
-const InstallationBackend = (hemera, opts) => {
-  const Joi = hemera.exposition['hemera-joi'].joi
-
+const InstallationBackend = (opts) => {
   opts = options.processor(opts, {
     required: REQUIRED,
     defaults: DEFAULTS

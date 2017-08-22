@@ -2,6 +2,7 @@
 
 // make sure reqs are sent as call.request (i.e. fake grpc for the moment)
 const Client = (channel, backend) => {
+  if(!backend) throw new Error('no backend given for client')
   return Object.keys(backend).reduce((all, name) => {
     const backendHandler = backend[name]
     all[name] = (req, done) => {

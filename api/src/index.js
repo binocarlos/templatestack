@@ -1,17 +1,12 @@
 'use strict'
 
-const Client = require('template-api/src/grpc/client')
-
 const settings = require('./settings')
 const Backends = require('./backends')
+const Clients = require('./clients')
 const App = require('./app')
 
 const backends = Backends()
-
-const clients = Object.keys(backends).reduce((all, field) => {
-  all[field] = Client(backends[field])
-  return all
-}, {})
+const clients = Clients(backends)
 
 const app = App({
   clients

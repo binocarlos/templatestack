@@ -15,7 +15,7 @@ const DEFAULTS = {
   extractInstallationId: (req) => webserverTools.getIdParam(req, 'installationid')
 }
 
-const DiggerRoutes = (transport, opts) => {
+const DiggerRoutes = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

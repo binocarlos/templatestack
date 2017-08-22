@@ -14,32 +14,31 @@ const path = require('path')
 
 const settings = require('./settings')
 
-const Routes = (app, clients) => {
-
+const Routes = (app, rpcClients) => {
   const auth = AuthRoutes({
-    client: clients.auth
+    client: rpcClients.auth
   })
 
   const system = SystemRoutes()
   const installation = InstallationRoutes({
-    client: clients.installation
+    client: rpcClients.installation
   })
   const digger = DiggerRoutes({
-    client: clients.digger
+    client: rpcClients.digger
   })
   const booking = BookingRoutes({
-    client: clients.booking
+    client: rpcClients.booking
   })
   const users = CollaborationRoutes({
-    client: clients.installation,
-    authClient: clients.auth,
+    client: rpcClients.installation,
+    authClient: rpcClients.auth,
     collaboration_template: {
       type: 'user'
     }
   })
-  const clients = CollaborationRoutes(transport, {
-    client: clients.installation,
-    authClient: clients.auth,
+  const clients = CollaborationRoutes({
+    client: rpcClients.installation,
+    authClient: rpcClients.auth,
     collaboration_template: {
       type: 'client'
     }
@@ -47,7 +46,7 @@ const Routes = (app, clients) => {
 
   const authAccess = AuthAccess()
   const installationAccess = InstallationAccess({
-    client: clients.installation
+    client: rpcClients.installation
   })
 
   const basePath = (path) => settings.base + path

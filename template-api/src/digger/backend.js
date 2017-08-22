@@ -107,7 +107,7 @@ const DiggerBackend = (opts) => {
       }
     ], done)
     
-  })
+  }
 
 
   /*
@@ -145,7 +145,7 @@ const DiggerBackend = (opts) => {
       }
     ], done)
     
-  })
+  }
 
   /*
   
@@ -168,7 +168,7 @@ const DiggerBackend = (opts) => {
       logic.linkTree(linkQuery, done) :
       logic.linkChildren(linkQuery, done)
     
-  })
+  }
 
 
   /*
@@ -197,7 +197,7 @@ const DiggerBackend = (opts) => {
       }, finish)
     }, done)
     
-  })
+  }
 
 
   /*
@@ -226,7 +226,7 @@ const DiggerBackend = (opts) => {
       }, finish)
     }, done)
     
-  })
+  }
 
 
 
@@ -252,7 +252,7 @@ const DiggerBackend = (opts) => {
       }, finish)
     }, done)
     
-  })
+  }
 
 
   /*
@@ -283,7 +283,7 @@ const DiggerBackend = (opts) => {
       }, finish)
     }, done)
     
-  })
+  }
 
 
   /*
@@ -315,7 +315,7 @@ const DiggerBackend = (opts) => {
       }, finish)
     }, done)
     
-  })
+  }
 
   return {
     loadById,

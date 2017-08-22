@@ -11,11 +11,14 @@ const InstallationStorage = require('template-api/src/installation/storage_sql')
 const DiggerStorage = require('template-api/src/digger/storage_sql')
 const BookingStorage = require('template-api/src/booking/storage_sql')
 
-const Knex = require('../databases/knex')
+const Knex = require('./databases/knex')
 
-const packageJSON = require('../../package.json')
+const packageJSON = require('../package.json')
 
 const Backends = () => {
+
+  const knex = Knex()
+  
   const system = SystemBackend({
     version: packageJSON.version
   })
@@ -35,8 +38,10 @@ const Backends = () => {
 
   const installation = InstallationBackend({
     storage: InstallationStorage({knex}),
-    authUpdate: (req, done) => Client(auth).update(req, done),
-    autgEnsure: (req, done) => Client(auth).ensure(req, done)
+    hooks: {
+      authUpdate: (req, done) => Client(auth).update(req, done),
+      authEnsure: (req, done) => Client(auth).ensure(req, done)
+    }
   })
 
   const digger = DiggerBackend({
@@ -46,7 +51,11 @@ const Backends = () => {
 
   const booking = BookingBackend({
     storage: BookingStorage({knex}),
-    hooks: {}
+    hooks: {
+      create: (opts, booking, done) => done(),
+      save: (opts, booking, done) => done(),
+      del: (opts, booking, done) => done()
+    }
   })
 
   return {
