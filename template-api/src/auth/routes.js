@@ -1,7 +1,6 @@
 'use strict'
 
 const options = require('template-tools/src/utils/options')
-const Client = require('../grpc/client')
 const urlparse = require('url').parse
 const async = require('async')
 

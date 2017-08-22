@@ -5,16 +5,13 @@ const async = require('async')
 const BookingTests = require('template-api/src/test/booking.test.js')
 
 const Knex = require('../src/databases/knex')
-const Transport = require('../src/transport')
 
 const knex = Knex()
-const transport = Transport()
 
 const authQueries = BookingTests.queries.auth
 
 BookingTests({
   knex,
-  transport,
   noInstallation: true,
   createAccount: (done) => {
     authQueries.login({

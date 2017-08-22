@@ -14,25 +14,41 @@ const path = require('path')
 
 const settings = require('./settings')
 
-const Routes = (app, transport) => {
-  const auth = AuthRoutes(transport)
-  const system = SystemRoutes(transport)
-  const installation = InstallationRoutes(transport)
-  const digger = DiggerRoutes(transport)
-  const booking = BookingRoutes(transport)
-  const users = CollaborationRoutes(transport, {
+const Routes = (app, clients) => {
+
+  const auth = AuthRoutes({
+    client: clients.auth
+  })
+
+  const system = SystemRoutes()
+  const installation = InstallationRoutes({
+    client: clients.installation
+  })
+  const digger = DiggerRoutes({
+    client: clients.digger
+  })
+  const booking = BookingRoutes({
+    client: clients.booking
+  })
+  const users = CollaborationRoutes({
+    client: clients.installation,
+    authClient: clients.auth,
     collaboration_template: {
       type: 'user'
     }
   })
   const clients = CollaborationRoutes(transport, {
+    client: clients.installation,
+    authClient: clients.auth,
     collaboration_template: {
       type: 'client'
     }
   })
 
-  const authAccess = AuthAccess(transport)
-  const installationAccess = InstallationAccess(transport)
+  const authAccess = AuthAccess()
+  const installationAccess = InstallationAccess({
+    client: clients.installation
+  })
 
   const basePath = (path) => settings.base + path
   const iPath = (path) => basePath('/i/:installationid' + path)

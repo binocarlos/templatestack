@@ -6,12 +6,12 @@ const tools = require('../transport/tools')
 
 const REQUIRED = [
   'hooks',
-  'authClient'
   'storage'
 ]
 
 const REQUIRED_HOOKS = [
-  
+  'authUpdate',
+  'authEnsure' 
 ]
 
 const REQUIRE_STORAGE_METHODS = [
@@ -55,8 +55,6 @@ const InstallationBackend = (hemera, opts) => {
   const AUTH_TOPIC = opts.authTopic
   const INSTALLATION_TEMPLATE = opts.installationTemplate
   const COLLABORATION_TEMPLATE = opts.collaborationTemplate
-
-  const authClient = opts.authClient
 
   /*
   
@@ -141,7 +139,7 @@ const InstallationBackend = (hemera, opts) => {
     
   */
   const activate = (call, done) => {
-    authClient.update({
+    hooks.authUpdate({
       id: call.request.userid,
       data: {
         activeInstallation: call.request.id
@@ -242,10 +240,9 @@ const InstallationBackend = (hemera, opts) => {
     
   */
   const add_user = (call, done) => {
-
     async.waterfall([
       (next) => {
-        authClient.ensure({
+        hooks.authEnsure({
           data: call.request.userdata
         }, next)
       },

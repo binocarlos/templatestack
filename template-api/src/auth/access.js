@@ -11,7 +11,7 @@ const DEFAULTS = {
   
 }
 
-const AuthAccess = (backends, opts) => {
+const AuthAccess = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

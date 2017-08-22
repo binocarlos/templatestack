@@ -18,7 +18,7 @@ const LEVELS = {
   owner: 300
 }
 
-const InstallationAccess = (transport, opts) => {
+const InstallationAccess = (opts) => {
 
   opts = options.processor(opts, {
     required: REQUIRED,

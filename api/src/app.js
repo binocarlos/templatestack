@@ -14,14 +14,14 @@ const InstallationTools = require('template-api/src/installation/tools')
 const Routes = require('./routes')
 const settings = require('./settings')
 
-const Transport = require('./transport')
 const Redis = require('./databases/redis')
 
-const App = () => {
+const App = (opts = {}) => {
+  const clients = opts.clients
+  if(!clients) throw new Error('clients needed for app')
 
   const app = express()
   const redis = Redis()
-  const transport = Transport()
 
   app.set('view engine', 'ejs')
   
@@ -30,7 +30,9 @@ const App = () => {
     redis
   })
   
-  const passport = Passport(transport)
+  const passport = Passport({
+    authClient: clients.auth
+  })
   
   app.use(morgan('tiny'))
   app.use(bodyParser.json())
@@ -42,7 +44,7 @@ const App = () => {
   app.use(InstallationTools.middleware())
   app.use(WebserverTools.middleware())
 
-  Routes(app, transport, settings)
+  Routes(app, clients, settings)
 
   app.use(WebserverTools.errorLogger)
   app.use(WebserverTools.errorHandler)

@@ -7,12 +7,12 @@ const tools = require('./tools')
 const queries = require('./queries/booking')
 const authQueries = require('./queries/auth')
 const defaultFixtures = require('./fixtures/booking')
+const databaseTools = require('../database/tools')
 
 const dateTools = require('template-tools/src/utils/date')
 
 const REQUIRED = [
   'knex',
-  'transport',
   'createAccount'
 ]
 
@@ -22,7 +22,7 @@ const BookingTests = (opts = {}) => {
     throwError: true
   })
 
-  const { knex, transport, createAccount } = opts
+  const { knex, createAccount } = opts
 
   const fixtures = opts.fixtures || defaultFixtures
 
@@ -290,12 +290,13 @@ const BookingTests = (opts = {}) => {
       (u, next) => {
         user = u.body      
         i = user.meta.activeInstallation
-        transport.act({
-          topic: 'booking',
-          cmd: 'create',
-          installationid: i,
-          data
-        }, next)
+        const insertData = Object.assign({}, data, {
+          installation: i
+        })
+        knex('booking')
+          .insert(insertData)
+          .returning('*')
+          .asCallback(databaseTools.singleExtractor(next))
       }
     ], (err, result) => {
       if(err) t.error(err)
@@ -312,7 +313,6 @@ const BookingTests = (opts = {}) => {
     
     knex.destroy()
       .then(() => {
-        transport.close()
         t.end()
       })
   })

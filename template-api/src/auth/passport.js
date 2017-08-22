@@ -12,7 +12,7 @@ const Passport = (opts) => {
     required: REQUIRED
   })
 
-  const authClient = opts.authClient
+  const authClient = opts.authClient  
 
   passport.serializeUser((req, user, done) => {
     const id = opts.extractUserId ?
@@ -22,7 +22,7 @@ const Passport = (opts) => {
   })
 
   // the backend handler should not expose sensitive data
-  passport.deserializeUser((req, id, done) => {
+  passport.deserializeUser((req, id, done) => {    
     authClient.load({
       id
     }, done)

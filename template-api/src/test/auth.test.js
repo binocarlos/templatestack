@@ -1,4 +1,4 @@
-/*"use strict";
+"use strict";
 const tape = require('tape')
 const async = require('async')
 const tools = require('./tools')
@@ -146,4 +146,3 @@ const AuthTests = (opts = {}) => {
 }
 
 module.exports = AuthTests
-*/
