@@ -121,14 +121,14 @@ const BookingBackend = (opts) => {
     const calendarConfig = opts.getCalendarConfig(req.type)
     const scheduleConfig = opts.getScheduleConfig(req.type)
 
-    hemera.act({
-      topic: TOPIC,
-      cmd: 'search',
-      installationid: req.installationid,
-      start: req.start,
-      end: req.end,
-      type: req.type,
-      summary: req.summary
+    search({
+      request: {
+        installationid: req.installationid,
+        start: req.start,
+        end: req.end,
+        type: req.type,
+        summary: req.summary
+      }
     }, (err, bookings) => {
       if(err) return done(err)
 
