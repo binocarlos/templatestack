@@ -48,7 +48,13 @@ const BookingTests = (opts = {}) => {
       (next) => createAccount(next),
 
       (user, next) => {
-        knex('booking').del()
+        user = user.body ? user.body : user  
+        const i = user.meta.activeInstallation
+        knex('booking')
+          .where({
+            installation: i
+          })
+          .del()
           .then(() => {
             next(null, user)
           })

@@ -1,11 +1,13 @@
 import {
   initialize,
-  touch
+  touch,
+  change
 } from 'redux-form'
 
 const FormActions = (forms) => {
   const formActions = {
     initialize,
+    change,
     clear: (name) => formActions.initialize(name, {}),
     reset: (name) => {
       const formDesc = forms[name]

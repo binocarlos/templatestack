@@ -5,7 +5,7 @@ const options = require('template-tools/src/utils/options')
 const Mailgun = require('mailgun-js')
 
 const REQUIRED = [
-  'filepath'
+  
 ]
 
 const REQUIRED_HOOKS = [
@@ -26,17 +26,6 @@ const MailgunTestBackend = (opts) => {
     required: REQUIRED_HOOKS
   })
 
-  let messages = []
-
-  const saveMessages = () => {
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('saving email messages')
-    console.log(opts.filepath)
-    console.log(JSON.stringify(messages, null, 4))
-    fs.writeFileSync(opts.filepath, JSON.stringify(messages), 'utf8')
-  }
-
   /*
   
     send
@@ -48,9 +37,7 @@ const MailgunTestBackend = (opts) => {
     
   */
   const send = (call, done) => {
-    messages.push(call.request)
-    saveMessages()
-    done(null, messages)
+    done(null, call.request)
   }
 
   return {
