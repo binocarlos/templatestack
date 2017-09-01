@@ -1,6 +1,6 @@
 {
   "name": "template-api",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "useful tools to create a node.js API server using hemera",
   "scripts": {},
   "dependencies": {
