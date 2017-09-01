@@ -85,3 +85,6 @@ $ docker exec -ti template_stack_api npm test
 
 
 
+## licence
+
+MIT
