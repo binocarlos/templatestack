@@ -17,7 +17,9 @@ class ToolbarLayout extends Component {
       <Layout>
         {this.props.toolbar}
         <Panel bodyScroll={false} style={ STYLES.panel }>
-          { this.props.children }
+          <div ref={ this.props.scrollRef }>
+            { this.props.children }
+          </div>
         </Panel>
       </Layout>
     )

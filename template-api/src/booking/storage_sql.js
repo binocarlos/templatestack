@@ -127,7 +127,7 @@ const BookingStorageSQL = (opts) => {
         id: query.id,
         [tables.installation]: query.installationid
       })
-      .del(data)
+      .del()
       .transacting(trx)
       .returning('*')
       .asCallback(databaseTools.singleExtractor(done))

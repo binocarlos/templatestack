@@ -63,6 +63,7 @@ const errorHandler = (err, req, res, next) => {
 
 const errorReply = (next, res, err, code) => {
   res._code = code
+  console.error(`${code} - ${err}`)
   next(err)
 }
 

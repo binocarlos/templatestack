@@ -58,7 +58,7 @@ const BookingBackend = (opts) => {
   const load = (call, done) => {
     const req = call.request
   
-    storage.get({
+    storage.load({
       id: req.id,
       installationid: req.installationid
     }, (err, booking) => {
