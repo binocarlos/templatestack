@@ -14,7 +14,7 @@ const RouterSaga = (opts = {}) => {
   consoleTools.devRun(() => {
     console.log('have hooks:')
     console.dir(Object.keys(hooks))
-  })  
+  })
 
   const getRoute = (path) => basepath + path
 
@@ -23,6 +23,10 @@ const RouterSaga = (opts = {}) => {
   function* runHook(name, payload) {
     if(opts.trigger) opts.trigger(name, payload)
     
+    consoleTools.devRun(() => {
+      console.log(`HOOK: ${name}`)
+      console.dir(payload)
+    })
     if(name.indexOf('/') == 0) {
       // replace `:param` with values from state
       const routerParams = yield select(state => state.router.params)

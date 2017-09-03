@@ -33,6 +33,19 @@ const AuthSagas = (opts = {}) => {
   }
 
   function* status(action = {}) {
+    const routerState = yield select(state => state.router)
+    const query = routerState.query || {}
+
+    const autoUsername = query.autoUsername
+    const autoPassword = query.autoPassword
+
+    if(autoUsername && autoPassword) {
+      yield call(runLogin, {
+        username: autoUsername,
+        password: autoPassword
+      })
+    }
+
     const { answer, error } = yield call(apiSaga, {
       name: 'authStatus',
       actions: actions.status,
@@ -54,6 +67,13 @@ const AuthSagas = (opts = {}) => {
     const valid = yield select(isValid(opts.loginForm))
     if(!valid) return
     const values = yield select(getFormValues(opts.loginForm))
+    yield call(runLogin, values)
+    const user = yield call(status)
+    yield put(routerActions.hook('authLoginSuccess', user))
+    return user
+  }
+
+  function* runLogin(values = {}) {
     const { answer, error } = yield call(apiSaga, {
       name: 'authLogin',
       actions: actions.login,
@@ -64,9 +84,6 @@ const AuthSagas = (opts = {}) => {
       yield put(routerActions.hook('authLoginError', error))
       return
     }
-    const user = yield call(status)
-    yield put(routerActions.hook('authLoginSuccess', user))
-    return user
   }
 
   function* register(action = {}) {

@@ -89,6 +89,11 @@ const getRange = (start, end) => {
 
 const timeTitle = (t) => getTimeTitle(convertTimeToDate(t))
 
+const timestamp = () => {
+  const d = new Date()
+  return Math.round(d.getTime()/1000)
+}
+
 module.exports = {
   today,
   utcParts,
@@ -108,5 +113,6 @@ module.exports = {
   timeRange,
   timeRangeTitle,
   isBeforeToday,
-  getRange
+  getRange,
+  timestamp
 }
