@@ -117,12 +117,14 @@ export const checkbox = ({
   meta: { touched, error },
   ...custom
 }) => {
+  const isChecked = input.value ? true : false
   return (
     <div className={ fieldTheme.padded }>
       <Checkbox
         label={label}
-        {...input}
+        name={custom.config.id}
         checked={input.value ? true : false}
+        onChange={() => input.onChange(isChecked ? false : true)}
       />
     </div>
   )
@@ -155,8 +157,8 @@ export const multipleCheckbox = ({
           return (
             <Checkbox
               key={ i }
+              name={item.value}
               label={item.label}
-              value={item.value}
               checked={isChecked ? true : false}
               onChange={checkOnChange}
             />
