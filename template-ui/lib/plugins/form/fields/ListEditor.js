@@ -34,9 +34,9 @@ class ListEditor extends Component {
     const meta = this.props.meta || {}
     const items = input.value || []
     const error = meta.touched && meta.error ? meta.error : null
-    
+
     return (
-      <div>
+      <div id={ `listEditor_${input.name}` }>
         <List 
           selectable
         >
