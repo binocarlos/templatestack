@@ -122,7 +122,7 @@ export const checkbox = ({
     <div className={ fieldTheme.padded }>
       <Checkbox
         label={label}
-        name={custom.config.id}
+        name={(custom || {}).id}
         checked={input.value ? true : false}
         onChange={() => input.onChange(isChecked ? false : true)}
       />
