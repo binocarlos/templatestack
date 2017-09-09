@@ -26,18 +26,27 @@ const STYLES = {
   }
 }
 
+
+
+
+
 export const input = ({
   input,
   label,
   meta: { touched, error },
   ...custom
 }) => {
+  
+  const config = custom.config || {}
+    
   return (
     <Input
       label={label}
       error={touched && error ? error : null}
       spellCheck={false}
       type={ custom.type }
+      multiline={ config.multiline }
+      rows={ config.rows }
       {...input}
     />
   )
