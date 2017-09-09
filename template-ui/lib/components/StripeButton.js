@@ -5,7 +5,9 @@ class StripeButton extends Component {
 
   createStripeHandler() {
     if(this.handler) return
-    if(!this.props.stripeKey) return
+    if(!this.props.stripeKey) {
+      throw new Error('trying to create a stripe button with no apiKey')
+    }
     this.handler = window.StripeCheckout.configure({
       key: this.props.stripeKey,
       name: this.props.name,
@@ -13,7 +15,7 @@ class StripeButton extends Component {
       amount: this.props.amount,
       panelLabel: this.props.panelLabel,
       email: this.props.email,
-      currency: 'GBP',
+      currency: this.props.currency || 'GBP',
       locale: 'en',
       zipCode: false,
       billingAddress: false,
