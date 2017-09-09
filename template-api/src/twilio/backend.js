@@ -50,7 +50,17 @@ const TwilioBackend = (opts) => {
         from: call.request.from,
         to: call.request.to,
         body: call.request.content
-      }, done)  
+      }, (err, res) => {
+        if(err) return done(err)
+        done(null, {
+          ok: true,
+          status: res.status,
+          uri: res.uri,
+          from: res.from,
+          to: res.to,
+          body: res.body
+        })
+      })  
     }
   }
 
