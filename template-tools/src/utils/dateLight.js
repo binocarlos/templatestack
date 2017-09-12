@@ -18,16 +18,23 @@ const sqlDate = (date, trim = false) => {
 
 // turn 16.3 into {hour:16,minute:30}
 const getTime = (t = 0) => {
-  const h = Math.round(t)
-  const m = (t % 1) * 100
+  const h = Math.floor(t)
+  const m = Math.round((t - h) * 60)
   return {
     hour: h,
     minute: m || 0
   }
 }
 
-// given a number like 16.3 add some minutes then return an object with hour, minutes
-const addTime = (t, delta) => getTime(t + (delta / 60))
+// given a number like 16.3 add some minutes (delta) then return an object with hour, minutes
+const addTime = (t, delta) => {
+  const time = getTime(t)
+  const deltaTime = getTime(delta/60)
+  return {
+    hour: time.hour + deltaTime.hour,
+    minute: time.minute + deltaTime.minute
+  }
+}
 
 const convertTimeToDate = (t) => {
   const ret = new Date()
