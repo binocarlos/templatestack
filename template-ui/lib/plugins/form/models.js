@@ -17,6 +17,8 @@ export const number = (opts = {}) => {
   return Object.assign({}, {
     normalize: (value) => {
       if(value.match(/\.$/)) return value
+      // the case where it strips the last zero from an amount like 9.50
+      if(value.match(/\.\d+0$/)) return value
       const num = parseFloat(value)
       return isNaN(num) ? value : num
       return value
