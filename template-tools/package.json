@@ -1,6 +1,6 @@
 {
   "name": "template-tools",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "template-ui/api isomorphic tools",
   "scripts": {
     "test": "tape src/**/*.test.js"
