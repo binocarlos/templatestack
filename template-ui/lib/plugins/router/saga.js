@@ -92,7 +92,7 @@ const RouterSaga = (opts = {}) => {
   // if the handler is a string - it is turned into {name}
   // this way - the router can also pass a payload {name,payload}
   // each name/payload combo is run in series
-  function* routerChanged(action) {
+  function* routerChanged() {
     const router = yield select(state => state.router)
     const routeInfo = router.result || {}
 
@@ -121,7 +121,7 @@ const RouterSaga = (opts = {}) => {
   // called once we have loaded user info
   function* initialize() {
     const routerState = yield select(state => state.router)
-    yield put(actions.push(routerState.pathname))
+    yield call(routerChanged)
   }
 
   const listeners = ForkListeners([
