@@ -93,6 +93,9 @@ const RouterSaga = (opts = {}) => {
   // this way - the router can also pass a payload {name,payload}
   // each name/payload combo is run in series
   function* routerChanged() {
+    if(opts.onChange) {
+      yield call(opts.onChange)
+    }
     const router = yield select(state => state.router)
     const routeInfo = router.result || {}
 
