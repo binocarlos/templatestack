@@ -5,10 +5,18 @@ export class ListMenu extends Component {
 
   getMenuItem(option, i) {
     if(!option) return null
-    const id = option[0]
-    const title = option[1]
-    const icon = option[2]
-    if(id == '-') {
+
+    let item = {
+      id: option[0],
+      title: option[1],
+      icon: option[2]
+    }
+
+    if(this.props.process) {
+      item = this.props.process(item)
+    }
+
+    if(item.id == '-') {
       return (
         <ListDivider
           key={ i }
@@ -19,9 +27,11 @@ export class ListMenu extends Component {
       return (
         <ListItem 
           ripple
-          caption={ title }
-          leftIcon={ icon }
-          onClick={ () => this.props.onClick(id) }
+          caption={ item.title }
+          leftIcon={ item.icon }
+          onClick={ () => this.props.onClick(item.id) }
+          className={ item.className }
+          theme={ item.theme }
           key={ i }
         />
       )
