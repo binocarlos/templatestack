@@ -1,6 +1,7 @@
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
 import createLogger from 'redux-logger'
 import createSagaMiddleware, { END } from 'redux-saga'
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 export default function configureStore(opts = {}) {
   if(!opts.reducers) throw new Error('reducers required')
@@ -13,7 +14,7 @@ export default function configureStore(opts = {}) {
       ...reducers
     }),
     initialState,
-    compose(
+    composeEnhancers(
       router.enhancer,
       applyMiddleware(
         sagaMiddleware,
@@ -21,8 +22,7 @@ export default function configureStore(opts = {}) {
         createLogger({
           collapsed:true
         })
-      ),
-      window.devToolsExtension ? window.devToolsExtension() : f => f
+      )
     )
   )
   store.runSaga = sagaMiddleware.run
