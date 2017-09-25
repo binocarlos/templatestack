@@ -18,9 +18,9 @@
     "js-yaml": "^3.9.0",
     "knex": "^0.13.0",
     "morgan": "^1.8.2",
-    "template-api": "^2.1.0",
-    "template-tools": "^1.1.0",
-    "shared": "file:../shared"
+    "shared": "file:../shared",
+    "template-api": "^2.2.2",
+    "template-tools": "^1.2.3"
   },
   "devDependencies": {
     "request": "^2.81.0",

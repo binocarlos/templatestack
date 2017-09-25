@@ -29,9 +29,9 @@
     "redux-logger": "^2.7.4",
     "redux-saga": "^0.15.4",
     "reselect": "^3.0.1",
-    "template-ui": "^1.0.0",
-    "template-tools": "^1.0.0",
-    "shared": "file:../shared"
+    "shared": "file:../shared",
+    "template-tools": "^1.2.3",
+    "template-ui": "^1.7.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
