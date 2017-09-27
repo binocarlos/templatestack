@@ -7,10 +7,12 @@ import AuthSaga from 'template-ui/lib/plugins/auth/saga'
 
 import * as actions from '../actions'
 
+import apis from '../api'
 import authApi from '../api/auth'
 import config from '../config'
 import forms from '../forms'
 
+import Installation from './installation'
 import Hooks from './hooks'
 
 const auth = AuthSaga({
@@ -21,8 +23,20 @@ const auth = AuthSaga({
   touchAllAction: actions.form.touchAll
 })
 
+const installation = Installation({
+  apis: {
+    list: apis.installationList,
+    get: apis.installationGet,
+    create: apis.installationCreate,
+    save: apis.installationSave,
+    del: apis.installationDel,
+    activate: apis.installationActivate
+  }
+})
+
 const hooks = Hooks({
-  auth
+  auth,
+  installation
 })
 
 const router = RouterSaga({

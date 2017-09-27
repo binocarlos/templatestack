@@ -14,6 +14,7 @@ const icons = {
   save: 'send',
   add: 'add',
   edit: 'create',
+  project: 'layers',
   delete: 'delete',
   folder_open: 'keyboard_arrow_right',
   view: 'visibility',
@@ -49,6 +50,7 @@ const config = {
     user: [
       ['/dashboard', 'Dashboard', icons.dashboard],
       ['/layout', 'Layout', icons.item],
+      ['/projects', 'Projects', icons.project],
       ['-'],
       ['/help', 'Help', icons.help],
       ['authLogout', 'Logout', icons.logout]

@@ -17,19 +17,19 @@ class ApplicationContainer extends Component {
 
 export default connect(
   (state, ownProps) => {
-    const user = selectors.value(state, 'user')
+    const user = selectors.auth.user(state)
+    const username = selectors.auth.name(state)
     const menuOptions = user ?
       config.menu.user :
       config.menu.guest
     const manualScroll = selectors.router.firstValue(state, 'manualScroll')
-    const username = user ? user.username : ''
     return {
       title: config.title,
       menuOpen: selectors.value(state, 'menuOpen'),
-      user: selectors.value(state, 'user'),
+      user,
       username,
       menuOptions,
-      bodyScroll: manualScroll ? true : false,
+      bodyScroll: manualScroll ? false : true,
       initialized: selectors.value(state, 'initialized'),
       snackbar: selectors.value(state, 'snackbar')
     }

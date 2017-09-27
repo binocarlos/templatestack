@@ -2,6 +2,7 @@ import {
   getFormValues
 } from 'redux-form'
 import APISelector from 'template-ui/lib/plugins/api/selectors'
+import AuthSelectors from 'template-ui/lib/plugins/auth/selectors'
 export { default as router } from 'template-ui/lib/plugins/router/selectors'
 
 export const values = (state) => state.value || {}
@@ -18,3 +19,4 @@ export const formValues = (name) => {
 }
 
 export const api = APISelector()
+export const auth = AuthSelectors()

@@ -26,6 +26,7 @@ const Logger = (type) => {
 const Hooks = (opts = {}) => {
 
   const auth = opts.auth
+  const installation = opts.installation
 
   function* authLoginSuccess(user) {
     yield put(actions.router.redirect('/dashboard'))
@@ -48,6 +49,9 @@ const Hooks = (opts = {}) => {
     apiRequest: Logger('request'),
     apiResponse: Logger('response'),
     apiError: Logger('error'),
+
+    installationList: installation.list,
+    
     systemMessage
   }
 }

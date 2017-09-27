@@ -11,9 +11,11 @@ import config from './config'
 import Application from './containers/Application'
 import LoginForm from './containers/LoginForm'
 import RegisterForm from './containers/RegisterForm'
+import InstallationList from './containers/InstallationList'
 
 import Home from './components/Home'
 import Layout from './components/Layout'
+
 
 const Route = RouteFactory(config.basepath)
 
@@ -22,7 +24,11 @@ export const routeConfig = processRoutes({
   '/': {},
   '/dashboard': {},
   '/layout': {
-    manualScroll: false
+    manualScroll: true
+  },
+  '/projects': {
+    manualScroll: true,
+    hooks: ['installationList']
   },
   '/help': {
     triggers: []
@@ -55,6 +61,10 @@ export const routes = (
 
       <Route path='/layout'>
         <Layout />
+      </Route>
+
+      <Route path='/projects'>
+        <InstallationList />
       </Route>
 
       <Route path='/help'>
