@@ -20,6 +20,10 @@ export default connect(
     selected: selectors.value(state, 'installationsSelected') || []
   }),
   (dispatch) => ({
-    onSelect: (data) => dispatch(actions.value.set('installationsSelected', data))
+    onSelect: (data) => dispatch(actions.value.set('installationsSelected', data)),
+    toolbarClick: (name) => {
+      console.log('-------------------------------------------');
+      console.log(name)
+    }
   })
 )(InstallationListContainer)

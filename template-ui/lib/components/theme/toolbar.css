@@ -8,3 +8,9 @@
 .title, .inner, .leftIcon, .rightIcon {
   color: var(--palette-grey-600) !important;
 }
+
+.injectedTitle {
+  font-size: '1.1em';
+  display: inline-block;
+  margin-right: 20px;
+}
