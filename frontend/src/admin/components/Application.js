@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
-import Application from 'template-ui/lib/components/layout2/Application'
+import ApplicationLayout from 'template-ui/lib/components/layout2/ApplicationLayout'
 import IconText from 'template-ui/lib/components/IconText'
 import ListMenu from 'template-ui/lib/components/ListMenu'
 import IconMenu from 'template-ui/lib/components/IconMenu'
@@ -43,7 +43,7 @@ class ApplicationComponent extends Component {
     }
 
     return (
-      <Application {...applicationProps} />
+      <ApplicationLayout {...applicationProps} />
     )
   }
 }

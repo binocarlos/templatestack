@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 
-import Tree from 'template-ui/lib/components/layout2/Tree'
+import TreeLayout from 'template-ui/lib/components/layout2/TreeLayout'
+import ToolbarLayout from 'template-ui/lib/components/layout2/ToolbarLayout'
 import LongText from 'template-ui/lib/components/widgets/LongText'
+import Toolbar from 'template-ui/lib/components/Toolbar'
 
 class Layout extends Component {
   render() {
@@ -10,14 +12,22 @@ class Layout extends Component {
         text='tree'
       />
     )
+    const toolbar = (
+      <Toolbar title='Test bar' />
+    )
     return (
-      <Tree
+      <TreeLayout
+        width='250px'
         tree={tree}
       >
-        <LongText
-          text='content'
-        />
-      </Tree>
+        <ToolbarLayout
+          toolbar={toolbar}
+        >
+          <LongText
+            text='content'
+          />
+        </ToolbarLayout>
+      </TreeLayout>
     )
   }
 }

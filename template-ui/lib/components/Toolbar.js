@@ -5,18 +5,13 @@ import theme from './theme/toolbar.css'
 
 class Toolbar extends Component {
   render() {
+    const props = {
+      ...this.props,
+      flat: true,
+      theme
+    }
     return (
-      <AppBar
-        theme={ theme }
-        flat
-        title={ this.props.title}
-        leftIcon={ this.props.leftIcon }
-        rightIcon={ this.props.rightIcon }
-        onLeftIconClick={ this.props.onLeftIconClick }
-        onRightIconClick={ this.props.onRightIconClick }
-      >
-        { this.props.children }
-      </AppBar>
+      <AppBar {...props} />
     )
   }
 }

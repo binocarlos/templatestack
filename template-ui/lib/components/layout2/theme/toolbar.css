@@ -4,17 +4,15 @@
   overflow: hidden;
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
+  -webkit-flex-direction: column;
+  flex-direction: column;
 }
 
-.tree {
-  height: 100%;
-  overflow: auto;
+.toolbar {
+  
 }
 
 .content {
   flex-grow: 1;
-  height: 100%;
   overflow: auto;
 }
