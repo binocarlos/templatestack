@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import SnackBar from 'react-toolbox/lib/snackbar'
 import { Layout, NavDrawer, Sidebar, Panel } from 'react-toolbox/lib/layout'
 import { AppBar } from 'react-toolbox/lib/app_bar';
 
@@ -36,7 +37,13 @@ class Application extends Component {
         </AppBar>
         <Panel bodyScroll={ bodyScroll } style={ useStyle }>
           { this.props.children }
-        </Panel>        
+        </Panel>       
+        <SnackBar
+          active={this.props.snackbar ? true : false}
+          label={this.props.snackbar || ''}
+          timeout={5000}
+          onTimeout={this.props.clearSnackbar}
+        />
       </Layout>
     )
   }

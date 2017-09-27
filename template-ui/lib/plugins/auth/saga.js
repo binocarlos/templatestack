@@ -32,6 +32,18 @@ const AuthSagas = (opts = {}) => {
     opts.handleLogout()
   }
 
+  function* message(text) {
+    if(opts.messageHook) {
+      yield put(routerActions.hook(opts.messageHook, text))
+    }
+  }
+
+  function* touchForm(name) {
+    if(opts.touchAllAction) {
+      yield put(opts.touchAllAction(name))
+    }
+  }
+
   function* status(action = {}) {
     const routerState = yield select(state => state.router)
     const query = routerState.query || {}
@@ -65,31 +77,41 @@ const AuthSagas = (opts = {}) => {
 
   function* login(action = {}) {
     const valid = yield select(isValid(opts.loginForm))
-    if(!valid) return
+    if(!valid) {
+      yield call(touchForm, opts.loginForm)
+      yield call(message, 'Invalid Form Details')
+      return
+    }
     const values = yield select(getFormValues(opts.loginForm))
-    yield call(runLogin, values)
+    const { answer, error } = yield call(runLogin, values)
+    if(error) {
+      yield put(routerActions.hook('authLoginError', error))
+      yield call(message, error.toString())
+      return
+    }
     const user = yield call(status)
     yield put(routerActions.hook('authLoginSuccess', user))
     return user
   }
 
   function* runLogin(values = {}) {
-    const { answer, error } = yield call(apiSaga, {
+    const ret = yield call(apiSaga, {
       name: 'authLogin',
       actions: actions.login,
       api: apis.login,
       payload: values
     })
-    if(error) {
-      yield put(routerActions.hook('authLoginError', error))
-      return
-    }
+    return ret
   }
 
   function* register(action = {}) {
-    const valid = yield select(isValid('register'))
-    if(!valid) return
-    const values = yield select(getFormValues('register'))
+    const valid = yield select(isValid(opts.registerForm))
+    if(!valid) {
+      yield call(touchForm, opts.registerForm)
+      yield call(message, 'Invalid Form Details')
+      return
+    }
+    const values = yield select(getFormValues(opts.registerForm))
 
     const { answer, error } = yield call(apiSaga, {
       name: 'authRegister',
@@ -100,6 +122,7 @@ const AuthSagas = (opts = {}) => {
 
     if(error) {
       yield put(routerActions.hook('authRegisterError', user))
+      yield call(message, error.toString())
       return
     }
 
