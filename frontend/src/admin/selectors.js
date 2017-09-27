@@ -4,11 +4,11 @@ import {
 import APISelector from 'template-ui/lib/plugins/api/selectors'
 export { default as router } from 'template-ui/lib/plugins/router/selectors'
 
-export const valuesSelector = (state) => state.value || {}
-export const valueSelector = (state, name) => valuesSelector(state)[name]
-export const routeInfoSelector = (state) => state.router.result
+export const values = (state) => state.value || {}
+export const value = (state, name) => values(state)[name]
+export const routeInfo = (state) => state.router.result
 
-export const formValuesSelector = (name) => {
+export const formValues = (name) => {
   const selector = getFormValues(name)
   const handler = (state) => {
     const ret = selector(state)

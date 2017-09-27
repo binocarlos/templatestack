@@ -3,11 +3,7 @@ import { connect } from 'react-redux'
 
 import config from '../config'
 import * as actions from '../actions'
-
-import {
-  valueSelector,
-  router
-} from '../selectors'
+import * as selectors from '../selectors'
 
 import Application from '../components/Application'
 
@@ -21,19 +17,19 @@ class ApplicationContainer extends Component {
 
 export default connect(
   (state, ownProps) => {
-    const user = valueSelector(state, 'user')
+    const user = selectors.value(state, 'user')
     const menuOptions = user ?
       config.menu.user :
       config.menu.guest
-    const autoScroll = router.firstValue(state, 'autoScroll')
+    const autoScroll = selectors.router.firstValue(state, 'autoScroll')
     return {
       title: config.title,
-      menuOpen: valueSelector(state, 'menuOpen'),
-      user: valueSelector(state, 'user'),
+      menuOpen: selectors.value(state, 'menuOpen'),
+      user: selectors.value(state, 'user'),
       menuOptions,
       autoScroll: autoScroll,
-      initialized: valueSelector(state, 'initialized'),
-      snackbar: valueSelector(state, 'snackbar')
+      initialized: selectors.value(state, 'initialized'),
+      snackbar: selectors.value(state, 'snackbar')
     }
   },
   (dispatch) => {

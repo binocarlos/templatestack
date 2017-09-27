@@ -3,6 +3,8 @@ import SnackBar from 'react-toolbox/lib/snackbar'
 import { Layout, NavDrawer, Sidebar, Panel } from 'react-toolbox/lib/layout'
 import { AppBar } from 'react-toolbox/lib/app_bar';
 
+import theme from './theme/appbar.css'
+
 class Application extends Component {
   render () {
     const bodyScroll = typeof(this.props.autoScroll) == 'boolean' ?
@@ -33,7 +35,11 @@ class Application extends Component {
           onLeftIconClick={ this.props.toggleMenu }
           title={ this.props.title }
         >
-          { this.props.appbar }
+          <div>
+            <div className={ theme.rightMenu }>
+              { this.props.appbar }
+            </div>
+          </div>
         </AppBar>
         <Panel bodyScroll={ bodyScroll } style={ useStyle }>
           { this.props.children }
