@@ -35,9 +35,24 @@ const authRegister = formWrapper({
   }
 })
 
+const installation = formWrapper({
+  name: 'installation',
+  fields: {
+    name: models.string({
+      title: 'Name',
+      component: fields.input,
+      validate: [validators.required]
+    }),
+    test: models.string({
+      component: fields.input
+    })
+  }
+})
+
 const forms = {
   authLogin,
-  authRegister
+  authRegister,
+  installation
 }
 
 export default forms

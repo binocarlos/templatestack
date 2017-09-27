@@ -10,7 +10,7 @@
 }
 
 .injectedTitle {
-  font-size: '1.1em';
+  font-size: 1.13em !important;
   display: inline-block;
   margin-right: 20px;
 }

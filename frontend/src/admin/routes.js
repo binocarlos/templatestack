@@ -12,6 +12,7 @@ import Application from './containers/Application'
 import LoginForm from './containers/LoginForm'
 import RegisterForm from './containers/RegisterForm'
 import InstallationList from './containers/InstallationList'
+import InstallationForm from './containers/InstallationForm'
 
 import Home from './components/Home'
 import Layout from './components/Layout'
@@ -28,7 +29,10 @@ export const routeConfig = processRoutes({
   },
   '/projects': {
     manualScroll: true,
-    hooks: ['installationList']
+    hooks: ['installationList'],
+    '/add': {
+
+    }
   },
   '/help': {
     triggers: []
@@ -65,6 +69,10 @@ export const routes = (
 
       <Route path='/projects' exact>
         <InstallationList />
+      </Route>
+
+      <Route path='/projects/add' exact>
+        <InstallationForm />
       </Route>
 
       <Route path='/help'>
