@@ -7,10 +7,7 @@ class Home extends Component {
       <Grid fluid>
         <Row>
           <Col xs={6} md={3}>
-            Hello, world!
-          </Col>
-          <Col xs={6} md={3}>
-            Hello, world!
+            Welcome
           </Col>
         </Row>
       </Grid>

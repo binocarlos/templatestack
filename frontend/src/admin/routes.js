@@ -17,13 +17,11 @@ import Home from './components/Home'
 const Route = RouteFactory(config.basepath)
 
 export const routeConfig = processRoutes({
+  '': {},
   '/': {},
+  '/dashboard': {},
   '/help': {
     triggers: []
-  },
-  '/about': {
-    //user: true,
-    //autoScroll: false,
   },
   '/login': {
   },
@@ -40,15 +38,21 @@ export const routes = (
             <LoginForm />
           </UserWrapper>
           <UserWrapper loggedIn={ true }>
-            Logged In!
+            <Home />
           </UserWrapper>
         </Section>
       </Route>
 
+      <Route path='/dashboard'>
+        <Section>
+          <Home />
+        </Section>
+      </Route>
+
       <Route path='/help'>
-        <div>
+        <Section>
           Help
-        </div>
+        </Section>
       </Route>
 
       <Route path='/login'>

@@ -49,8 +49,6 @@ const config = {
       ['/dashboard', 'Dashboard', icons.dashboard],
       ['-'],
       ['/help', 'Help', icons.help],
-      ['/about', 'About', icons.about],
-      ['-'],
       ['authLogout', 'Logout', icons.logout]
     ]
   },
