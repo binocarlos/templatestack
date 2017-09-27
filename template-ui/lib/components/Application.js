@@ -42,7 +42,7 @@ class Application extends Component {
           active={this.props.snackbar ? true : false}
           label={this.props.snackbar || ''}
           timeout={5000}
-          onTimeout={this.props.clearSnackbar}
+          onTimeout={() => this.props.clearSnackbar()}
         />
       </Layout>
     )

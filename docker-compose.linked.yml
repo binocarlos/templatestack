@@ -8,8 +8,8 @@ services:
       - ./frontend/yarn.lock:/app/frontend/yarn.lock
       - ./frontend/template.ejs:/app/frontend/template.ejs
       - ./shared/src:/app/frontend/node_modules/shared/src
-      - ./template-ui/lib:/app/frontend/node_modules/template-ui/lib
-      - ./template-tools/src:/app/frontend/node_modules/template-tools/src
+      - ../templatestack/template-ui/lib:/app/frontend/node_modules/template-ui/lib
+      - ../templatestack/template-tools/src:/app/frontend/node_modules/template-tools/src
   api:
     volumes:
       - ./api/src:/app/api/src
@@ -18,5 +18,5 @@ services:
       - ./api/package.json:/app/api/package.json
       - ./api/yarn.lock:/app/api/yarn.lock
       - ./shared/src:/app/api/node_modules/shared/src
-      - ./template-api/src:/app/api/node_modules/template-api/src
-      - ./template-tools/src:/app/api/node_modules/template-tools/src
+      - ../templatestack/template-api/src:/app/api/node_modules/template-api/src
+      - ../templatestack/template-tools/src:/app/api/node_modules/template-tools/src

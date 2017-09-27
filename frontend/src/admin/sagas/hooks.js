@@ -33,24 +33,13 @@ const Hooks = (opts = {}) => {
 
   function* authRegisterSuccess(user) {
     yield put(actions.router.redirect('/dashboard'))
-  }  
+  }
 
-  function* authenticateRoute() {
-    const userSetting = yield select(state => selectors.router.firstValue(state, 'user'))
-    // this route has no opinion about the user
-    if(typeof(userSetting) != 'boolean') return
-    const user = yield select(state => selectors.valueSelector(state, 'user'))
-    const hasUser = user ? true : false
-    const isRouteAuthenticated = hasUser == userSetting
-    if(!isRouteAuthenticated) {
-      yield put(actions.router.push(config.authRedirect || '/'))
-    }
+  function* systemMessage(message) {
+    yield put(actions.value.set('snackbar', message))
   }
 
   return {
-    routerChanged: [
-      authenticateRoute
-    ],
     authLogout: auth.logout,
     authLoginSubmit: auth.login,
     authLoginSuccess,
@@ -58,7 +47,8 @@ const Hooks = (opts = {}) => {
     authRegisterSuccess,
     apiRequest: Logger('request'),
     apiResponse: Logger('response'),
-    apiError: Logger('error')
+    apiError: Logger('error'),
+    systemMessage
   }
 }
 

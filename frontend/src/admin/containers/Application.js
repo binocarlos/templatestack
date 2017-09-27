@@ -32,7 +32,8 @@ export default connect(
       user: valueSelector(state, 'user'),
       menuOptions,
       autoScroll: autoScroll,
-      initialized: valueSelector(state, 'initialized')
+      initialized: valueSelector(state, 'initialized'),
+      snackbar: valueSelector(state, 'snackbar')
     }
   },
   (dispatch) => {
@@ -44,6 +45,9 @@ export default connect(
       },
       onOptionClick: (id) => {
         dispatch(actions.router.redirect(id))
+      },
+      clearSnackbar: () => {
+        dispatch(actions.value.set('snackbar', ''))
       }
     }
   }

@@ -37,7 +37,7 @@ export const routes = (
       <Route home>
         <Section>
           <UserWrapper loggedIn={ false }>
-            <Home />
+            <LoginForm />
           </UserWrapper>
           <UserWrapper loggedIn={ true }>
             Logged In!
