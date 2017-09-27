@@ -58,6 +58,11 @@ const Range = (opts) => {
   }, {})
 
   return dateRange
+    .filter(date => {
+      const sqlDate = dateTools.sqlDate(date, true)
+      const calendarDay = Calendar(opts.calendar, date)
+      return calendarDay
+    })
     .map(date => {
       const sqlDate = dateTools.sqlDate(date, true)
       const calendarDay = Calendar(opts.calendar, date)
