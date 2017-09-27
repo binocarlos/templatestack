@@ -22,10 +22,12 @@ export default connect(
       config.menu.user :
       config.menu.guest
     const autoScroll = selectors.router.firstValue(state, 'autoScroll')
+    const username = user ? user.username : ''
     return {
       title: config.title,
       menuOpen: selectors.value(state, 'menuOpen'),
       user: selectors.value(state, 'user'),
+      username,
       menuOptions,
       autoScroll: autoScroll,
       initialized: selectors.value(state, 'initialized'),

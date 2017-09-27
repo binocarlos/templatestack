@@ -35,18 +35,7 @@ class Application extends Component {
           onLeftIconClick={ this.props.toggleMenu }
           title={ this.props.title }
         >
-          <div>
-            {
-              this.props.user ? (
-                <div className={ theme.userInfo }>
-                  user
-                </div>
-              ) : null
-            }
-            <div className={ theme.rightMenu }>
-              { this.props.appbar }
-            </div>
-          </div>
+          { this.props.appbar }
         </AppBar>
         <Panel bodyScroll={ bodyScroll } style={ useStyle }>
           { this.props.children }

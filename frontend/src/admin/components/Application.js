@@ -1,8 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 
 import Application from 'template-ui/lib/components/Application'
+import IconText from 'template-ui/lib/components/IconText'
 import ListMenu from 'template-ui/lib/components/ListMenu'
 import IconMenu from 'template-ui/lib/components/IconMenu'
+
+import horizontal from 'template-ui/lib/components/theme/horizontal.css'
+import apptheme from './theme/application.css'
 
 class ApplicationComponent extends Component {
   render() {
@@ -20,10 +24,16 @@ class ApplicationComponent extends Component {
     )
 
     const appbarMenu = (
-      <IconMenu
-        options={ this.props.menuOptions }
-        onClick={ this.props.onOptionClick }
-      />
+      <div className={ horizontal.center }>
+        <IconText
+          icon='person'
+          text={ this.props.username }
+        />
+        <IconMenu
+          options={ this.props.menuOptions }
+          onClick={ this.props.onOptionClick }
+        />
+      </div>
     )
 
     const applicationProps = {
