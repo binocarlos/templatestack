@@ -21,7 +21,7 @@ export default connect(
     const menuOptions = user ?
       config.menu.user :
       config.menu.guest
-    const autoScroll = selectors.router.firstValue(state, 'autoScroll')
+    const manualScroll = selectors.router.firstValue(state, 'manualScroll')
     const username = user ? user.username : ''
     return {
       title: config.title,
@@ -29,7 +29,7 @@ export default connect(
       user: selectors.value(state, 'user'),
       username,
       menuOptions,
-      autoScroll: autoScroll,
+      bodyScroll: manualScroll ? true : false,
       initialized: selectors.value(state, 'initialized'),
       snackbar: selectors.value(state, 'snackbar')
     }

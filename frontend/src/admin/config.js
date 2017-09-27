@@ -3,6 +3,7 @@ const icons = {
   help: 'help_outline',
   about: 'info_outline',
   home: 'home',
+  item: 'label',
   menu: 'menu',
   options: 'more_vert',
   logout: 'exit_to_app',
@@ -47,6 +48,7 @@ const config = {
     ],
     user: [
       ['/dashboard', 'Dashboard', icons.dashboard],
+      ['/layout', 'Layout', icons.item],
       ['-'],
       ['/help', 'Help', icons.help],
       ['authLogout', 'Logout', icons.logout]

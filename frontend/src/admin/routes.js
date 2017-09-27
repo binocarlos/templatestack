@@ -13,6 +13,7 @@ import LoginForm from './containers/LoginForm'
 import RegisterForm from './containers/RegisterForm'
 
 import Home from './components/Home'
+import Layout from './components/Layout'
 
 const Route = RouteFactory(config.basepath)
 
@@ -20,6 +21,9 @@ export const routeConfig = processRoutes({
   '': {},
   '/': {},
   '/dashboard': {},
+  '/layout': {
+    manualScroll: false
+  },
   '/help': {
     triggers: []
   },
@@ -47,6 +51,10 @@ export const routes = (
         <Section>
           <Home />
         </Section>
+      </Route>
+
+      <Route path='/layout'>
+        <Layout />
       </Route>
 
       <Route path='/help'>
