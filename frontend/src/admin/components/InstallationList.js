@@ -26,10 +26,17 @@ class InstallationList extends Component {
       />
     )
 
+    const count = selected.length > 0 ? selected.length : data.length
+    let title = `Projects (${count})`
+
+    if(selectedItems.length == 1) {
+      title = selectedItems[0].name
+    }
+
     return (
       <Toolbar
         leftIcon={ config.icons.project }
-        title='Projects'
+        title={ title }
         leftContent={ buttons }
       />
     )

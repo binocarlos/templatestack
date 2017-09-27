@@ -63,7 +63,7 @@ export const routes = (
         <Layout />
       </Route>
 
-      <Route path='/projects'>
+      <Route path='/projects' exact>
         <InstallationList />
       </Route>
 
