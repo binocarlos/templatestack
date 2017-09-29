@@ -111,6 +111,9 @@ export default connect(
           id
         }))
       },
+      touchEditWindow: () => {
+        dispatch(formActions.touchAll(id, ownProps.schema))
+      },
       cancelDeleteWindow: () => {
         dispatch(valueActions.set(`${id}_deleteWindow`, false))
       },

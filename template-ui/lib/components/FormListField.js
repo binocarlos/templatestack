@@ -5,8 +5,8 @@ import ProgressBar from 'react-toolbox/lib/progress_bar'
 import Table from 'template-ui/lib/components/Table'
 import ToolbarLayout from './layout2/ToolbarLayout'
 import Toolbar from './Toolbar'
-import CrudButtonsList from './CrudButtonsList'
-import CrudButtonsItem from './CrudButtonsItem'
+import CrudButtonsListToolbar from './CrudButtonsListToolbar'
+import CrudButtonsListItem from './CrudButtonsListItem'
 import CrudDeleteModal from './CrudDeleteModal'
 import CrudFormModal from './CrudFormModal'
 import FormLayout from './FormLayout'
@@ -38,7 +38,7 @@ class FormListField extends Component {
     const selectedItems = selected.map(i => data[i])
 
     const buttons = (
-      <CrudButtonsList
+      <CrudButtonsListToolbar
         icons={icons}
         selected={this.props.selected}
         onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
@@ -65,7 +65,7 @@ class FormListField extends Component {
 
   getRowButtons(item, i) {
     return (
-      <CrudButtonsItem
+      <CrudButtonsListItem
         icons={icons}
         onClick={ (name) => this.props.itemClick(name, item, i) }
       />
@@ -112,7 +112,14 @@ class FormListField extends Component {
         title={ this.props.label }
         active={ this.props.editActive ? true : false}
         onCancel={ this.props.cancelEditWindow }
-        onConfirm={ this.props.confirmEditWindow }
+        onConfirm={ () => {
+          if(this.props.valid) {
+            this.props.confirmEditWindow()  
+          }
+          else {
+            this.props.touchEditWindow()   
+          }
+        }}
       >
         { this.getForm() }
       </CrudFormModal>

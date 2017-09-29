@@ -4,8 +4,8 @@ import ProgressBar from 'react-toolbox/lib/progress_bar'
 import ToolbarLayout from 'template-ui/lib/components/layout2/ToolbarLayout'
 import Toolbar from 'template-ui/lib/components/Toolbar'
 import Table from 'template-ui/lib/components/Table'
-import CrudButtonsList from 'template-ui/lib/components/CrudButtonsList'
-import CrudButtonsItem from 'template-ui/lib/components/CrudButtonsItem'
+import CrudButtonsListToolbar from 'template-ui/lib/components/CrudButtonsListToolbar'
+import CrudButtonsListItem from 'template-ui/lib/components/CrudButtonsListItem'
 import CrudDeleteModal from 'template-ui/lib/components/CrudDeleteModal'
 
 import horizontal from 'template-ui/lib/components/theme/horizontal.css'
@@ -21,7 +21,7 @@ class ProjectList extends Component {
     const selectedItems = selected.map(i => data[i])
 
     const buttons = (
-      <CrudButtonsList
+      <CrudButtonsListToolbar
         primary
         icons={config.icons}
         selected={this.props.selected}
@@ -47,7 +47,7 @@ class ProjectList extends Component {
 
   getRowButtons(item, i) {
     return (
-      <CrudButtonsItem
+      <CrudButtonsListItem
         icons={config.icons}
         onClick={ (name) => this.props.itemClick(name, item, i) }
       />

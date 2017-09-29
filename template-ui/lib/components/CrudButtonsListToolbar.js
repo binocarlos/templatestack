@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 import { Button } from 'react-toolbox/lib/button'
-import ButtonMenu from './ButtonMenu'
-import IconMenu from './IconMenu'
+import IconButtons from './IconButtons'
 
 class CrudButtonsList extends Component {
 
@@ -26,15 +25,13 @@ class CrudButtonsList extends Component {
     else {
       let options = []
       if(selected == 1) {
-        options.push(['edit', 'Edit', icons.edit])
+        options.push(['edit', 'Edit', icons.edit, {primary:true,raised:true}])
       }
       if(selected >=1) {
         options.push(['delete', 'Delete', icons.delete])
       }
       return (
-        <ButtonMenu
-          label='Actions'
-          icon={icons.actions}
+        <IconButtons
           options={options}
           onClick={(id) => this.props.onClick(id)}
         />
