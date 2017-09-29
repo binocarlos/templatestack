@@ -26,9 +26,6 @@ export default connect(
   }),
   (dispatch) => ({
     onSelect: (data) => {
-      console.log('-------------------------------------------');
-      console.log('-------------------------------------------');
-      console.dir(data)
       dispatch(actions.project.list.setSelected(data))
     },
     itemClick: (name, item, index) => {

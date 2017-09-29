@@ -47,6 +47,7 @@ const layer1 = {
   },
   others: {
     component: fields.list,
+    itemTitle: 'Thing2',
     schema: layer2,
     table: tables.layer2
   }
@@ -60,6 +61,7 @@ const project = {
   },
   test: {
     title: 'Test List',
+    itemTitle: 'Thing',
     component: fields.list,
     schema: layer1,
     table: tables.layer1

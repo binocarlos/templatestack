@@ -24,11 +24,12 @@ class CrudButtonsList extends Component {
     }
     else {
       let options = []
-      if(selected == 1) {
-        options.push(['edit', 'Edit', icons.edit, {primary:true,raised:true}])
-      }
+      
       if(selected >=1) {
-        options.push(['delete', 'Delete', icons.delete])
+        options.push(['delete', 'Delete', icons.delete, {}])
+      }
+      if(selected == 1) {
+        options.push(['edit', 'Edit', icons.edit, {}])
       }
       return (
         <IconButtons

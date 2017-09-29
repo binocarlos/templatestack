@@ -61,7 +61,7 @@ const FormSagas = (opts = {}) => {
     const index = yield select(state => valueSelectors.get(state, `${id}_editIndex`))
 
     // add mode
-    if(!index) {
+    if(typeof(index) !== 'number') {
       yield put(arrayPush(form, field, values))
     }
     // edit mode

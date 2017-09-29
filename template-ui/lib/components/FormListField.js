@@ -79,11 +79,11 @@ class FormListField extends Component {
     return (
       <Table
         multiSelectable
-        onRowSelect={this.props.onSelect}
         data={ data }
         selected={ selected }
         schema={ this.props.table }
         getRowButtons={ this.getRowButtons.bind(this) }
+        onSelect={this.props.onSelect}
       />
     )
   }
@@ -94,7 +94,7 @@ class FormListField extends Component {
     const selectedItems = selected.map(i => data[i])
     return (
       <CrudDeleteModal
-        title={ this.props.label }
+        title={ this.props.itemTitle || this.props.label }
         active={ this.props.deleteActive ? true : false}
         items={ selectedItems }
         onCancel={ this.props.cancelDeleteWindow }
@@ -109,7 +109,7 @@ class FormListField extends Component {
       <CrudFormModal
         valid={ this.props.valid }
         errors={ this.props.errors }
-        title={ this.props.label }
+        title={ this.props.itemTitle || this.props.label }
         active={ this.props.editActive ? true : false}
         onCancel={ this.props.cancelEditWindow }
         onConfirm={ () => {
