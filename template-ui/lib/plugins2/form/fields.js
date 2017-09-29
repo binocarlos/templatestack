@@ -208,7 +208,8 @@ const fields = {
   checkbox,
   date,
   time,
-  multipleCheckbox
+  multipleCheckbox,
+  list
 }
 
 export default fields

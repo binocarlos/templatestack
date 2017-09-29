@@ -35,7 +35,9 @@ const project = {
     validate: [validators.required]
   },
   test: {
-    
+    title: 'Test List',
+    component: fields.list,
+    form: layer1
   }
 }
 
