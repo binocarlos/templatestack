@@ -83,14 +83,15 @@ export default connect(
           editItem(item, index)
         }
       },
-      toolbarClick: (name, selectedItems) => {
+      toolbarClick: (name, selectedItems, selected) => {
         if(name == 'delete') {
           dispatch(valueActions.set(`${id}_deleteWindow`, true))
         }
         else if(name == 'edit') {
           const item = selectedItems[0]
+          const itemIndex = selected[0]
           if(!item) return
-          editItem(item, 0)
+          editItem(item, itemIndex)
         }
         else if(name == 'add') {
           addItem()
@@ -110,6 +111,7 @@ export default connect(
         dispatch(routerActions.hook('formListCloseWindow', {
           id
         }))
+        dispatch(valueActions.set(`${id}_selected`, []))
       },
       touchEditWindow: () => {
         dispatch(formActions.touchAll(id, ownProps.schema))

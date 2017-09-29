@@ -41,7 +41,7 @@ class FormListField extends Component {
       <CrudButtonsListToolbar
         icons={icons}
         selected={this.props.selected}
-        onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
+        onClick={ (name) => this.props.toolbarClick(name, selectedItems, selected) }
       />
     )
 

@@ -42,8 +42,7 @@ const layer1 = {
   name: {
     title: 'Layer1',
     component: fields.input,
-    validate: [validators.required],
-    default: 'apples'
+    validate: [validators.required]
   },
   others: {
     component: fields.list,
