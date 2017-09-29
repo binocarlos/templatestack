@@ -1,46 +1,44 @@
 import React, { Component, PropTypes } from 'react'
 
-import Navigation from 'react-toolbox/lib/navigation'
+import { Button } from 'react-toolbox/lib/button'
+import ButtonMenu from './ButtonMenu'
+import IconMenu from './IconMenu'
 
 class CrudButtonsList extends Component {
 
   render() {
-    const buttons = []
+    let buttons = null
     const icons = this.props.icons
     const selected = (this.props.selected || []).length
 
     if(selected <= 0) {
-      buttons.push({
-        label: 'Add',
-        icon: icons.add,
-        primary: true,
-        raised: true,
-        onClick: () => this.props.onClick('add')
-      })
+      return (
+        <Button
+          label='Add'
+          icon={icons.add}
+          primary
+          raised
+          onClick={() => this.props.onClick('add')}
+        />
+      )
     }
-
-    if(selected == 1) {
-      buttons.push({
-        label: 'Edit',
-        icon: icons.edit,
-        onClick: () => this.props.onClick('edit')
-      })
+    else {
+      let options = []
+      if(selected == 1) {
+        options.push(['edit', 'Edit', icons.edit])
+      }
+      if(selected >=1) {
+        options.push(['delete', 'Delete', icons.delete])
+      }
+      return (
+        <ButtonMenu
+          label='Actions'
+          icon={icons.actions}
+          options={options}
+          onClick={(id) => this.props.onClick(id)}
+        />
+      )
     }
-
-    if(selected >= 1) {
-      buttons.push({
-        label: 'Delete',
-        icon: icons.delete,
-        onClick: () => this.props.onClick('delete')
-      })
-    }
-    
-    return (
-      <Navigation
-        type='horizontal'
-        actions={buttons}
-      />
-    )
   }
 }
 

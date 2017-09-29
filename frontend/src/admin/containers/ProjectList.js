@@ -25,7 +25,12 @@ export default connect(
     error: selectors.api.error(state, 'projectList')
   }),
   (dispatch) => ({
-    onSelect: (data) => dispatch(actions.project.list.setSelected(data)),
+    onSelect: (data) => {
+      console.log('-------------------------------------------');
+      console.log('-------------------------------------------');
+      console.dir(data)
+      dispatch(actions.project.list.setSelected(data))
+    },
     itemClick: (name, item, index) => {
       if(name == 'delete') {
         dispatch(actions.project.list.setSelected([index]))

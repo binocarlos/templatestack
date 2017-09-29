@@ -1,12 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 
-import Navigation from 'react-toolbox/lib/navigation'
+import IconMenu from './IconMenu'
 
 class CrudButtonsItem extends Component {
 
   render() {
     const buttons = []
     const icons = this.props.icons || {}
+
+    const options = [
+      ['edit', 'Edit', icons.edit],
+      ['delete', 'Delete', icons.delete]
+    ]
 
     buttons.push({
       label: this.props.hideLabels ? '' : 'Edit',
@@ -21,9 +26,9 @@ class CrudButtonsItem extends Component {
     })
     
     return (
-      <Navigation
-        type='horizontal'
-        actions={buttons}
+      <IconMenu
+        options={options}
+        onClick={this.props.onClick}
       />
     )
   }

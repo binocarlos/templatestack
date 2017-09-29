@@ -17,6 +17,9 @@
 .injectedTitle {
   display: inline-block;
   margin-right: 20px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .boldTitle {

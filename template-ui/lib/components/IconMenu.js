@@ -36,7 +36,7 @@ export class IconMenuComponent extends Component {
         position='topRight' 
         menuRipple
         iconRipple
-        theme={ this.props.theme || whiteIconMenuTheme }
+        theme={ this.props.theme || (this.props.dark ? null : whiteIconMenuTheme) }
       >
         {
           (this.props.options || []).map(this.getMenuItem.bind(this))

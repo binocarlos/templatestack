@@ -70,10 +70,10 @@ class ProjectList extends Component {
       <Table
         showHead
         multiSelectable
-        onRowSelect={this.props.onSelect}
         data={ data }
         selected={ selected }
         schema={ tables.project }
+        onSelect={this.props.onSelect}
         getRowButtons={ this.getRowButtons.bind(this) }
       />
     )
