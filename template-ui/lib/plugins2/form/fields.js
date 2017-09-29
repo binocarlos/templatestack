@@ -214,7 +214,9 @@ export const time = ({
 export const list = FormListField
 
 export const section = (props) => {
-  const fields = utils.getFields(props.schema)
+  const fields = utils.getFields(props.schema, {
+    prependName: props.prependName
+  })
   const LayoutComponent = props.layoutComponent || FormLayout
   return (
     <LayoutComponent

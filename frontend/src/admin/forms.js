@@ -81,6 +81,10 @@ const options = {
   cost: models.number({
     title: 'Cost'
   }),
+  color: {
+    title: 'Color',
+    validate: [validators.required]
+  },
   format: {
     title: 'Format',
     horizontal: true,
@@ -111,6 +115,7 @@ const project = utils.composeParts([{
   },
   options: {
     containerComponent: fields.section,
+    prependName: 'options',
     schema: options
   }
 },

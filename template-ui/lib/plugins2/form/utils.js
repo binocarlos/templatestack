@@ -11,12 +11,14 @@ const composeParts = (parts = []) => {
   }, {})
 }
 
-const getFields = (schema = {}, injectProps = {}) => {
+const getFields = (schema = {}, opts = {}) => {
+  let { injectProps, prependName } = opts
+  prependName = prependName ? prependName + '.' : ''
   return Object.keys(schema || {}).reduce((all, name, i) => {
     const field = schema[name]
     const fieldProps = Object.assign({}, {
       key: i,
-      name,
+      name: prependName + name,
       component: fields.input,
       label: field.title || name.replace(/^\w/, (s) => s.toUpperCase()),
     }, injectProps, field)
