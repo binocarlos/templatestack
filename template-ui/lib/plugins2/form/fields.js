@@ -6,6 +6,9 @@ import TimePicker from 'react-toolbox/lib/time_picker'
 import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio'
 import Dropdown from 'react-toolbox/lib/dropdown'
 
+import ErrorText from '../../components/ErrorText'
+import FormListField from '../../containers/FormListField'
+
 import theme from './theme.css'
 
 export const input = ({
@@ -14,17 +17,14 @@ export const input = ({
   meta: { touched, error },
   ...props
 }) => {
-  
-  const config = props.config || {}
-    
   return (
     <Input
       label={label}
       error={touched && error ? error : null}
       spellCheck={false}
       type={ props.type }
-      multiline={ config.multiline }
-      rows={ config.rows }
+      multiline={ props.multiline }
+      rows={ props.rows }
       {...input}
     />
   )
@@ -52,7 +52,6 @@ export const radio = ({
   meta: { touched, error },
   ...props
 }) => {
-  const config = props.config || {}
   const useTheme = config.horizontal ?
     { 
       field: theme.horizontal
@@ -88,12 +87,10 @@ export const notes = ({
   meta: { touched, error },
   ...props
 }) => {
-  const config = props.config || {}
-  
   return (
     <div>
       <div className={ theme.notesTitle }>{ label }</div>
-      <div className={ theme.notesContent }>{ config.notes }</div>
+      <div className={ theme.notesContent }>{ props.notes }</div>
     </div>
   )
 }
@@ -183,6 +180,24 @@ export const time = ({
     {...input}
   />
 )
+
+export const list = ({
+  input,
+  label,
+  meta,
+  ...props
+}) => {
+  return (
+    <div>
+      <h5>{ label }</h5>
+      <FormListField
+        formName={ meta.form }
+        fieldName={ input.name }
+        data={ input.value || [] }
+      />
+    </div>
+  )
+}
 
 
 const fields = {

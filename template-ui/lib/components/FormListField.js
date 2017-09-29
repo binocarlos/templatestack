@@ -1,17 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 
 import ProgressBar from 'react-toolbox/lib/progress_bar'
-import ToolbarLayout from 'template-ui/lib/components/layout2/ToolbarLayout'
-import Toolbar from 'template-ui/lib/components/Toolbar'
-import Table from 'template-ui/lib/components/Table'
-import CrudButtonsList from 'template-ui/lib/components/CrudButtonsList'
-import CrudButtonsItem from 'template-ui/lib/components/CrudButtonsItem'
-import CrudDeleteModal from 'template-ui/lib/components/CrudDeleteModal'
+import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table'
+import ToolbarLayout from './layout2/ToolbarLayout'
+import Toolbar from './Toolbar'
+import CrudButtonsList from './CrudButtonsList'
+import CrudButtonsItem from './CrudButtonsItem'
+import CrudDeleteModal from './CrudDeleteModal'
 
-import horizontal from 'template-ui/lib/components/theme/horizontal.css'
+import horizontal from './theme/horizontal.css'
 
-import config from '../config'
-import tables from '../tables'
+import icons from '../utils/icons'
 
 class ProjectList extends Component {
 
@@ -22,7 +21,7 @@ class ProjectList extends Component {
 
     const buttons = (
       <CrudButtonsList
-        icons={config.icons}
+        icons={icons}
         selected={this.props.selected}
         onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
       />
@@ -37,18 +36,9 @@ class ProjectList extends Component {
 
     return (
       <Toolbar
-        leftIcon={ config.icons.project }
+        leftIcon={ icons.project }
         title={ title }
         leftContent={ buttons }
-      />
-    )
-  }
-
-  getRowButtons(item, i) {
-    return (
-      <CrudButtonsItem
-        icons={config.icons}
-        onClick={ (name) => this.props.itemClick(name, item.id, i) }
       />
     )
   }
@@ -57,24 +47,25 @@ class ProjectList extends Component {
     const data = this.props.data || []
     const selected = this.props.selected || []
     const selectedItems = selected.map(i => data[i])
-    if(!this.props.loaded) {
-      return (
-        <ProgressBar
-          type="circular"
-          mode="indeterminate"
-        />
-      )
-    }
-
     return (
-      <Table
-        multiSelectable
-        onRowSelect={this.props.onSelect}
-        data={ data }
-        selected={ selected }
-        schema={ tables.project }
-        getRowButtons={ this.getRowButtons.bind(this) }
-      />
+      <Table multiSelectable onRowSelect={this.props.onSelect} style={{ marginTop: 10 }}>
+        <TableHead>
+          <TableCell>Name</TableCell>
+          <TableCell><span></span></TableCell>
+        </TableHead>
+        {data.map((item, i) => (
+          <TableRow key={i} selected={selected.indexOf(i) >= 0}>
+            <TableCell>{item.name}</TableCell>
+            <TableCell numeric>
+              <CrudButtonsItem
+                icons={config.icons}
+                onClick={ (name) => this.props.itemClick(name, item.id, i) }
+                hideLabels
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </Table>
     )
   }
 

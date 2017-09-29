@@ -9,13 +9,13 @@ class CrudButtonsItem extends Component {
     const icons = this.props.icons || {}
 
     buttons.push({
-      label: 'Edit',
+      label: this.props.hideLabels ? '' : 'Edit',
       icon: icons.edit,
       onClick: () => this.props.onClick('edit')
     })
     
     buttons.push({
-      label: 'Delete',
+      label: this.props.hideLabels ? '' : 'Delete',
       icon: icons.delete,
       onClick: () => this.props.onClick('delete')
     })

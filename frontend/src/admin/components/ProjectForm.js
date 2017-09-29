@@ -35,7 +35,7 @@ class ProjectForm extends Component {
 
   render() {
     const data = this.props.data || []
-    const fields = formUtils.getFields(forms.installation)
+    const fields = formUtils.getFields(forms.project)
     
     return (
       <ToolbarLayout

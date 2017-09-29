@@ -28,21 +28,37 @@ const authRegister = {
   }
 }
 
-const installation = {
+const project = {
   name: {
     title: 'Name',
     component: fields.input,
     validate: [validators.required]
   },
   test: {
-    component: fields.input
+    
+  }
+}
+
+const layer1 = {
+  name: {
+    title: 'Layer1',
+    component: fields.input,
+    validate: [validators.required]
+  }
+}
+
+const layer2 = {
+  name: {
+    title: 'Layer2',
+    component: fields.input,
+    validate: [validators.required]
   }
 }
 
 const forms = {
   authLogin,
   authRegister,
-  installation
+  project
 }
 
 export default forms
