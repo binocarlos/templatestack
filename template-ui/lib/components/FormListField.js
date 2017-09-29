@@ -98,7 +98,7 @@ class FormListField extends Component {
         active={ this.props.deleteActive ? true : false}
         items={ selectedItems }
         onCancel={ this.props.cancelDeleteWindow }
-        onConfirm={ this.props.confirmDeleteWindow }
+        onConfirm={ () => this.props.confirmDeleteWindow(selected) }
       />
     )
   }

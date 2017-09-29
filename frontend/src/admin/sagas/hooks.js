@@ -62,7 +62,8 @@ const Hooks = (opts = {}) => {
     formListWindowEdit: form.listWindowEdit,
     formListCloseWindow: form.listCloseWindow,
     formListConfirmWindow: form.listConfirmWindow,
-
+    formListDelete: form.listDelete,
+    
     // api sagas
     projectList: project.list 
   }

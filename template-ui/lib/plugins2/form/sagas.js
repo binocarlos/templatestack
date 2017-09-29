@@ -32,7 +32,6 @@ const FormSagas = (opts = {}) => {
     defaults: DEFAULTS
   })
 
-
   function* listWindowAdd(payload) {
     const { id, item, schema } = payload
     const defaults = formUtils.getDefaults(schema)
@@ -40,7 +39,6 @@ const FormSagas = (opts = {}) => {
     yield put(valueActions.set(`${id}_editIndex`, null))
     yield put(valueActions.set(`${id}_editWindow`, true))
   }
-
 
   function* listWindowEdit(payload) {
     const { id, item, index } = payload
@@ -70,11 +68,19 @@ const FormSagas = (opts = {}) => {
     }
   }
 
+  function* listDelete(payload) {
+    const { form, field, selected } = payload
+    const values = yield select(state => selectors.values(state, form))
+    const value = (values[field] || []).filter((v, i) => selected.indexOf(i) >= 0 ? false : true)
+    yield put(actions.change(form, field, value))
+  }
+
   return {
     listWindowAdd,
     listWindowEdit,
     listCloseWindow,
-    listConfirmWindow
+    listConfirmWindow,
+    listDelete
   }
  
 }

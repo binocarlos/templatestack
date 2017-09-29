@@ -108,10 +108,10 @@ export default connect(
           form,
           field
         }))
+        dispatch(valueActions.set(`${id}_selected`, []))
         dispatch(routerActions.hook('formListCloseWindow', {
           id
         }))
-        dispatch(valueActions.set(`${id}_selected`, []))
       },
       touchEditWindow: () => {
         dispatch(formActions.touchAll(id, ownProps.schema))
@@ -119,7 +119,13 @@ export default connect(
       cancelDeleteWindow: () => {
         dispatch(valueActions.set(`${id}_deleteWindow`, false))
       },
-      confirmDeleteWindow: () => {
+      confirmDeleteWindow: (selected) => {
+        dispatch(routerActions.hook('formListDelete', {
+          form,
+          field,
+          selected
+        }))
+        dispatch(valueActions.set(`${id}_selected`, []))
         dispatch(valueActions.set(`${id}_deleteWindow`, false))
       }
     }
