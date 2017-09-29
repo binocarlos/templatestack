@@ -46,6 +46,11 @@ export const routeConfig = processRoutes({
   }
 }, config.basepath)
 
+export const redirects = {
+  projectAdd: () => '/projects/add',
+  projectEdit: (id) => `/projects/edit/${id}`
+}
+
 export const routes = (
   <Application>
     <Route home>

@@ -25,6 +25,6 @@ export default connect(
     loading: selectors.api.loading(state, 'authRegister')
   }),
   (dispatch) => ({
-    submit: () => dispatch(actions.router.hook('authRegisterSubmit'))
+    submitForm: () => dispatch(actions.router.hook('authRegisterSubmit'))
   })
 )(RegisterFormContainer)

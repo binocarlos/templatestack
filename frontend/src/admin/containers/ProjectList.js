@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import selectors from '../selectors'
 import actions from '../actions'
 
+import { redirects } from '../routes'
+
 import ProjectList from '../components/ProjectList'
 
 class ProjectListContainer extends Component {
@@ -31,7 +33,7 @@ export default connect(
         return
       }
       else if(name == 'edit') {
-        dispatch(actions.router.redirect(`/projects/edit/${id}`))
+        dispatch(actions.router.redirect(redirects.projectEdit(id)))
       }
     },
     toolbarClick: (name, selectedItems) => {
@@ -41,11 +43,11 @@ export default connect(
       else if(name == 'edit') {
         const item = selectedItems[0]
         if(item) {
-          dispatch(actions.router.redirect(`/projects/edit/${item.id}`))
+          dispatch(actions.router.redirect(redirects.projectEdit(item.id)))
         }
       }
       else if(name == 'add') {
-        dispatch(actions.router.redirect('/projects/add'))
+        dispatch(actions.router.redirect(redirects.projectAdd()))
       }
     },
     cancelDeleteWindow: () => {

@@ -45,7 +45,7 @@ class Application extends Component {
         <SnackBar
           active={this.props.snackbar ? true : false}
           label={this.props.snackbar || ''}
-          timeout={5000}
+          timeout={3000}
           onTimeout={() => this.props.clearSnackbar()}
         />
       </Layout>

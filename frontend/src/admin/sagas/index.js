@@ -9,8 +9,6 @@ import actions from '../actions'
 import config from '../config'
 import Hooks from './hooks'
 
-const getRoute = (path) => config.basepath + path
-
 const hooks = Hooks({
   apis
 })
@@ -18,7 +16,7 @@ const hooks = Hooks({
 const router = RouterSaga({
   getHook: hooks.getHook,
   getRouteHooks: hooks.getRouteHooks,
-  getRoute
+  getRoute: (path) => config.basepath + path
 })
 
 function* initialize() {

@@ -39,7 +39,7 @@ class Application extends Component {
         </AppBar>
         <Panel bodyScroll={ bodyScroll } style={ useStyle }>
           { this.props.children }
-        </Panel>       
+        </Panel>      
         <SnackBar
           active={this.props.snackbar ? true : false}
           label={this.props.snackbar || ''}

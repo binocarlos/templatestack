@@ -1,5 +1,5 @@
-import models from 'template-ui/lib/plugins/form/models'
-import fields from 'template-ui/lib/plugins/form/fields'
+import models from 'template-ui/lib/plugins2/form/models'
+import fields from 'template-ui/lib/plugins2/form/fields'
 import validators from 'template-tools/src/utils/validators'
 
 const authLogin = {
@@ -34,7 +34,9 @@ const installation = {
     component: fields.input,
     validate: [validators.required]
   },
-  test: {}
+  test: {
+    component: fields.input
+  }
 }
 
 const forms = {

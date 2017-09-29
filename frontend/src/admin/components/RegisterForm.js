@@ -15,7 +15,7 @@ class RegisterForm extends Component {
         submitTitle='Register'
         loading={ this.props.loading }
         error={ this.props.error }
-        submit={ this.props.submit }
+        submit={ this.props.submitForm }
       >
         <FormLayout
           fields={ fields }

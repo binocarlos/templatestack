@@ -6,7 +6,7 @@ import TimePicker from 'react-toolbox/lib/time_picker'
 import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio'
 import Dropdown from 'react-toolbox/lib/dropdown'
 
-import theme from './fields.css'
+import theme from './theme.css'
 
 export const input = ({
   input,
