@@ -35,7 +35,7 @@ export default connect(
         return
       }
       else if(name == 'edit') {
-        dispatch(actions.router.redirect(redirects.projectEdit(item.id)))
+        dispatch(actions.router.redirect(redirects.projectListEdit(item.id)))
       }
     },
     toolbarClick: (name, selectedItems) => {
@@ -45,11 +45,11 @@ export default connect(
       else if(name == 'edit') {
         const item = selectedItems[0]
         if(item) {
-          dispatch(actions.router.redirect(redirects.projectEdit(item.id)))
+          dispatch(actions.router.redirect(redirects.projectListEdit(item.id)))
         }
       }
       else if(name == 'add') {
-        dispatch(actions.router.redirect(redirects.projectAdd()))
+        dispatch(actions.router.redirect(redirects.projectListAdd()))
       }
     },
     cancelDeleteWindow: () => {

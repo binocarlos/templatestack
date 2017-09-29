@@ -2,6 +2,7 @@ import models from 'template-ui/lib/plugins2/form/models'
 import fields from 'template-ui/lib/plugins2/form/fields'
 import validators from 'template-tools/src/utils/validators'
 
+import config from './config'
 import tables from './tables'
 
 const authLogin = {

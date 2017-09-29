@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 
+import { redirects } from '../routes'
+
 import selectors from '../selectors'
 import actions from '../actions'
 
@@ -26,9 +28,13 @@ export default connect(
     error: selectors.api.error(state, 'projectForm')
   }),
   (dispatch) => ({
-    toolbarClick: (name) => {
-      console.log('-------------------------------------------');
-      console.log(name)
+    toolbarClick: (name, props) => {
+      if(name == 'cancel') {
+        dispatch(actions.router.redirect(redirects.projectFormCancel()))
+      }
+      else if(name == 'save') {
+        dispatch(actions.router.hook('projectSave'))  
+      }
     }
   })
 )(ProjectFormContainer)

@@ -34,7 +34,12 @@ export const routeConfig = processRoutes({
     manualScroll: true,
     hooks: ['projectList'],
     '/add': {
-
+      formmode: 'add',
+      hooks: ['projectAdd']
+    },
+    '/edit/:id': {
+      formmode: 'edit',
+      hooks: ['projectEdit']
     }
   },
   '/help': {
@@ -47,8 +52,9 @@ export const routeConfig = processRoutes({
 }, config.basepath)
 
 export const redirects = {
-  projectAdd: () => '/projects/add',
-  projectEdit: (id) => `/projects/edit/${id}`
+  projectListAdd: () => '/projects/add',
+  projectListEdit: (id) => `/projects/edit/${id}`,
+  projectFormCancel: () => '/projects'
 }
 
 export const routes = (

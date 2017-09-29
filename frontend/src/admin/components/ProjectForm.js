@@ -22,14 +22,14 @@ class ProjectForm extends Component {
         valid={this.props.valid}
         loading={this.props.loading}
         icons={config.icons}
-        onClick={ (name) => this.props.toolbarClick(name) }
+        onClick={ (name) => this.props.toolbarClick(name, this.props) }
       />
     )
 
     return (
       <Toolbar
         leftIcon={ config.icons.project }
-        title='Project Form'
+        title='Project'
         leftContent={ buttons }
       />
     )

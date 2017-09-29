@@ -4,7 +4,9 @@ import { delay } from 'redux-saga'
 import options from 'template-tools/src/utils/options'
 
 import apiSaga from 'template-ui/lib/plugins2/api/saga'
+import formUtils from 'template-ui/lib/plugins2/form/utils'
 
+import forms from '../forms'
 import config from '../config'
 import actions from '../actions'
 import selectors from '../selectors'
@@ -39,8 +41,38 @@ const ProjectSagas = (opts = {}) => {
     }
   }
 
+  function* add() {
+    const defaults = formUtils.getDefaults(forms.project)
+    yield put(actions.form.initialize('project', defaults))
+  }
+
+  function* edit() {
+    const id = yield select(state => selectors.router.param(state, 'id'))
+
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(id)
+  }
+
+  function* save() {
+    const valid = yield select(state => selectors.form.valid(state, 'project'))
+
+    if(!valid) {
+      yield put(actions.form.touchAll('project', forms.project))
+      return
+    }
+
+    const values = yield select(state => selectors.form.values(state, 'project'))
+
+    console.log(JSON.stringify(values, null, 4))
+    
+  }
+
   return {
-    list
+    list,
+    add,
+    edit,
+    save
   }
 }
 
