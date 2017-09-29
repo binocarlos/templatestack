@@ -5,22 +5,29 @@ import fields from './fields'
 const processSchema = (schema = {}) => {
   return Object.keys(schema || {}).reduce((all, fieldname) => {
     const opts = schema[fieldname] || {}
-    const name = opts.name || fieldname
+    if(opts._include) {
+      const processed = processSchema(opts._include)
+      Object.keys(processed || {}).forEach(key => {
+        all[key] = processed[key]
+      })
+    }
+    else {
+      const name = opts.name || fieldname
 
-    all[fieldname] = Object.assign({}, {
-      name,
-      component: fields.input,
-      label: opts.title || name.replace(/^\w/, (s) => s.toUpperCase()),
-    }, opts)
+      all[fieldname] = Object.assign({}, {
+        name,
+        component: fields.input,
+        label: opts.title || name.replace(/^\w/, (s) => s.toUpperCase()),
+      }, opts)
+    }
 
     return all
   }, {})
 }
 
 const getFields = (schema = {}, injectProps = {}) => {
-  const processedSchema = processSchema(schema)
-  return Object.keys(processedSchema || {}).reduce((all, name, i) => {
-    const fieldProps = Object.assign({}, processedSchema[name], injectProps, {
+  return Object.keys(schema || {}).reduce((all, name, i) => {
+    const fieldProps = Object.assign({}, schema[name], injectProps, {
       key: i
     })
     all[name] = (
