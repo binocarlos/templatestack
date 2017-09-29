@@ -8,7 +8,7 @@ import actions from '../actions'
 import RegisterForm from '../components/RegisterForm'
 
 const Form = reduxForm({
-  name: 'authRegister'
+  form: 'authRegister'
 })(RegisterForm)
 
 class RegisterFormContainer extends Component {

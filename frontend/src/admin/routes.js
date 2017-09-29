@@ -26,9 +26,11 @@ export const routeConfig = processRoutes({
   '/': {},
   '/dashboard': {},
   '/layout': {
+    user: true,
     manualScroll: true
   },
   '/projects': {
+    user: true,
     manualScroll: true,
     hooks: ['projectList'],
     '/add': {

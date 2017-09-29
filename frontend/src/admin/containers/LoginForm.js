@@ -8,7 +8,7 @@ import actions from '../actions'
 import LoginForm from '../components/LoginForm'
 
 const Form = reduxForm({
-  name: 'authLogin'
+  form: 'authLogin'
 })(LoginForm)
 
 class LoginFormContainer extends Component {
@@ -25,6 +25,6 @@ export default connect(
     loading: selectors.api.loading(state, 'authLogin')
   }),
   (dispatch) => ({
-    submit: () => dispatch(actions.router.hook('authLoginSubmit'))
+    submitForm: () => dispatch(actions.router.hook('authLoginSubmit'))
   })
 )(LoginFormContainer)

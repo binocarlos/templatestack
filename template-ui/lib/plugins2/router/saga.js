@@ -45,6 +45,10 @@ const RouterSaga = (opts = {}) => {
   }
 
   function* runRedirect(path) {
+    if(path.indexOf('/') != 0) {
+      yield call(runHook, path)
+      return
+    }
     let route = getRoute(path)
     const routerParams = yield select(state => state.router.params)
     route = route.replace(/:(\w+)/g, name => {
@@ -60,7 +64,7 @@ const RouterSaga = (opts = {}) => {
   function* runHook(name, payload) {
     consoleTools.devRun(() => {
       console.log(`HOOK RUN: ${name}`)
-      console.dir(payload)
+      if(payload) console.dir(payload)
     })
     const hook = getHook(name)
     if(!hook) throw new Error(`no hook found for ${name}`)
@@ -99,10 +103,10 @@ const RouterSaga = (opts = {}) => {
   }
 
   function* initialize() {
-    yield call(handleChangeAction)
     yield takeEvery(TYPES.redirect, handleRedirectAction)
     yield takeEvery(TYPES.hook, handleHookAction)
     yield takeEvery(TYPES.changed, handleChangeAction)
+    yield call(handleChangeAction)
   }
 
   return {

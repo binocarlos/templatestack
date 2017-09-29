@@ -8,7 +8,7 @@ import actions from '../actions'
 import ProjectForm from '../components/ProjectForm'
 
 const Form = reduxForm({
-  name: 'installation'
+  form: 'installation'
 })(ProjectForm)
 
 class ProjectFormContainer extends Component {

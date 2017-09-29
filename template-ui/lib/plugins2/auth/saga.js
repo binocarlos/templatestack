@@ -132,7 +132,7 @@ const AuthSagas = (opts = {}) => {
     const loggedIn = yield select(state => selectors.loggedIn(state))
     const isRouteAuthenticated = loggedIn == userSetting
     if(!isRouteAuthenticated) {
-      yield put(routerSelectors.redirect('/'))
+      yield put(routerActions.redirect('/'))
       return false
     }
     return true

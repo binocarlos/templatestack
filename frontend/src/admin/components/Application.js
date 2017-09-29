@@ -19,10 +19,14 @@ class ApplicationComponent extends Component {
 
     const appbarMenu = (
       <div className={ horizontal.center }>
-        <IconText
-          icon='person'
-          text={ this.props.username }
-        />
+        {
+          this.props.user ? (
+            <IconText
+              icon='person'
+              text={ this.props.username }
+            />
+          ) : null
+        }
         <IconMenu
           options={ this.props.menuOptions }
           onClick={ this.props.onOptionClick }
