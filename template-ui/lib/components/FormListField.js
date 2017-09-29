@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { reduxForm } from 'redux-form'
 
 import ProgressBar from 'react-toolbox/lib/progress_bar'
 import Table from 'template-ui/lib/components/Table'
@@ -8,12 +9,28 @@ import CrudButtonsList from './CrudButtonsList'
 import CrudButtonsItem from './CrudButtonsItem'
 import CrudDeleteModal from './CrudDeleteModal'
 import CrudFormModal from './CrudFormModal'
+import FormLayout from './FormLayout'
 
+import formUtils from 'template-ui/lib/plugins2/form/utils'
 import horizontal from './theme/horizontal.css'
 
 import icons from '../utils/icons'
 
-class ProjectList extends Component {
+const FormContainer = reduxForm({
+  
+})(FormLayout)
+
+class FormListField extends Component {
+
+  getForm() {
+    const fields = formUtils.getFields(this.props.schema)
+    return (
+      <FormContainer
+        form={ this.props.id }
+        fields={ fields }
+      />
+    )
+  }
 
   getToolbar() {
     const data = this.props.data || []
@@ -94,7 +111,9 @@ class ProjectList extends Component {
         active={ this.props.editActive ? true : false}
         onCancel={ this.props.cancelEditWindow }
         onConfirm={ this.props.confirmEditWindow }
-      />
+      >
+        { this.getForm() }
+      </CrudFormModal>
     )
   }
 
@@ -114,4 +133,4 @@ class ProjectList extends Component {
   }
 }
 
-export default ProjectList
+export default FormListField

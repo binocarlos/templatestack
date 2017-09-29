@@ -30,6 +30,27 @@ const authRegister = {
   }
 }
 
+const layer2 = {
+  name: {
+    title: 'Layer2',
+    component: fields.input,
+    validate: [validators.required]
+  }
+}
+
+const layer1 = {
+  name: {
+    title: 'Layer1',
+    component: fields.input,
+    validate: [validators.required]
+  },
+  others: {
+    component: fields.list,
+    schema: layer2,
+    table: tables.layer2
+  }
+}
+
 const project = {
   name: {
     title: 'Name',
@@ -39,26 +60,11 @@ const project = {
   test: {
     title: 'Test List',
     component: fields.list,
-    form: layer1,
+    schema: layer1,
     table: tables.layer1
   }
 }
 
-const layer1 = {
-  name: {
-    title: 'Layer1',
-    component: fields.input,
-    validate: [validators.required]
-  }
-}
-
-const layer2 = {
-  name: {
-    title: 'Layer2',
-    component: fields.input,
-    validate: [validators.required]
-  }
-}
 
 const forms = {
   authLogin,

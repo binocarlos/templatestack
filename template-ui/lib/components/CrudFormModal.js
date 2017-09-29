@@ -13,7 +13,7 @@ class CrudFormModal extends Component {
         onCancel={ this.props.onCancel }
         onConfirm={ this.props.onConfirm }
       >
-        FORM HERE
+        { this.props.children }
       </Modal>
     )
   }

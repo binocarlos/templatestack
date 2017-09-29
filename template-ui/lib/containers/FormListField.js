@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { reduxForm } from 'redux-form'
 
 import routerActions from '../plugins2/router/actions'
 import valueActions from '../plugins2/value/actions'
