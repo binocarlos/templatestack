@@ -1,9 +1,12 @@
+import React, { Component, PropTypes } from 'react'
 import models from 'template-ui/lib/plugins2/form/models'
 import fields from 'template-ui/lib/plugins2/form/fields'
 import validators from 'template-tools/src/utils/validators'
 
 import config from './config'
 import tables from './tables'
+
+import TestModal from './components/TestModal'
 
 const authLogin = {
   username: {
@@ -62,9 +65,13 @@ const project = {
   test: {
     title: 'Test List',
     itemTitle: 'Thing',
+    allowEdit: false,
+    allowReorder: true,
     component: fields.list,
     schema: layer1,
-    table: tables.layer1
+    table: tables.layer1,
+    //formHook: 'projectTest',
+    itemWindowComponent: TestModal
   }
 }
 

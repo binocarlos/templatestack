@@ -27,11 +27,12 @@ export default connect(
     return {
       id,
       valid: formSelectors.valid(state, id),
+      values: formSelectors.values(state, id),
       errors: formSelectors.errors(state, id),
       data: ownProps.input.value || [],
-      selected: valueSelectors.get(state, `${id}_selected`) || [],
-      deleteActive: valueSelectors.get(state, `${id}_deleteWindow`),
-      editActive: valueSelectors.get(state, `${id}_editWindow`)
+      selected: formSelectors.list.selected(state, id),
+      deleteWindow: formSelectors.list.deleteWindow(state, id),
+      itemWindow: formSelectors.list.itemWindow(state, id),
     }
   },
   (dispatch, ownProps) => {
@@ -40,44 +41,37 @@ export default connect(
     const id = getFormId(ownProps)
     
     const editItem = (item, index) => {
-      if(ownProps.formHook) {
-        dispatch(routerActions.hook(ownProps.formHook, {
-          id,
-          mode: 'edit',
-          item,
-          index
-        }))
-      }
-      else {
-        dispatch(routerActions.hook('formListWindowEdit', {
-          id,
-          item,
-          index
-        }))
-      }
+      const hook = ownProps.formHook || 'formList'
+      dispatch(routerActions.hook(hook, {
+        action: 'edit',
+        id,
+        item,
+        index
+      }))
     }
 
     const addItem = () => {
-      if(ownProps.formHook) {
-        dispatch(routerActions.hook(ownProps.formHook, {
-          id,
-          mode: 'add'
-        }))
-      }
-      else {
-        dispatch(routerActions.hook('formListWindowAdd', {
-          id,
-          schema: ownProps.schema
-        }))
-      }
+      const hook = ownProps.formHook || 'formList'
+      dispatch(routerActions.hook(hook, {
+        action: 'add',
+        id,
+        schema: ownProps.schema
+      }))
     }
 
     return {
       onSelect: (data) => dispatch(valueActions.set(`${id}_selected`, data)),
       itemClick: (name, item, index) => {
         if(name == 'delete') {
-          dispatch(valueActions.set(`${id}_selected`, [index]))
-          dispatch(valueActions.set(`${id}_deleteWindow`, true))
+          dispatch(routerActions.hook('formList', {
+            action: 'selected',
+            id,
+            selected: [index],
+          }))
+          dispatch(routerActions.hook('formList', {
+            action: 'del',
+            id,
+          }))
         }
         else if(name == 'edit') {
           editItem(item, index)
@@ -85,7 +79,10 @@ export default connect(
       },
       toolbarClick: (name, selectedItems, selected) => {
         if(name == 'delete') {
-          dispatch(valueActions.set(`${id}_deleteWindow`, true))
+          dispatch(routerActions.hook('formList', {
+            action: 'del',
+            id,
+          }))
         }
         else if(name == 'edit') {
           const item = selectedItems[0]
@@ -97,36 +94,55 @@ export default connect(
           addItem()
         }
       },
-      cancelEditWindow: () => {
-        dispatch(routerActions.hook('formListCloseWindow', {
+      cancelItemWindow: () => {
+        dispatch(routerActions.hook('formList', {
+          action: 'cancel',
           id
         }))
       },
-      confirmEditWindow: () => {
-        dispatch(routerActions.hook('formListConfirmWindow', {
+      confirmItemWindow: (values) => {
+        dispatch(routerActions.hook('formList', {
+          action: 'confirmItem',
           id,
           form,
-          field
+          field,
+          values
         }))
-        dispatch(valueActions.set(`${id}_selected`, []))
-        dispatch(routerActions.hook('formListCloseWindow', {
+        dispatch(routerActions.hook('formList', {
+          action: 'selected',
+          id,
+          selected: [],
+        }))
+        dispatch(routerActions.hook('formList', {
+          action: 'cancel',
           id
         }))
       },
-      touchEditWindow: () => {
+      touchItemWindow: () => {
         dispatch(formActions.touchAll(id, ownProps.schema))
       },
       cancelDeleteWindow: () => {
-        dispatch(valueActions.set(`${id}_deleteWindow`, false))
+        dispatch(routerActions.hook('formList', {
+          action: 'cancel',
+          id
+        }))
       },
       confirmDeleteWindow: (selected) => {
-        dispatch(routerActions.hook('formListDelete', {
+        dispatch(routerActions.hook('formList', {
+          action: 'confirmDelete',
           form,
           field,
           selected
         }))
-        dispatch(valueActions.set(`${id}_selected`, []))
-        dispatch(valueActions.set(`${id}_deleteWindow`, false))
+        dispatch(routerActions.hook('formList', {
+          action: 'selected',
+          id,
+          selected: [],
+        }))
+        dispatch(routerActions.hook('formList', {
+          action: 'cancel',
+          id
+        }))
       }
     }
   }

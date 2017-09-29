@@ -8,8 +8,9 @@ import Toolbar from './Toolbar'
 import CrudButtonsListToolbar from './CrudButtonsListToolbar'
 import CrudButtonsListItem from './CrudButtonsListItem'
 import CrudDeleteModal from './CrudDeleteModal'
-import CrudFormModal from './CrudFormModal'
+import Modal from './Modal'
 import FormLayout from './FormLayout'
+import FormModal from './FormModal'
 
 import formUtils from 'template-ui/lib/plugins2/form/utils'
 import horizontal from './theme/horizontal.css'
@@ -37,7 +38,7 @@ class FormListField extends Component {
     const selected = this.props.selected || []
     const selectedItems = selected.map(i => data[i])
 
-    const buttons = (
+    const buttons = this.props.getToolbarButtons ? this.props.getToolbarButtons(this.props) : (
       <CrudButtonsListToolbar
         icons={icons}
         selected={this.props.selected}
@@ -78,7 +79,8 @@ class FormListField extends Component {
     const selectedItems = selected.map(i => data[i])
     return (
       <Table
-        multiSelectable
+        selectable={ this.props.selectable }
+        multiSelectable={ this.props.multiSelectable }
         data={ data }
         selected={ selected }
         schema={ this.props.table }
@@ -95,7 +97,7 @@ class FormListField extends Component {
     return (
       <CrudDeleteModal
         title={ this.props.itemTitle || this.props.label }
-        active={ this.props.deleteActive ? true : false}
+        active={ this.props.deleteWindow ? true : false}
         items={ selectedItems }
         onCancel={ this.props.cancelDeleteWindow }
         onConfirm={ () => this.props.confirmDeleteWindow(selected) }
@@ -103,26 +105,26 @@ class FormListField extends Component {
     )
   }
 
-  getEditWindow() {
+  getItemWindow() {
     if(this.props.formHook) return null
+    if(this.props.itemWindowComponent) {
+      const ItemWindowComponent = this.props.itemWindowComponent
+      return (
+        <ItemWindowComponent {...this.props} />
+      )
+    }
     return (
-      <CrudFormModal
-        valid={ this.props.valid }
-        errors={ this.props.errors }
+      <FormModal
+        active={ this.props.itemWindow ? true : false}
         title={ this.props.itemTitle || this.props.label }
-        active={ this.props.editActive ? true : false}
-        onCancel={ this.props.cancelEditWindow }
-        onConfirm={ () => {
-          if(this.props.valid) {
-            this.props.confirmEditWindow()  
-          }
-          else {
-            this.props.touchEditWindow()   
-          }
-        }}
-      >
-        { this.getForm() }
-      </CrudFormModal>
+        form={ this.props.id }
+        schema={ this.props.schema }
+        values={ this.props.values }
+        onCancel={ this.props.cancelItemWindow }
+        onConfirm={ this.props.confirmItemWindow }
+        onTouchForm={ this.props.touchItemWindow }
+        valid={ this.props.valid }
+      />
     )
   }
 
@@ -135,7 +137,7 @@ class FormListField extends Component {
         { this.getToolbar() }
         { this.getTable() }
         { this.getDeleteWindow() }
-        { this.getEditWindow() }
+        { this.getItemWindow() }
       </div>
     )
   }

@@ -58,17 +58,14 @@ const Hooks = (opts = {}) => {
 
     // form sagas
 
-    formListWindowAdd: form.listWindowAdd,
-    formListWindowEdit: form.listWindowEdit,
-    formListCloseWindow: form.listCloseWindow,
-    formListConfirmWindow: form.listConfirmWindow,
-    formListDelete: form.listDelete,
+    formList: form.list,
     
     // api sagas
     projectList: project.list,
     projectAdd: project.add,
     projectEdit: project.edit,
     projectSave: project.save,
+    projectTest: project.test,
   }
 
   function* initialize() {

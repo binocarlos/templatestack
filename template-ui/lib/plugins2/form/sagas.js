@@ -25,39 +25,43 @@ const DEFAULTS = {
   
 }
 
-const FormSagas = (opts = {}) => {
-
-  opts = options.processor(opts, {
-    required: REQUIRED,
-    defaults: DEFAULTS
-  })
-
-  function* listWindowAdd(payload) {
+const List = (opts = {}) => {
+  function* add(payload) {
     const { id, item, schema } = payload
     const defaults = formUtils.getDefaults(schema)
     yield put(actions.initialize(id, defaults))
-    yield put(valueActions.set(`${id}_editIndex`, null))
-    yield put(valueActions.set(`${id}_editWindow`, true))
+    yield put(valueActions.set(`${id}_itemIndex`, null))
+    yield put(valueActions.set(`${id}_itemWindow`, true))
   }
 
-  function* listWindowEdit(payload) {
+  function* edit(payload) {
     const { id, item, index } = payload
     yield put(actions.initialize(id, item))
-    yield put(valueActions.set(`${id}_editIndex`, index))
-    yield put(valueActions.set(`${id}_editWindow`, true))
+    yield put(valueActions.set(`${id}_itemIndex`, index))
+    yield put(valueActions.set(`${id}_itemWindow`, true))
   }
 
-  function* listCloseWindow(payload) {
+  function* del(payload) {
+    const { id, item, index } = payload
+    yield put(valueActions.set(`${id}_deleteWindow`, true))
+  }
+
+  function* selected(payload) {
+    const { id, selected } = payload
+    yield put(valueActions.set(`${id}_selected`, selected))
+  }
+
+  function* cancel(payload) {
     const { id } = payload
-    yield put(valueActions.set(`${id}_editIndex`, null))
-    yield put(valueActions.set(`${id}_editWindow`, false))
+    yield put(valueActions.set(`${id}_itemIndex`, null))
+    yield put(valueActions.set(`${id}_itemWindow`, false))
+    yield put(valueActions.set(`${id}_deleteWindow`, false))
   }
 
-  function* listConfirmWindow(payload) {
-    const { id, form, field } = payload
-    const values = yield select(state => selectors.values(state, id))
-    const index = yield select(state => valueSelectors.get(state, `${id}_editIndex`))
-
+  function* confirmItem(payload) {
+    const { id, form, field, values } = payload
+    const index = yield select(state => selectors.list.itemIndex(state, id))
+    
     // add mode
     if(typeof(index) !== 'number') {
       yield put(arrayPush(form, field, values))
@@ -68,7 +72,7 @@ const FormSagas = (opts = {}) => {
     }
   }
 
-  function* listDelete(payload) {
+  function* confirmDelete(payload) {
     const { form, field, selected } = payload
     const values = yield select(state => selectors.values(state, form))
     const value = (values[field] || []).filter((v, i) => selected.indexOf(i) >= 0 ? false : true)
@@ -76,13 +80,34 @@ const FormSagas = (opts = {}) => {
   }
 
   return {
-    listWindowAdd,
-    listWindowEdit,
-    listCloseWindow,
-    listConfirmWindow,
-    listDelete
+    add,
+    edit,
+    del,
+    selected,
+    cancel,
+    confirmItem,
+    confirmDelete
+  } 
+}
+
+const FormSagas = (opts = {}) => {
+
+  opts = options.processor(opts, {
+    required: REQUIRED,
+    defaults: DEFAULTS
+  })
+
+  const list = List(opts)
+
+  function* listController(payload) {
+    const action = list[payload.action]
+    if(!action) throw new Error(`form saga list: no action found: ${payload.action}`)
+    yield call(action, payload)
   }
- 
+
+  return {
+    list: listController
+  }
 }
 
 export default FormSagas

@@ -68,11 +68,19 @@ const ProjectSagas = (opts = {}) => {
     
   }
 
+  function* test(payload) {
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('test project hook')
+    console.dir(payload)
+  }
+
   return {
     list,
     add,
     edit,
-    save
+    save,
+    test
   }
 }
 
