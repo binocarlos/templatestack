@@ -11,8 +11,6 @@ import formSelectors from '../plugins2/form/selectors'
 
 import FormListField from '../components/FormListField'
 
-import formUtils from '../plugins2/form/utils'
-
 class FormListFieldContainer extends Component {
   render() {
     return (
@@ -42,26 +40,31 @@ export default connect(
     const editItem = (item) => {
       if(ownProps.formHook) {
         dispatch(routerActions.hook(ownProps.formHook, {
+          id,
           mode: 'edit',
           item
         }))
       }
       else {
-        dispatch(formActions.initialize(id, item))
-        dispatch(valueActions.set(`${id}_editWindow`, true))
+        dispatch(routerActions.hook('formListWindowEdit', {
+          id,
+          item
+        }))
       }
     }
 
     const addItem = () => {
       if(ownProps.formHook) {
         dispatch(routerActions.hook(ownProps.formHook, {
+          id,
           mode: 'add'
         }))
       }
       else {
-        const defaults = formUtils.getDefaults(ownProps.schema)
-        dispatch(formActions.initialize(id, defaults))
-        dispatch(valueActions.set(`${id}_editWindow`, true))
+        dispatch(routerActions.hook('formListWindowAdd', {
+          id,
+          schema: ownProps.schema
+        }))
       }
     }
 
@@ -90,10 +93,14 @@ export default connect(
         }
       },
       cancelEditWindow: () => {
-        dispatch(valueActions.set(`${id}_editWindow`, false))
+        dispatch(routerActions.hook('formListCloseWindow', {
+          id
+        }))
       },
       confirmEditWindow: () => {
-        dispatch(valueActions.set(`${id}_editWindow`, false))
+        dispatch(routerActions.hook('formListConfirmWindow', {
+          id
+        }))
       },
       cancelDeleteWindow: () => {
         dispatch(valueActions.set(`${id}_deleteWindow`, false))

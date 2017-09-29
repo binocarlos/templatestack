@@ -8,6 +8,7 @@ import {
 import consoleTools from 'template-ui/lib/utils/console'
 
 import AuthSaga from 'template-ui/lib/plugins2/auth/saga'
+import FormSagas from 'template-ui/lib/plugins2/form/sagas'
 import systemSagas from 'template-ui/lib/plugins2/system/sagas'
 
 import ProjectSaga from './project'
@@ -36,6 +37,8 @@ const Hooks = (opts = {}) => {
     formTouchAll: actions.formutils.touchAll
   })
 
+  const form = FormSagas()
+
   const project = ProjectSaga({
     apis: apis.project
   })
@@ -52,6 +55,13 @@ const Hooks = (opts = {}) => {
     authLoginSubmit: auth.login,
     authRegisterSubmit: auth.register,
     authenticateRoute: auth.checkRoute,
+
+    // form sagas
+
+    formListWindowAdd: form.listWindowAdd,
+    formListWindowEdit: form.listWindowEdit,
+    formListCloseWindow: form.listCloseWindow,
+    formListConfirmWindow: form.listConfirmWindow,
 
     // api sagas
     projectList: project.list 
