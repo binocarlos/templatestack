@@ -2,36 +2,27 @@ import React, { Component, PropTypes } from 'react'
 import { Field } from 'redux-form'
 import fields from './fields'
 
-const processSchema = (schema = {}) => {
-  return Object.keys(schema || {}).reduce((all, fieldname) => {
-    const opts = schema[fieldname] || {}
-    if(opts._include) {
-      const processed = processSchema(opts._include)
-      Object.keys(processed || {}).forEach(key => {
-        all[key] = processed[key]
-      })
-    }
-    else {
-      const name = opts.name || fieldname
-
-      all[fieldname] = Object.assign({}, {
-        name,
-        component: fields.input,
-        label: opts.title || name.replace(/^\w/, (s) => s.toUpperCase()),
-      }, opts)
-    }
-
+const composeParts = (parts = []) => {
+  return parts.reduce((all, part) => {
+    Object.keys(part).forEach((key) => {
+      all[key] = part[key]
+    })
     return all
   }, {})
 }
 
 const getFields = (schema = {}, injectProps = {}) => {
   return Object.keys(schema || {}).reduce((all, name, i) => {
-    const fieldProps = Object.assign({}, schema[name], injectProps, {
-      key: i
-    })
+    const field = schema[name]
+    const fieldProps = Object.assign({}, {
+      key: i,
+      name,
+      component: fields.input,
+      label: field.title || name.replace(/^\w/, (s) => s.toUpperCase()),
+    }, injectProps, field)
+    const RenderComponent = fieldProps.containerComponent || Field
     all[name] = (
-      <Field {...fieldProps} />
+      <RenderComponent {...fieldProps} />
     )
     return all
   }, {})
@@ -46,7 +37,7 @@ const getDefaults = (schema = {}) => {
 }
 
 const utils = {
-  processSchema,
+  composeParts,
   getFields,
   getDefaults
 }

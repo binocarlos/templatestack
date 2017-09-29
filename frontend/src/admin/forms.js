@@ -9,7 +9,7 @@ import tables from './tables'
 
 import TestModal from './components/TestModal'
 
-const authLogin = {
+const auth = {
   username: {
     title: 'Email',
     component: fields.input,
@@ -17,36 +17,23 @@ const authLogin = {
   },
   password: {
     type: 'password',
-    component: fields.input,
     validate: validators.required
   }
 }
 
-const authRegister = {
-  username: {
-    title: 'Email',
-    component: fields.input,
-    validate: [validators.required,validators.email]
-  },
-  password: {
-    type: 'password',
-    component: fields.input,
-    validate: validators.required
-  }
-}
+const authLogin = auth
+const authRegister = auth
 
 const layer2 = {
   name: {
     title: 'Layer2',
-    component: fields.input,
     validate: [validators.required]
   }
 }
 
 const layer1 = {
   name: {
-    title: 'Layer1',
-    component: fields.input,
+    title: 'Layer1',  
     validate: [validators.required]
   },
   others: {
@@ -60,40 +47,75 @@ const layer1 = {
 const address = {
   address1: {
     title: 'Address 1',
-    component: fields.input,
     validate: [validators.required]
   },
   address2: {
     title: 'Address 2',
-    component: fields.input,
     validate: []
   },
   area: {
     title: 'Area',
-    component: fields.input,
     validate: []
   },
   city: {
     title: 'City',
-    component: fields.input,
     validate: [validators.required]
   },
   postcode: {
     title: 'Postcode',
-    component: fields.input,
     validate: [validators.required]
   }
 }
 
-const project = {
+const options = {
+  newsletter: {
+    title: 'Get newsletter?',
+    component: fields.checkbox
+  },
+  topics: {
+    title: 'Topics',
+    horizontal: true,
+    component: fields.multipleCheckbox,
+    source: ['science', 'art', 'history']
+  },
+  cost: models.number({
+    title: 'Cost'
+  }),
+  format: {
+    title: 'Format',
+    horizontal: true,
+    component: fields.radio,
+    source: ['A4', 'A3', 'A5']
+  },
+  country: {
+    title: 'Country',
+    component: fields.select,
+    source: ['UK', 'France', 'SPain']
+  },
+  about: {
+    title: 'Read This!',
+    notes: 'This is some text',
+    component: fields.notes
+  },
+  notes: {
+    title: 'Notes',
+    multiline: true,
+    rows: 5
+  }
+}
+
+const project = utils.composeParts([{
   name: {
     title: 'Name',
-    component: fields.input,
     validate: [validators.required]
   },
-  address: {
-    _include: address
-  },
+  options: {
+    containerComponent: fields.section,
+    schema: options
+  }
+},
+address,
+{
   test: {
     title: 'Test List',
     itemTitle: 'Thing',
@@ -105,13 +127,13 @@ const project = {
     //formHook: 'projectTest',
     itemWindowComponent: TestModal
   }
-}
+}])
 
 
 const forms = {
-  authLogin: utils.processSchema(authLogin),
-  authRegister: utils.processSchema(authRegister),
-  project: utils.processSchema(project)
+  authLogin,
+  authRegister,
+  project
 }
 
 export default forms

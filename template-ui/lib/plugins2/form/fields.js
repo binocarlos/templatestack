@@ -1,4 +1,7 @@
 import React, { Component, PropTypes } from 'react'
+import {
+  FormSection
+} from 'redux-form'
 import Input from 'react-toolbox/lib/input'
 import Checkbox from 'react-toolbox/lib/checkbox'
 import DatePicker from 'react-toolbox/lib/date_picker'
@@ -7,10 +10,23 @@ import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio'
 import Dropdown from 'react-toolbox/lib/dropdown'
 
 import ErrorText from '../../components/ErrorText'
+import FormLayout from '../../components/FormLayout'
 import FormListField from '../../containers/FormListField'
 
+import utils from './utils'
 import theme from './theme.css'
 
+const processOptions = (source) => {
+  return (source || []).map(s => {
+    if(typeof(s) == 'string') {
+      return {
+        value: s,
+        label: s
+      }
+    }
+    return s
+  })
+}
 export const input = ({
   input,
   label,
@@ -36,14 +52,18 @@ export const select = ({
   label,
   meta: { touched, error },
   ...props
-}) => (
-  <Dropdown
-    auto={false}
-    label={label}
-    error={touched && error ? error : null}
-    {...input}
-  />
-)
+}) => {
+  const source = processOptions(props.source)
+  return (
+    <Dropdown
+      auto={false}
+      label={label}
+      error={touched && error ? error : null}
+      source={source}
+      {...input}
+    />
+  )
+}
 
 // needs 'source' to power options
 export const radio = ({
@@ -58,12 +78,14 @@ export const radio = ({
     } :
     { }
 
+  const source = processOptions(props.source)
+
   return (
     <div>
       <div className={ theme.radioTitle }>{ label }</div>
       <RadioGroup {...input}>
         {
-          (props.source || []).map((item, i) => {
+          source.map((item, i) => {
             return (
               <RadioButton 
                 theme={ useTheme }
@@ -122,6 +144,13 @@ export const multipleCheckbox = ({
 }) => {
 
   let currentValue = input.value || []
+  const source = processOptions(props.source)
+
+  const useTheme = props.horizontal ?
+    { 
+      field: theme.horizontal
+    } :
+    { }
 
   return (
     <div>
@@ -129,7 +158,7 @@ export const multipleCheckbox = ({
         { label }
       </div>
       {
-        (props.source || []).map((item, i) => {
+        source.map((item, i) => {
           const isChecked = currentValue.indexOf(item.value) >= 0
           const checkOnChange = (val) => {
             currentValue = currentValue.filter(v => v != item.value)
@@ -141,6 +170,7 @@ export const multipleCheckbox = ({
           return (
             <Checkbox
               key={ i }
+              theme={ useTheme }
               name={item.value}
               label={item.label}
               checked={isChecked ? true : false}
@@ -183,6 +213,16 @@ export const time = ({
 
 export const list = FormListField
 
+export const section = (props) => {
+  const fields = utils.getFields(props.schema)
+  const LayoutComponent = props.layoutComponent || FormLayout
+  return (
+    <LayoutComponent
+      fields={ fields }
+      props={ props }
+    />
+  )
+}
 
 const fields = {
   input,
@@ -193,7 +233,8 @@ const fields = {
   date,
   time,
   multipleCheckbox,
-  list
+  list,
+  section
 }
 
 export default fields
