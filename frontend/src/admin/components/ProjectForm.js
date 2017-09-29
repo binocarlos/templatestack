@@ -4,19 +4,23 @@ import ToolbarLayout from 'template-ui/lib/components/layout2/ToolbarLayout'
 import Toolbar from 'template-ui/lib/components/Toolbar'
 import Section from 'template-ui/lib/components/Section'
 import CrudButtonsForm from 'template-ui/lib/components/CrudButtonsForm'
+import FormLayout from 'template-ui/lib/components/FormLayout'
 import LongText from 'template-ui/lib/components/widgets/LongText'
+
 import horizontal from 'template-ui/lib/components/theme/horizontal.css'
 
+import formUtils from 'template-ui/lib/plugins2/form/utils'
 import config from '../config'
+import forms from '../forms'
 
-class InstallationForm extends Component {
+class ProjectForm extends Component {
 
   getToolbar() {
 
     const buttons = (
       <CrudButtonsForm
         icons={config.icons}
-        onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
+        onClick={ (name) => this.props.toolbarClick(name) }
       />
     )
 
@@ -31,16 +35,20 @@ class InstallationForm extends Component {
 
   render() {
     const data = this.props.data || []
-    const selected = this.props.selected || []
-    const selectedItems = selected.map(i => data[i])
+    const fields = formUtils.getFields(forms.installation)
+    
     return (
       <ToolbarLayout
         toolbar={this.getToolbar()}
       >
-        <Section>FORM</Section>
+        <Section>
+          <FormLayout
+            fields={ fields }
+          />
+        </Section>
       </ToolbarLayout>
     )
   }
 }
 
-export default InstallationForm
+export default ProjectForm

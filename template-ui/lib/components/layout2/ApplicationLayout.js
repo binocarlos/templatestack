@@ -1,9 +1,25 @@
 import React, { Component } from 'react'
 import SnackBar from 'react-toolbox/lib/snackbar'
+import ProgressBar from 'react-toolbox/lib/progress_bar'
 import { Layout, NavDrawer, Sidebar, Panel } from 'react-toolbox/lib/layout'
 import { AppBar } from 'react-toolbox/lib/app_bar';
 
 class Application extends Component {
+
+  getChildren() {
+    if(!this.props.initialized) {
+      return (
+        <ProgressBar
+          type="circular"
+          mode="indeterminate"
+        />
+      )
+    }
+    else{
+      return this.props.children
+    }
+  }
+
   render () {
     return (
       <Layout>
@@ -24,7 +40,7 @@ class Application extends Component {
           { this.props.appbar }
         </AppBar>
         <Panel bodyScroll={ this.props.bodyScroll }>
-          { this.props.children }
+          { this.getChildren() }
         </Panel>       
         <SnackBar
           active={this.props.snackbar ? true : false}

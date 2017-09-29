@@ -7,10 +7,10 @@ import rootSaga from './sagas'
 import { routeConfig, routes } from './routes'
 import reducers from './reducers'
 
-// test2
 const router = routerForBrowser({
   routes: routeConfig
 })
+
 const Root = RootFactory(routes)
 
 const store = configureStore({

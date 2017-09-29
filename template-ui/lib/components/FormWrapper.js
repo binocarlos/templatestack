@@ -31,7 +31,7 @@ class FormWrapper extends Component {
             null
         }
         <div className={ formTheme.fieldsWrapper }>
-          { this.props.fields }
+          { this.props.fields || this.props.children }
         </div>
         <Loading loading={this.props.loading}>
           <Navigation

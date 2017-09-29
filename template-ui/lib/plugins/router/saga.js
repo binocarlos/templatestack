@@ -137,9 +137,14 @@ const RouterSaga = (opts = {}) => {
     yield fork(listeners)
   }
 
+  function* setupListeners() {
+    yield fork(listeners)
+  }
+
   return {
     initialize,
-    main
+    main,
+    setupListeners
   }
 }
 

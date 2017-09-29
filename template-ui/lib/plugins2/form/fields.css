@@ -1,0 +1,29 @@
+.padded {
+  margin-top: 10px;
+}
+
+.spaceBottom {
+  margin-bottom: 20px;
+}
+
+.horizontal {
+  display: inline-block !important; 
+  padding-right: 20px;
+}
+
+.radioTitle {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #999;
+}
+
+.notesTitle {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #999;
+}
+
+.notesContent {
+  font-size: .85em;
+  color: #999;
+}

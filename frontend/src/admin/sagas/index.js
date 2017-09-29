@@ -1,62 +1,33 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 import { delay } from 'redux-saga'
 
-import InitializeFormSaga from 'template-ui/lib/plugins/form/initializeSaga'
-import RouterSaga from 'template-ui/lib/plugins/router/saga'
-import AuthSaga from 'template-ui/lib/plugins/auth/saga'
-
-import * as actions from '../actions'
+import RouterSaga from 'template-ui/lib/plugins2/router/saga'
 
 import apis from '../api'
-import authApi from '../api/auth'
-import config from '../config'
-import forms from '../forms'
+import actions from '../actions'
 
-import Installation from './installation'
+import config from '../config'
 import Hooks from './hooks'
 
-const auth = AuthSaga({
-  actions: actions.auth,
-  apis: authApi,
-  basepath: config.basepath,
-  messageHook: 'systemMessage',
-  touchAllAction: actions.form.touchAll
-})
-
-const installation = Installation({
-  apis: {
-    list: apis.installationList,
-    get: apis.installationGet,
-    create: apis.installationCreate,
-    save: apis.installationSave,
-    del: apis.installationDel,
-    activate: apis.installationActivate
-  }
-})
+const getRoute = (path) => config.basepath + path
 
 const hooks = Hooks({
-  auth,
-  installation
+  apis
 })
 
 const router = RouterSaga({
-  hooks,
-  basepath: config.basepath
+  getHook: hooks.getHook,
+  getRouteHooks: hooks.getRouteHooks,
+  getRoute
 })
 
 function* initialize() {
   yield call(delay, 1)
-  yield all([
-    call(auth.status),
-    call(InitializeFormSaga(forms))
-  ])
-  yield put(actions.value.set('initialized', true))
-  yield call(router.initialize)
+  yield call(hooks.initialize)
+  yield fork(router.initialize)
+  yield put(actions.system.initialized())
 }
 
 export default function* root() {
-  yield all([
-    initialize,
-    router.main
-  ].map(fork))
+  yield fork(initialize)
 }

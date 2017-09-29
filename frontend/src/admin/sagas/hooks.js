@@ -1,58 +1,77 @@
 import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux-saga/effects'
 
-import {
-  getFormValues,
-  isValid
-} from 'redux-form'
+import { 
+  getRouteInfoHooks,
+  authenticateRoute
+} from 'template-ui/lib/plugins2/router/tools'
 
-import apiSaga from 'template-ui/lib/plugins/api/saga'
 import consoleTools from 'template-ui/lib/utils/console'
 
-import config from '../config'
-import * as actions from '../actions'
-import * as selectors from '../selectors'
+import AuthSaga from 'template-ui/lib/plugins2/auth/saga'
+import systemSagas from 'template-ui/lib/plugins2/system/sagas'
 
-const Logger = (type) => {
-  function* logger(req) {
-    consoleTools.devRun(() => {
-      console.log(`api ${type}: ${req.name}`)
-      console.dir(req)
-    })
-  }
-  return logger
+import ProjectSaga from './project'
+
+import config from '../config'
+import actions from '../actions'
+
+function* authLoginSuccess() {
+  yield put(actions.router.redirect('/dashboard'))
 }
 
+function* authRegisterSuccess() {
+  yield put(actions.router.redirect('/dashboard'))
+}
+
+function* authLogout() {
+  document.location = config.logout + '?redirect=' + config.basepath
+}
 
 const Hooks = (opts = {}) => {
 
-  const auth = opts.auth
-  const installation = opts.installation
+  const apis = opts.apis
 
-  function* authLoginSuccess(user) {
-    yield put(actions.router.redirect('/dashboard'))
+  const auth = AuthSaga({
+    apis: apis.auth,
+    formTouchAll: actions.formutils.touchAll
+  })
+
+  const project = ProjectSaga({
+    apis: apis.project
+  })
+
+  const hooks = {
+    
+    // system sagas
+    message: systemSagas.message,
+
+    // auth sagas
+    authLogout,
+    authLoginSuccess,
+    authRegisterSuccess,
+    authLoginSubmit: auth.login,
+    authRegisterSubmit: auth.register,
+    authenticateRoute: auth.checkRoute,
+
+    // api sagas
+    projectList: project.list 
   }
 
-  function* authRegisterSuccess(user) {
-    yield put(actions.router.redirect('/dashboard'))
-  }
-
-  function* systemMessage(message) {
-    yield put(actions.value.set('snackbar', message))
+  function* initialize() {
+    yield call(auth.status)
   }
 
   return {
-    authLogout: auth.logout,
-    authLoginSubmit: auth.login,
-    authLoginSuccess,
-    authRegisterSubmit: auth.register,
-    authRegisterSuccess,
-    apiRequest: Logger('request'),
-    apiResponse: Logger('response'),
-    apiError: Logger('error'),
-
-    installationList: installation.list,
+    hooks,
+    initialize,
+    getHook: (name) => hooks[name],
+    getRouteHooks: (routeInfo, mode = 'enter') => {
+      const routeInfoHooks = getRouteInfoHooks(routeInfo, mode)
+      return mode == 'enter' ? 
+        ['authenticateRoute'].concat(routeInfoHooks) :
+        routeInfoHooks
+    }
     
-    systemMessage
   }
 }
 

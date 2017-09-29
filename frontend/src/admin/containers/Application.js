@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import config from '../config'
-import * as actions from '../actions'
-import * as selectors from '../selectors'
+import actions from '../actions'
+import selectors from '../selectors'
 
 import Application from '../components/Application'
 
@@ -18,34 +18,35 @@ class ApplicationContainer extends Component {
 export default connect(
   (state, ownProps) => {
     const user = selectors.auth.user(state)
-    const username = selectors.auth.name(state)
+    const username = user ? user.username : null
     const menuOptions = user ?
       config.menu.user :
       config.menu.guest
-    const manualScroll = selectors.router.firstValue(state, 'manualScroll')
+    const manualScroll = selectors.system.manualScroll(state)
+    const menuOpen = selectors.system.menuOpen(state)
     return {
       title: config.title,
-      menuOpen: selectors.value(state, 'menuOpen'),
+      menuOpen,
       user,
       username,
       menuOptions,
       bodyScroll: manualScroll ? false : true,
-      initialized: selectors.value(state, 'initialized'),
-      snackbar: selectors.value(state, 'snackbar')
+      initialized: selectors.system.initialized(state),
+      snackbar: selectors.system.message(state)
     }
   },
   (dispatch) => {
     return {
-      toggleMenu: () => dispatch(actions.value.toggle('menuOpen')),
+      toggleMenu: () => dispatch(actions.system.toggleMenu()),
       onMenuClick: (id) => {
-        dispatch(actions.value.set('menuOpen', false))
+        dispatch(actions.system.setMenu(false))
         dispatch(actions.router.redirect(id))
       },
       onOptionClick: (id) => {
         dispatch(actions.router.redirect(id))
       },
       clearSnackbar: () => {
-        dispatch(actions.value.set('snackbar', ''))
+        dispatch(actions.system.message(''))
       }
     }
   }

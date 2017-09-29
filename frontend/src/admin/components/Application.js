@@ -10,12 +10,6 @@ import apptheme from './theme/application.css'
 
 class ApplicationComponent extends Component {
   render() {
-    if(!this.props.initialized) {
-      return (
-        <div>loading...</div>
-      )
-    }
-
     const mainMenu = (
       <ListMenu
         options={ this.props.menuOptions }

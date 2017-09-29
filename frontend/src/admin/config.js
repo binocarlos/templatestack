@@ -29,14 +29,13 @@ const config = {
   title:'Example Admin Panel',
   basepath:'/admin',
   api: '/api/v1',
+  logout: '/api/v1/auth/logout',
   // the default state for the value reducer
   initialState: {
     value: {
-      config: {},
       initialized: false,
       user: null,
-      menuOpen: false,
-      test: 10
+      menuOpen: false
     }
   },  
   menu: {
