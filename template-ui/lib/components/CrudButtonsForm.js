@@ -9,19 +9,21 @@ class CrudButtonsForm extends Component {
     const icons = this.props.icons
     const selected = (this.props.selected || []).length
 
-    buttons.push({
-      label: 'Cancel',
-      icon: icons.cancel,
-      onClick: () => this.props.onClick('cancel')
-    })
+    if(!this.props.loading) {
+      buttons.push({
+        label: 'Cancel',
+        icon: icons.cancel,
+        onClick: () => this.props.onClick('cancel')
+      })
 
-    buttons.push({
-      label: 'Save',
-      icon: icons.save,
-      onClick: () => this.props.onClick('save'),
-      raised: this.props.valid,
-      primary: this.props.valid
-    })
+      buttons.push({
+        label: 'Save',
+        icon: icons.save,
+        onClick: () => this.props.onClick('save'),
+        raised: this.props.valid,
+        primary: this.props.valid
+      })
+    }
     
     return (
       <Navigation

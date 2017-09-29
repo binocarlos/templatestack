@@ -22,6 +22,7 @@ class ProjectList extends Component {
 
     const buttons = (
       <CrudButtonsList
+        primary
         icons={config.icons}
         selected={this.props.selected}
         onClick={ (name) => this.props.toolbarClick(name, selectedItems) }

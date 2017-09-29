@@ -27,6 +27,7 @@ class CrudButtonsItem extends Component {
     
     return (
       <IconMenu
+        dark
         options={options}
         onClick={this.props.onClick}
       />

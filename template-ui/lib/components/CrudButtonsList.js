@@ -16,7 +16,8 @@ class CrudButtonsList extends Component {
         <Button
           label='Add'
           icon={icons.add}
-          primary
+          primary={this.props.primary}
+          accent={this.props.secondary}
           raised
           onClick={() => this.props.onClick('add')}
         />

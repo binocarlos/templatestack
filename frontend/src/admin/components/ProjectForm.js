@@ -19,6 +19,8 @@ class ProjectForm extends Component {
 
     const buttons = (
       <CrudButtonsForm
+        valid={this.props.valid}
+        loading={this.props.loading}
         icons={config.icons}
         onClick={ (name) => this.props.toolbarClick(name) }
       />

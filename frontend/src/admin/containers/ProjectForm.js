@@ -21,7 +21,9 @@ class ProjectFormContainer extends Component {
 
 export default connect(
   (state, ownProps) => ({
-    
+    valid: selectors.form.valid(state, 'project'),
+    loading: selectors.api.loading(state, 'projectForm'),
+    error: selectors.api.error(state, 'projectForm')
   }),
   (dispatch) => ({
     toolbarClick: (name) => {
