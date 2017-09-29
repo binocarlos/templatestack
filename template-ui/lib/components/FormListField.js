@@ -107,6 +107,8 @@ class FormListField extends Component {
     if(this.props.formHook) return null
     return (
       <CrudFormModal
+        valid={ this.props.valid }
+        errors={ this.props.errors }
         title={ this.props.label }
         active={ this.props.editActive ? true : false}
         onCancel={ this.props.cancelEditWindow }

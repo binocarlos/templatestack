@@ -30,9 +30,18 @@ const getFields = (schema = {}, injectProps = {}) => {
   }, {})
 }
 
+const getDefaults = (schema = {}) => {
+  return Object.keys(schema || {}).reduce((all, fieldname) => {
+    const opts = schema[fieldname] || {}
+    if(opts.default) all[fieldname] = opts.default
+    return all
+  }, {})
+}
+
 const utils = {
   processSchema,
-  getFields
+  getFields,
+  getDefaults
 }
 
 export default utils

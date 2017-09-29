@@ -4,10 +4,14 @@ import { reduxForm } from 'redux-form'
 
 import routerActions from '../plugins2/router/actions'
 import valueActions from '../plugins2/value/actions'
+import formActions from '../plugins2/form/actions'
 
 import valueSelectors from '../plugins2/value/selectors'
+import formSelectors from '../plugins2/form/selectors'
 
 import FormListField from '../components/FormListField'
+
+import formUtils from '../plugins2/form/utils'
 
 class FormListFieldContainer extends Component {
   render() {
@@ -24,6 +28,8 @@ export default connect(
     const id = getFormId(ownProps)
     return {
       id,
+      valid: formSelectors.valid(state, id),
+      errors: formSelectors.errors(state, id),
       data: ownProps.input.value || [],
       selected: valueSelectors.get(state, `${id}_selected`) || [],
       deleteActive: valueSelectors.get(state, `${id}_deleteWindow`),
@@ -41,6 +47,7 @@ export default connect(
         }))
       }
       else {
+        dispatch(formActions.initialize(id, item))
         dispatch(valueActions.set(`${id}_editWindow`, true))
       }
     }
@@ -52,6 +59,8 @@ export default connect(
         }))
       }
       else {
+        const defaults = formUtils.getDefaults(ownProps.schema)
+        dispatch(formActions.initialize(id, defaults))
         dispatch(valueActions.set(`${id}_editWindow`, true))
       }
     }
