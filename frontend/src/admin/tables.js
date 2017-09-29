@@ -2,15 +2,24 @@ const project = {
   name: {}
 }
 
-const project2 = {
+const layer1 = {
   name: {
     title: 'Name',
-    value: (row, props) => row.name
+    value: (row, props) => row.name + ' LAYER1'
+  }
+}
+
+const layer2 = {
+  name: {
+    title: 'Name',
+    value: (row, props) => row.name + ' LAYER2'
   }
 }
 
 const tables = {
-  project
+  project,
+  layer1,
+  layer2
 }
 
 export default tables

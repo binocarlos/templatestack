@@ -2,6 +2,8 @@ import models from 'template-ui/lib/plugins2/form/models'
 import fields from 'template-ui/lib/plugins2/form/fields'
 import validators from 'template-tools/src/utils/validators'
 
+import tables from './tables'
+
 const authLogin = {
   username: {
     title: 'Email',
@@ -37,7 +39,8 @@ const project = {
   test: {
     title: 'Test List',
     component: fields.list,
-    form: layer1
+    form: layer1,
+    table: tables.layer1
   }
 }
 

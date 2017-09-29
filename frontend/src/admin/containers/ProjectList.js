@@ -26,14 +26,14 @@ export default connect(
   }),
   (dispatch) => ({
     onSelect: (data) => dispatch(actions.project.list.setSelected(data)),
-    itemClick: (name, id, index) => {
+    itemClick: (name, item, index) => {
       if(name == 'delete') {
         dispatch(actions.project.list.setSelected([index]))
         dispatch(actions.project.list.setDeleteWindow(true))
         return
       }
       else if(name == 'edit') {
-        dispatch(actions.router.redirect(redirects.projectEdit(id)))
+        dispatch(actions.router.redirect(redirects.projectEdit(item.id)))
       }
     },
     toolbarClick: (name, selectedItems) => {

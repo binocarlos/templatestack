@@ -52,7 +52,7 @@ export const radio = ({
   meta: { touched, error },
   ...props
 }) => {
-  const useTheme = config.horizontal ?
+  const useTheme = props.horizontal ?
     { 
       field: theme.horizontal
     } :
@@ -136,7 +136,7 @@ export const multipleCheckbox = ({
             if(val) {
               currentValue.push(item.value)
             }
-            input.onChange(currentValue)
+            input.onChange([].concat(currentValue))
           }
           return (
             <Checkbox
@@ -181,23 +181,7 @@ export const time = ({
   />
 )
 
-export const list = ({
-  input,
-  label,
-  meta,
-  ...props
-}) => {
-  return (
-    <div>
-      <h5>{ label }</h5>
-      <FormListField
-        formName={ meta.form }
-        fieldName={ input.name }
-        data={ input.value || [] }
-      />
-    </div>
-  )
-}
+export const list = FormListField
 
 
 const fields = {

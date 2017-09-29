@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 
 import ProgressBar from 'react-toolbox/lib/progress_bar'
-import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table'
+import Table from 'template-ui/lib/components/Table'
 import ToolbarLayout from './layout2/ToolbarLayout'
 import Toolbar from './Toolbar'
 import CrudButtonsList from './CrudButtonsList'
 import CrudButtonsItem from './CrudButtonsItem'
 import CrudDeleteModal from './CrudDeleteModal'
+import CrudFormModal from './CrudFormModal'
 
 import horizontal from './theme/horizontal.css'
 
@@ -28,7 +29,7 @@ class ProjectList extends Component {
     )
 
     const count = selected.length > 0 ? selected.length : data.length
-    let title = `Projects (${count})`
+    let title = `${this.props.label} (${count})`
 
     if(selectedItems.length == 1) {
       title = selectedItems[0].name
@@ -36,9 +37,20 @@ class ProjectList extends Component {
 
     return (
       <Toolbar
-        leftIcon={ icons.project }
+        leftIcon={ this.props.icon }
         title={ title }
         leftContent={ buttons }
+        clearBackground
+        small
+      />
+    )
+  }
+
+  getRowButtons(item, i) {
+    return (
+      <CrudButtonsItem
+        icons={icons}
+        onClick={ (name) => this.props.itemClick(name, item, i) }
       />
     )
   }
@@ -48,24 +60,41 @@ class ProjectList extends Component {
     const selected = this.props.selected || []
     const selectedItems = selected.map(i => data[i])
     return (
-      <Table multiSelectable onRowSelect={this.props.onSelect} style={{ marginTop: 10 }}>
-        <TableHead>
-          <TableCell>Name</TableCell>
-          <TableCell><span></span></TableCell>
-        </TableHead>
-        {data.map((item, i) => (
-          <TableRow key={i} selected={selected.indexOf(i) >= 0}>
-            <TableCell>{item.name}</TableCell>
-            <TableCell numeric>
-              <CrudButtonsItem
-                icons={config.icons}
-                onClick={ (name) => this.props.itemClick(name, item.id, i) }
-                hideLabels
-              />
-            </TableCell>
-          </TableRow>
-        ))}
-      </Table>
+      <Table
+        multiSelectable
+        onRowSelect={this.props.onSelect}
+        data={ data }
+        selected={ selected }
+        schema={ this.props.table }
+        getRowButtons={ this.getRowButtons.bind(this) }
+      />
+    )
+  }
+
+  getDeleteWindow() {
+    const data = this.props.data || []
+    const selected = this.props.selected || []
+    const selectedItems = selected.map(i => data[i])
+    return (
+      <CrudDeleteModal
+        title={ this.props.label }
+        active={ this.props.deleteActive ? true : false}
+        items={ selectedItems }
+        onCancel={ this.props.cancelDeleteWindow }
+        onConfirm={ this.props.confirmDeleteWindow }
+      />
+    )
+  }
+
+  getEditWindow() {
+    if(this.props.formHook) return null
+    return (
+      <CrudFormModal
+        title={ this.props.label }
+        active={ this.props.editActive ? true : false}
+        onCancel={ this.props.cancelEditWindow }
+        onConfirm={ this.props.confirmEditWindow }
+      />
     )
   }
 
@@ -78,13 +107,8 @@ class ProjectList extends Component {
         toolbar={this.getToolbar()}
       >
         { this.getTable() }
-        <CrudDeleteModal
-          title='Project'
-          active={ this.props.deleteActive }
-          items={ selectedItems }
-          onCancel={ this.props.cancelDeleteWindow }
-          onConfirm={ this.props.confirmDeleteWindow }
-        />
+        { this.getDeleteWindow() }
+        { this.getEditWindow() }
       </ToolbarLayout>
     )
   }

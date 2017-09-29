@@ -16,14 +16,14 @@ class FormListFieldContainer extends Component {
   }
 }
 
-const getFormId = (ownProps) => `formlist_${ownProps.formName}_${ownProps.fieldName}`
+const getFormId = (ownProps) => `formlist_${ownProps.meta.form}_${ownProps.input.name}`
 
 export default connect(
   (state, ownProps) => {
     const id = getFormId(ownProps)
     return {
       id,
-      data: ownProps.data || [],
+      data: ownProps.input.value || [],
       selected: valueSelectors.get(state, `${id}_selected`) || [],
       deleteActive: valueSelectors.get(state, `${id}_deleteWindow`),
       editActive: valueSelectors.get(state, `${id}_editWindow`)
@@ -31,28 +31,52 @@ export default connect(
   },
   (dispatch, ownProps) => {
     const id = getFormId(ownProps)
+    
+    const editItem = (item) => {
+      if(ownProps.formHook) {
+        dispatch(routerActions.hook(ownProps.formHook, {
+          mode: 'edit',
+          item
+        }))
+      }
+      else {
+        dispatch(valueActions.set(`${id}_editWindow`, true))
+      }
+    }
+
+    const addItem = () => {
+      if(ownProps.formHook) {
+        dispatch(routerActions.hook(ownProps.formHook, {
+          mode: 'add'
+        }))
+      }
+      else {
+        dispatch(valueActions.set(`${id}_editWindow`, true))
+      }
+    }
+
     return {
       onSelect: (data) => dispatch(valueActions.set(`${id}_selected`, data)),
-      itemClick: (name, id, index) => {
+      itemClick: (name, item, index) => {
         if(name == 'delete') {
-
+          dispatch(valueActions.set(`${id}_selected`, [index]))
+          dispatch(valueActions.set(`${id}_deleteWindow`, true))
         }
         else if(name == 'edit') {
-          
+          editItem(item)
         }
       },
       toolbarClick: (name, selectedItems) => {
         if(name == 'delete') {
-          
+          dispatch(valueActions.set(`${id}_deleteWindow`, true))
         }
         else if(name == 'edit') {
           const item = selectedItems[0]
-          if(item) {
-            
-          }
+          if(!item) return
+          editItem(item)
         }
         else if(name == 'add') {
-          
+          addItem()
         }
       },
       cancelEditWindow: () => {

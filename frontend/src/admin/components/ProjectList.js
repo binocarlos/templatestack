@@ -48,7 +48,7 @@ class ProjectList extends Component {
     return (
       <CrudButtonsItem
         icons={config.icons}
-        onClick={ (name) => this.props.itemClick(name, item.id, i) }
+        onClick={ (name) => this.props.itemClick(name, item, i) }
       />
     )
   }
@@ -68,6 +68,7 @@ class ProjectList extends Component {
 
     return (
       <Table
+        showHead
         multiSelectable
         onRowSelect={this.props.onSelect}
         data={ data }

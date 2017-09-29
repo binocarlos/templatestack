@@ -14,9 +14,11 @@ class TableComponent extends Component {
   }
 
   getHead() {
+    if(!this.props.showHead) return null
+    const data = this.props.data || []
     const fields = this.getFields()
     return (
-      <TableHead>
+      <TableHead displaySelect={ this.props.multiSelectable && data.length > 0 }>
         {
           fields.map((field, i) => {
             return (
@@ -39,9 +41,9 @@ class TableComponent extends Component {
     const fields = this.getFields()
     return (
       <Table
-        selectable={ this.props.selectable }
-        multiSelectable={ this.props.multiSelectable }
-        onRowSelect={this.props.onSelect}
+        selectable={ this.props.selectable && data.length > 0 }
+        multiSelectable={ this.props.multiSelectable && data.length > 0 }
+        onRowSelect={ this.props.onSelect }
       >
         { this.getHead() }
         {

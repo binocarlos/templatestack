@@ -6,17 +6,28 @@ import horizontal from './theme/horizontal.css'
 
 class Toolbar extends Component {
   render() {
+    const useTheme = Object.assign({}, theme)
+    if(this.props.clearBackground) {
+      useTheme.appBar = theme.appBarClear
+    }
     const props = {
       ...this.props,
       flat: true,
-      theme
+      theme: useTheme
     }
 
     if(props.leftContent) {
       if(props.title) {
         const newTitle = (
           <div className={ horizontal.left }>
-            <b className={ theme.injectedTitle}>{ props.title }</b>
+            <span className={ theme.injectedTitle}>
+              {
+                this.props.small ? this.props.title : (
+                  <b className={ theme.boldTitle}>{ this.props.title }</b>
+                )
+              }
+            </span>
+            
             { props.leftContent }
           </div>
         )
