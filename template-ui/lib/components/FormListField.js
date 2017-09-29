@@ -124,13 +124,12 @@ class FormListField extends Component {
     const selected = this.props.selected || []
     const selectedItems = selected.map(i => data[i])
     return (
-      <ToolbarLayout
-        toolbar={this.getToolbar()}
-      >
+      <div>
+        { this.getToolbar() }
         { this.getTable() }
         { this.getDeleteWindow() }
         { this.getEditWindow() }
-      </ToolbarLayout>
+      </div>
     )
   }
 }

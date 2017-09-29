@@ -8,8 +8,14 @@ class CrudDeleteModal extends Component {
     const items = this.props.items || []
     const count = items.length
     const title = this.props.title || 'Item'
+    const actions = [
+      { label: this.props.cancelTitle || "Cancel", onClick: this.props.onCancel },
+      { label: this.props.confirmTitle || "Confirm", onClick: this.props.onConfirm, raised: true, primary: true }
+    ]
+
     return (
       <Modal
+        actions={ actions }
         title={`Delete ${count} ${title}${count == 1 ? '' : 's'}?`}
         active={this.props.active}
         onCancel={this.props.onCancel}

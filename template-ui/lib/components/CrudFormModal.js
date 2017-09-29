@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 
-import Dialog from 'react-toolbox/lib/dialog'
+import Modal from './Modal'
 
 class CrudFormModal extends Component {
 
@@ -11,7 +11,7 @@ class CrudFormModal extends Component {
     ]
 
     return (
-      <Dialog
+      <Modal
         actions={actions}
         active={this.props.active}
         onEscKeyDown={this.props.onCancel}
@@ -20,7 +20,7 @@ class CrudFormModal extends Component {
         type={this.props.type}
       >
         { this.props.children }
-      </Dialog>
+      </Modal>
     )
   }
 }

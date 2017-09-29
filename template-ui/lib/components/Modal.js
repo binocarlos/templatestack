@@ -1,24 +1,22 @@
 import React, { Component } from 'react'
 import Dialog from 'react-toolbox/lib/dialog'
 
+import theme from './theme/modal.css'
+
 export class Modal extends Component {
 
+  defaultActions() {
+
+  }
   render () {
-    const actions = [
-      { label: this.props.cancelTitle || "Cancel", onClick: this.props.onCancel },
-      { label: this.props.confirmTitle || "Confirm", onClick: this.props.onConfirm, raised: true, primary: true }
-    ]
+
+    const props = {
+      ...this.props,
+      theme
+    }
+
     return (
-      <Dialog
-        actions={actions}
-        active={this.props.active}
-        onEscKeyDown={this.props.onCancel}
-        onOverlayClick={this.props.onCancel}
-        title={this.props.title}
-        type={this.props.type}
-      >
-        { this.props.children }
-      </Dialog>
+      <Dialog {...props} />
     )
   }
 }

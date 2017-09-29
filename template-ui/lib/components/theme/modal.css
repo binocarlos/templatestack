@@ -1,0 +1,12 @@
+.dialog {
+  
+}
+
+.navigation {
+  height: 52px;
+  min-height: 52px;
+}
+
+.body {
+  overflow: auto;
+}

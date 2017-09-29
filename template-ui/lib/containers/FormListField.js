@@ -35,20 +35,24 @@ export default connect(
     }
   },
   (dispatch, ownProps) => {
+    const form = ownProps.meta.form
+    const field = ownProps.input.name
     const id = getFormId(ownProps)
     
-    const editItem = (item) => {
+    const editItem = (item, index) => {
       if(ownProps.formHook) {
         dispatch(routerActions.hook(ownProps.formHook, {
           id,
           mode: 'edit',
-          item
+          item,
+          index
         }))
       }
       else {
         dispatch(routerActions.hook('formListWindowEdit', {
           id,
-          item
+          item,
+          index
         }))
       }
     }
@@ -76,7 +80,7 @@ export default connect(
           dispatch(valueActions.set(`${id}_deleteWindow`, true))
         }
         else if(name == 'edit') {
-          editItem(item)
+          editItem(item, index)
         }
       },
       toolbarClick: (name, selectedItems) => {
@@ -86,7 +90,7 @@ export default connect(
         else if(name == 'edit') {
           const item = selectedItems[0]
           if(!item) return
-          editItem(item)
+          editItem(item, 0)
         }
         else if(name == 'add') {
           addItem()
@@ -99,6 +103,11 @@ export default connect(
       },
       confirmEditWindow: () => {
         dispatch(routerActions.hook('formListConfirmWindow', {
+          id,
+          form,
+          field
+        }))
+        dispatch(routerActions.hook('formListCloseWindow', {
           id
         }))
       },

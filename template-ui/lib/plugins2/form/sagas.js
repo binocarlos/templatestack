@@ -2,7 +2,15 @@ import { take, put, call, fork, select, all, takeLatest, takeEvery } from 'redux
 
 import options from 'template-tools/src/utils/options'
 
+import { 
+  arrayPush,
+  arraySplice,
+  arrayRemove,
+  arraySwap
+} from 'redux-form'
+
 import valueActions from '../value/actions'
+import valueSelectors from '../value/selectors'
 
 import actions from './actions'
 import selectors from './selectors'
@@ -29,30 +37,37 @@ const FormSagas = (opts = {}) => {
     const { id, item, schema } = payload
     const defaults = formUtils.getDefaults(schema)
     yield put(actions.initialize(id, defaults))
-    yield put(valueActions.set(`${id}_editId`, null))
+    yield put(valueActions.set(`${id}_editIndex`, null))
     yield put(valueActions.set(`${id}_editWindow`, true))
   }
 
 
   function* listWindowEdit(payload) {
-    const { id, item } = payload
+    const { id, item, index } = payload
     yield put(actions.initialize(id, item))
-    yield put(valueActions.set(`${id}_editId`, item.id))
+    yield put(valueActions.set(`${id}_editIndex`, index))
     yield put(valueActions.set(`${id}_editWindow`, true))
   }
 
   function* listCloseWindow(payload) {
     const { id } = payload
-    yield put(valueActions.set(`${id}_editId`, null))
+    yield put(valueActions.set(`${id}_editIndex`, null))
     yield put(valueActions.set(`${id}_editWindow`, false))
   }
 
   function* listConfirmWindow(payload) {
-    const { id } = payload
+    const { id, form, field } = payload
     const values = yield select(state => selectors.values(state, id))
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(values)
+    const index = yield select(state => valueSelectors.get(state, `${id}_editIndex`))
+
+    // add mode
+    if(!index) {
+      yield put(arrayPush(form, field, values))
+    }
+    // edit mode
+    else {
+      yield put(arraySplice(form, field, index, 1, values))
+    }
   }
 
   return {
