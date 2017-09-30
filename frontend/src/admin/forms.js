@@ -51,6 +51,7 @@ const address = {
   },
   address2: {
     title: 'Address 2',
+    default: 'APPLES DEFAULT',
     validate: []
   },
   area: {
@@ -79,7 +80,8 @@ const options = {
     source: ['science', 'art', 'history']
   },
   cost: models.number({
-    title: 'Cost'
+    title: 'Cost',
+    default: 22.4
   }),
   color: {
     title: 'Color',
@@ -115,8 +117,7 @@ const project = utils.composeParts([{
   },
   options: {
     containerComponent: fields.section,
-    prependName: 'options',
-    schema: options
+    childSchema: options
   }
 },
 address,

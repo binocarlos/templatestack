@@ -30,10 +30,25 @@ const getFields = (schema = {}, opts = {}) => {
   }, {})
 }
 
+const fieldNames = (schema = {}) => {
+  return Object.keys(schema).reduce((all, name) => {
+    const field = schema[name]
+    if(field.childSchema) {
+      return all.concat(fieldNames(field.childSchema).map(childname => `${name}.${childname}`))
+    }
+    else {
+      return all.concat([name])
+    }
+  }, [])
+}
+
 const getDefaults = (schema = {}) => {
   return Object.keys(schema || {}).reduce((all, fieldname) => {
     const opts = schema[fieldname] || {}
-    if(opts.default) all[fieldname] = opts.default
+    if(opts.childSchema) {
+      all[fieldname] = getDefaults(opts.childSchema)
+    }
+    else if(opts.default) all[fieldname] = opts.default
     return all
   }, {})
 }
@@ -41,6 +56,7 @@ const getDefaults = (schema = {}) => {
 const utils = {
   composeParts,
   getFields,
+  fieldNames,
   getDefaults
 }
 

@@ -125,7 +125,7 @@ export const checkbox = ({
 }) => {
   const isChecked = input.value ? true : false
   return (
-    <div className={ theme.padded }>
+    <div className={ theme.checkboxContainer }>
       <Checkbox
         label={label}
         name={input.name}
@@ -154,9 +154,8 @@ export const multipleCheckbox = ({
 
   return (
     <div>
-      <div className={ theme.spaceBottom }>
-        { label }
-      </div>
+      <div className={ theme.radioTitle }>{ label }</div>
+      
       {
         source.map((item, i) => {
           const isChecked = currentValue.indexOf(item.value) >= 0
@@ -214,15 +213,15 @@ export const time = ({
 export const list = FormListField
 
 export const section = (props) => {
-  const fields = utils.getFields(props.schema, {
-    prependName: props.prependName
-  })
+  const fields = utils.getFields(props.childSchema)
   const LayoutComponent = props.layoutComponent || FormLayout
   return (
-    <LayoutComponent
-      fields={ fields }
-      props={ props }
-    />
+    <FormSection name={ props.name }>
+      <LayoutComponent
+        fields={ fields }
+        props={ props }
+      />
+    </FormSection>
   )
 }
 
