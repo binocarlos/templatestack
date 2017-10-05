@@ -88,9 +88,15 @@ const Range = (opts) => {
       items.forEach(item => {
         const slotIndexes = opts.getItemSlotIndexes(item)
         const block = schedule.blocks[slotIndexes.block]
-        if(!block) throw new Error(`no block found for ${item.id}`)
+        if(!block) {
+          console.error(`no block found for ${item.id}`)
+          return
+        }
         const slot = block.slots[slotIndexes.slot]
-        if(!slot) throw new Error(`no slot found for ${item.id}`)
+        if(!slot) {
+          console.error(`no slot found for ${item.id}`)
+          return
+        }
         const slotItems = slot._items || []
         slotItems.push(item)
         slot._items = slotItems
