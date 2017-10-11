@@ -2,14 +2,14 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 
-import routerActions from '../plugins2/router/actions'
-import valueActions from '../plugins2/value/actions'
-import formActions from '../plugins2/form/actions'
+import routerActions from '../../router/actions'
+import valueActions from '../../value/actions'
+import formActions from '../../form/actions'
 
-import valueSelectors from '../plugins2/value/selectors'
-import formSelectors from '../plugins2/form/selectors'
+import valueSelectors from '../../value/selectors'
+import formSelectors from '../../form/selectors'
 
-import FormListField from '../components/FormListField'
+import FormListField from '../../../components/FormListField'
 
 class FormListFieldContainer extends Component {
   render() {

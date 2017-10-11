@@ -117,7 +117,9 @@ const project = utils.composeParts([{
   },
   options: {
     containerComponent: fields.section,
-    childSchema: options
+    childSchema: options,
+    sectionTitle: 'Apples',
+    inset: true
   }
 },
 address,
@@ -131,7 +133,7 @@ address,
     schema: layer1,
     table: tables.layer1,
     //formHook: 'projectTest',
-    itemWindowComponent: TestModal
+    //itemWindowComponent: TestModal
   }
 }])
 

@@ -5,7 +5,7 @@ import Navigation from 'react-toolbox/lib/navigation'
 import ErrorText from './ErrorText'
 import Loading from './Loading'
 
-import formTheme from './theme/formWrapper.css'
+import formTheme from './theme/form.css'
 
 class FormWrapper extends Component {
 

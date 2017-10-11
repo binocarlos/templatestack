@@ -12,6 +12,8 @@ import {
 import valueActions from '../value/actions'
 import valueSelectors from '../value/selectors'
 
+import formSelectors from '../form/selectors'
+
 import actions from './actions'
 import selectors from './selectors'
 
@@ -60,6 +62,22 @@ const List = (opts = {}) => {
 
   function* confirmItem(payload) {
     const { id, form, field, values } = payload
+
+    const valid = yield select(state => formSelectors.valid(state, id))
+
+    if(!valid) {
+      yield put(actions.form.touchAll('project', forms.project))
+      return
+    }
+
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('here')
+    console.log(form)
+    console.dir(values)
+    console.dir(id)
+    return
+    console.dir(payload)
     const index = yield select(state => selectors.list.itemIndex(state, id))
     
     // add mode

@@ -11,7 +11,8 @@ import Dropdown from 'react-toolbox/lib/dropdown'
 
 import ErrorText from '../../components/ErrorText'
 import FormLayout from '../../components/FormLayout'
-import FormListField from '../../containers/FormListField'
+
+import ListField from './containers/ListField'
 
 import utils from './utils'
 import theme from './theme.css'
@@ -210,18 +211,32 @@ export const time = ({
   />
 )
 
-export const list = FormListField
+export const list = ListField
 
+// section puts all the fields into a subkey driven by the property name of the field
+// so a section with postcode and city could be under the address key meaning you get address.postcode
 export const section = (props) => {
+  props = props || {}
   const fields = utils.getFields(props.childSchema)
   const LayoutComponent = props.layoutComponent || FormLayout
+  const wrapperClassName = props.inset ? theme.insetFormSection : ''
+
   return (
-    <FormSection name={ props.name }>
-      <LayoutComponent
-        fields={ fields }
-        props={ props }
-      />
-    </FormSection>
+    <div className={ wrapperClassName }>
+      {
+        props.sectionTitle ? (
+          <div className={ theme.sectionTitle }>
+            { props.sectionTitle }
+          </div>
+        ) : null
+      }
+      <FormSection name={ props.name }>
+        <LayoutComponent
+          fields={ fields }
+          props={ props }
+        />
+      </FormSection>
+    </div>
   )
 }
 
