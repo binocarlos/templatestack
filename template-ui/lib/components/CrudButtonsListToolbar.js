@@ -9,35 +9,28 @@ class CrudButtonsList extends Component {
     let buttons = null
     const icons = this.props.icons
     const selected = (this.props.selected || []).length
+    let options = []
 
     if(selected <= 0) {
-      return (
-        <Button
-          label='Add'
-          icon={icons.add}
-          primary={this.props.primary}
-          accent={this.props.secondary}
-          raised
-          onClick={() => this.props.onClick('add')}
-        />
-      )
+      options.push(['add', 'Add', icons.add, {
+        primary: this.props.primary,
+        accent: this.props.secondary,
+      }])
     }
     else {
-      let options = []
-      
       if(selected >=1) {
         options.push(['delete', 'Delete', icons.delete, {}])
       }
       if(selected == 1) {
         options.push(['edit', 'Edit', icons.edit, {}])
       }
-      return (
-        <IconButtons
-          options={options}
-          onClick={(id) => this.props.onClick(id)}
-        />
-      )
     }
+    return (
+      <IconButtons
+        options={options}
+        onClick={(id) => this.props.onClick(id)}
+      />
+    )
   }
 }
 

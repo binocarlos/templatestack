@@ -70,14 +70,6 @@ const List = (opts = {}) => {
       return
     }
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('here')
-    console.log(form)
-    console.dir(values)
-    console.dir(id)
-    return
-    console.dir(payload)
     const index = yield select(state => selectors.list.itemIndex(state, id))
     
     // add mode
@@ -88,6 +80,14 @@ const List = (opts = {}) => {
     else {
       yield put(arraySplice(form, field, index, 1, values))
     }
+
+    yield call(selected, {
+      id,
+      selected: []
+    })
+    yield call(cancel, {
+      id
+    })
   }
 
   function* confirmDelete(payload) {

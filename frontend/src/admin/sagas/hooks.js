@@ -28,6 +28,11 @@ function* authLogout() {
   document.location = config.logout + '?redirect=' + config.basepath
 }
 
+function* testHook() {
+  console.log('-------------------------------------------');
+  console.log('test hook')
+}
+
 const Hooks = (opts = {}) => {
 
   const apis = opts.apis
@@ -59,6 +64,7 @@ const Hooks = (opts = {}) => {
     // form sagas
 
     formList: form.list,
+    testHook,
     
     // api sagas
     projectList: project.list,

@@ -31,6 +31,13 @@ const layer2 = {
   }
 }
 
+const inject = {
+  injected: {
+    title: 'Injected',
+    validate: [validators.required]
+  }
+}
+
 const layer1 = {
   name: {
     title: 'Layer1',  
@@ -122,7 +129,7 @@ const project = utils.composeParts([{
     inset: true
   }
 },
-address,
+inject,
 {
   test: {
     title: 'Test List',
@@ -132,7 +139,7 @@ address,
     component: fields.list,
     schema: layer1,
     table: tables.layer1,
-    //formHook: 'projectTest',
+    //formHook: 'testHook',
     //itemWindowComponent: TestModal
   }
 }])

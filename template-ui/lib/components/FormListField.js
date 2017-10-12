@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { reduxForm } from 'redux-form'
 
 import ProgressBar from 'react-toolbox/lib/progress_bar'
-import Table from 'template-ui/lib/components/Table'
+import Table from './Table'
 import ToolbarLayout from './layout2/ToolbarLayout'
 import Toolbar from './Toolbar'
 import CrudButtonsListToolbar from './CrudButtonsListToolbar'
@@ -36,7 +36,7 @@ class FormListField extends Component {
   getToolbar() {
     const data = this.props.data || []
     const selected = this.props.selected || []
-    const selectedItems = selected.map(i => data[i])
+    const selectedItems = selected.map(i => data[i]).filter(i => i)
 
     const buttons = this.props.getToolbarButtons ? this.props.getToolbarButtons(this.props) : (
       <CrudButtonsListToolbar
@@ -73,19 +73,25 @@ class FormListField extends Component {
     )
   }
 
+/*
+
+  selectable={ this.props.selectable }
+        multiSelectable={ this.props.multiSelectable }
+  
+*/
   getTable() {
     const data = this.props.data || []
     const selected = this.props.selected || []
     const selectedItems = selected.map(i => data[i])
     return (
       <Table
-        selectable={ this.props.selectable }
-        multiSelectable={ this.props.multiSelectable }
+        selectable={ true }
+        multiSelectable={ true }
         data={ data }
         selected={ selected }
         schema={ this.props.table }
         getRowButtons={ this.getRowButtons.bind(this) }
-        onSelect={this.props.onSelect}
+        onSelect={ this.props.onSelect }
       />
     )
   }

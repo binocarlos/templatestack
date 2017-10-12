@@ -23,7 +23,7 @@ class FormModal extends Component {
   }
 
   onConfirm() {
-    if(this.props.valid) {
+    if(!this.props.valid) {
       this.props.onTouchForm()
     }
     else {
