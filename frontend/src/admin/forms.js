@@ -117,7 +117,7 @@ const options = {
   }
 }
 
-const project = utils.composeParts([{
+const multiForm = utils.composeParts([{
   name: {
     title: 'Name',
     validate: [validators.required]
@@ -148,11 +148,24 @@ inject,
   }
 }])
 
+const project = {
+  name: {
+    title: 'Name',
+    validate: [validators.required]
+  },
+  options: {
+    containerComponent: fields.section,
+    childSchema: options,
+    sectionTitle: 'Apples',
+    inset: true
+  }
+}
 
 const forms = {
   authLogin,
   authRegister,
-  project
+  project,
+  multiForm
 }
 
 export default forms
