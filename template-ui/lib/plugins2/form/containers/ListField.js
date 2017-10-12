@@ -56,7 +56,7 @@ export default connect(
       dispatch(routerActions.hook(hook, {
         action: 'add',
         id,
-        schema: ownProps.schema
+        schema
       }))
     }
 
@@ -107,7 +107,8 @@ export default connect(
           id,
           form,
           field,
-          values
+          values,
+          schema
         }))
         /*
         dispatch(routerActions.hook('formList', {

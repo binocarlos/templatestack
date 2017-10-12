@@ -134,13 +134,17 @@ inject,
   test: {
     title: 'Test List',
     itemTitle: 'Thing',
-    allowEdit: false,
-    allowReorder: true,
     component: fields.list,
     schema: layer1,
     table: tables.layer1,
     //formHook: 'testHook',
     //itemWindowComponent: TestModal
+  },
+  address: {
+    title: 'Address',
+    itemTitle: 'Address',
+    component: fields.item,
+    schema: address
   }
 }])
 

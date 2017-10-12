@@ -13,6 +13,7 @@ import ErrorText from '../../components/ErrorText'
 import FormLayout from '../../components/FormLayout'
 
 import ListField from './containers/ListField'
+import ItemField from './containers/ItemField'
 
 import utils from './utils'
 import theme from './theme.css'
@@ -212,6 +213,7 @@ export const time = ({
 )
 
 export const list = ListField
+export const item = ItemField
 
 // section puts all the fields into a subkey driven by the property name of the field
 // so a section with postcode and city could be under the address key meaning you get address.postcode
@@ -250,6 +252,7 @@ const fields = {
   time,
   multipleCheckbox,
   list,
+  item,
   section
 }
 

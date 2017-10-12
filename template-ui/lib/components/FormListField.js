@@ -17,21 +17,7 @@ import horizontal from './theme/horizontal.css'
 
 import icons from '../utils/icons'
 
-const FormContainer = reduxForm({
-  
-})(FormLayout)
-
 class FormListField extends Component {
-
-  getForm() {
-    const fields = formUtils.getFields(this.props.schema)
-    return (
-      <FormContainer
-        form={ this.props.id }
-        fields={ fields }
-      />
-    )
-  }
 
   getToolbar() {
     const data = this.props.data || []

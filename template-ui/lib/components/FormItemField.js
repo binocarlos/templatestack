@@ -14,44 +14,27 @@ import FormModal from './FormModal'
 
 import formUtils from 'template-ui/lib/plugins2/form/utils'
 import horizontal from './theme/horizontal.css'
+import IconButtons from './IconButtons'
 
 import icons from '../utils/icons'
 
-const FormContainer = reduxForm({
-  
-})(FormLayout)
-
 class FormItemField extends Component {
-
-  getForm() {
-    const fields = formUtils.getFields(this.props.schema)
-    return (
-      <FormContainer
-        form={ this.props.id }
-        fields={ fields }
-      />
-    )
-  }
 
   getToolbar() {
     const data = this.props.data || []
-    const selected = this.props.selected || []
-    const selectedItems = selected.map(i => data[i])
+    
+    const options = [
+      ['edit', 'Edit', icons.edit, {}]
+    ]
 
     const buttons = this.props.getToolbarButtons ? this.props.getToolbarButtons(this.props) : (
-      <CrudButtonsListToolbar
-        icons={icons}
-        selected={this.props.selected}
-        onClick={ (name) => this.props.toolbarClick(name, selectedItems, selected) }
+      <IconButtons
+        options={options}
+        onClick={(id) => this.props.toolbarClick(id)}
       />
     )
 
-    const count = selected.length > 0 ? selected.length : data.length
-    let title = `${this.props.label} (${count})`
-
-    if(selectedItems.length == 1) {
-      title = selectedItems[0].name
-    }
+    const title = (this.props.getTitle ? this.props.getTitle() : this.props.title)
 
     return (
       <Toolbar
@@ -60,47 +43,6 @@ class FormItemField extends Component {
         leftContent={ buttons }
         clearBackground
         small
-      />
-    )
-  }
-
-  getRowButtons(item, i) {
-    return (
-      <CrudButtonsListItem
-        icons={icons}
-        onClick={ (name) => this.props.itemClick(name, item, i) }
-      />
-    )
-  }
-
-  getTable() {
-    const data = this.props.data || []
-    const selected = this.props.selected || []
-    const selectedItems = selected.map(i => data[i])
-    return (
-      <Table
-        selectable={ this.props.selectable }
-        multiSelectable={ this.props.multiSelectable }
-        data={ data }
-        selected={ selected }
-        schema={ this.props.table }
-        getRowButtons={ this.getRowButtons.bind(this) }
-        onSelect={this.props.onSelect}
-      />
-    )
-  }
-
-  getDeleteWindow() {
-    const data = this.props.data || []
-    const selected = this.props.selected || []
-    const selectedItems = selected.map(i => data[i])
-    return (
-      <CrudDeleteModal
-        title={ this.props.itemTitle || this.props.label }
-        active={ this.props.deleteWindow ? true : false}
-        items={ selectedItems }
-        onCancel={ this.props.cancelDeleteWindow }
-        onConfirm={ () => this.props.confirmDeleteWindow(selected) }
       />
     )
   }
@@ -128,16 +70,25 @@ class FormItemField extends Component {
     )
   }
 
+  getDataLine() {
+    return Object.keys(this.props.data || {}).reduce((all, key) => {
+      return all.concat([`${key}: ${this.props.data[key]}`])
+    }, []).join(', ')
+  }
+  
+  getSummary() {
+    if(!this.props.getSummary) return this.getDataLine()
+    return this.props.getSummary(this.props)
+  }
+
   render() {
-    const data = this.props.data || []
-    const selected = this.props.selected || []
-    const selectedItems = selected.map(i => data[i])
     return (
       <div>
         { this.getToolbar() }
-        { this.getTable() }
-        { this.getDeleteWindow() }
         { this.getItemWindow() }
+        <div>
+          { this.getSummary() }
+        </div>
       </div>
     )
   }

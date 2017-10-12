@@ -6,7 +6,8 @@ import {
   arrayPush,
   arraySplice,
   arrayRemove,
-  arraySwap
+  arraySwap,
+  change
 } from 'redux-form'
 
 import valueActions from '../value/actions'
@@ -61,12 +62,12 @@ const List = (opts = {}) => {
   }
 
   function* confirmItem(payload) {
-    const { id, form, field, values } = payload
+    const { id, form, field, values, schema } = payload
 
     const valid = yield select(state => formSelectors.valid(state, id))
 
     if(!valid) {
-      yield put(actions.form.touchAll('project', forms.project))
+      yield put(actions.form.touchAll(id, schema))
       return
     }
 
@@ -108,6 +109,50 @@ const List = (opts = {}) => {
   } 
 }
 
+const Item = (opts = {}) => {
+  function* edit(payload) {
+    const { id, item, index } = payload
+    yield put(actions.initialize(id, item))    
+    yield put(valueActions.set(`${id}_itemWindow`, true))
+  }
+
+  function* cancel(payload) {
+    const { id } = payload
+    yield put(valueActions.set(`${id}_itemWindow`, false))
+  }
+
+  function* confirmItem(payload) {
+    const { id, form, field, values, schema } = payload
+
+    const valid = yield select(state => formSelectors.valid(state, id))
+
+    if(!valid) {
+      yield put(actions.form.touchAll(id, schema))
+      return
+    }
+
+    yield put(change(form, field, values))
+    yield call(cancel, {
+      id
+    })
+  }
+
+  return {
+    edit,
+    cancel,
+    confirmItem
+  } 
+}
+
+const getController = (name, handlers) => {
+  function* controller(payload) {
+    const action = handlers[payload.action]
+    if(!action) throw new Error(`form saga ${name}: no action found: ${payload.action}`)
+    yield call(action, payload)
+  }
+  return controller
+}
+
 const FormSagas = (opts = {}) => {
 
   opts = options.processor(opts, {
@@ -116,15 +161,14 @@ const FormSagas = (opts = {}) => {
   })
 
   const list = List(opts)
+  const item = Item(opts)
 
-  function* listController(payload) {
-    const action = list[payload.action]
-    if(!action) throw new Error(`form saga list: no action found: ${payload.action}`)
-    yield call(action, payload)
-  }
+  const listController = getController('list', list)
+  const itemController = getController('item', item)
 
   return {
-    list: listController
+    list: listController,
+    item: itemController
   }
 }
 

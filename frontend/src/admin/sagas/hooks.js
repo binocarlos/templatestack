@@ -64,6 +64,7 @@ const Hooks = (opts = {}) => {
     // form sagas
 
     formList: form.list,
+    formItem: form.item,
     testHook,
     
     // api sagas

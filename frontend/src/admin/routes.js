@@ -88,6 +88,10 @@ export const routes = (
       <ProjectForm />
     </Route>
 
+    <Route path='/projects/edit/:id' exact>
+      <ProjectForm />
+    </Route>
+
     <Route path='/help'>
       <Section>
         Help
