@@ -1,14 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table'
 
+const defaultGetValue = (key) => (row, props) => row[key]
+
 class TableComponent extends Component {
 
   getFields() {
     return Object.keys(this.props.schema || {}).map((key) => {
       const opts = this.props.schema[key]
+      const getValue = opts.getValue || defaultGetValue(key)
       return Object.assign({}, {
         title: key.replace(/^\w/, (s) => s.toUpperCase()),
-        value: (row, props) => row[key]
+        value: getValue
       }, opts)
     })
   }
@@ -35,6 +38,30 @@ class TableComponent extends Component {
     )
   }
 
+  getRow(fields, item, i) {
+    const selected = this.props.selected || []
+    const data = this.props.data || []
+    return (
+      <TableRow key={i} selected={selected.indexOf(i) >= 0}>
+        {
+          fields.map((field, j) => {
+            const style = field.getStyle ? field.getStyle(item, this.props) : {}
+            return (
+              <TableCell key={ j } style={style}>{field.value(item, this.props) || ''}</TableCell>
+            )
+          })
+        }
+        {
+          this.props.getRowButtons ? (
+            <TableCell numeric>
+              { this.props.getRowButtons(item, i) }
+            </TableCell>
+          ) : null
+        }
+      </TableRow>
+    )
+  }
+
   render() {
     const selected = this.props.selected || []
     const data = this.props.data || []
@@ -47,22 +74,7 @@ class TableComponent extends Component {
       >
         { this.getHead() }
         {
-          data.map((item, i) => (
-            <TableRow key={i} selected={selected.indexOf(i) >= 0}>
-              {
-                fields.map((field, j) => (
-                  <TableCell key={ j }>{field.value(item, this.props) || ''}</TableCell>
-                ))
-              }
-              {
-                this.props.getRowButtons ? (
-                  <TableCell numeric>
-                    { this.props.getRowButtons(item, i) }
-                  </TableCell>
-                ) : null
-              }
-            </TableRow>
-          ))
+          data.map((item, i) => this.getRow(fields, item, i))
         }
       </Table>
     )
