@@ -4,7 +4,7 @@ import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table'
 class TableComponent extends Component {
 
   getFields() {
-    return Object.keys(this.props.schema).map((key) => {
+    return Object.keys(this.props.schema || {}).map((key) => {
       const opts = this.props.schema[key]
       return Object.assign({}, {
         title: key.replace(/^\w/, (s) => s.toUpperCase()),
