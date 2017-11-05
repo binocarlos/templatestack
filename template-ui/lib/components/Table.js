@@ -51,7 +51,7 @@ class TableComponent extends Component {
             <TableRow key={i} selected={selected.indexOf(i) >= 0}>
               {
                 fields.map((field, j) => (
-                  <TableCell key={ j }>{field.value(item, this.props)}</TableCell>
+                  <TableCell key={ j }>{field.value(item, this.props) || ''}</TableCell>
                 ))
               }
               {
