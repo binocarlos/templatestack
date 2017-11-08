@@ -1,0 +1,17 @@
+.container {
+  text-align: center;
+}
+
+.avatar {
+  display: inline-block;
+  text-align: center;
+}
+
+.username {
+  text-align: left;
+}
+
+.avatar img {
+  border: 1px solid gray;
+  background-color: #eee;
+}
