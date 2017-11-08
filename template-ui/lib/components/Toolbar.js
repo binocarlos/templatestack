@@ -41,8 +41,8 @@ class Toolbar extends Component {
     }
 
     if(props.rightContent) {
-      delete(props.rightContent)
       props.children = props.rightContent
+      delete(props.rightContent)
     }
 
     return (
