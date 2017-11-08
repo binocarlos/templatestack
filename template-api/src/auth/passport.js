@@ -16,8 +16,10 @@ const Passport = (opts) => {
   const authClient = opts.authClient  
   const providers = opts.providers || []
 
+  let strategies = []
+
   providers.forEach(provider => {
-    const strategy = new provider.strategy(provider.opts, (token, tokenSecret, profile, done) => {
+    const strategy = new provider.strategy(provider.opts, (token, refresh_token, profile, done) => {
       async.waterfall([
         (next) => {
           authClient.ensure({
@@ -33,7 +35,7 @@ const Passport = (opts) => {
           data[provider.id] = profile
           data[provider.id + 'Token'] = {
             value: token,
-            secret: tokenSecret
+            refresh: refresh_token
           }
 
           authClient.update({
@@ -44,7 +46,11 @@ const Passport = (opts) => {
       ], done)
   
     })
-    passport.use(strategy)
+    strategies.push({
+      provider,
+      strategy
+    })
+    passport.use(provider.id, strategy)
   })
 
   passport.serializeUser((req, user, done) => {
@@ -60,7 +66,8 @@ const Passport = (opts) => {
       id
     }, done)
   })
-    
+  
+  passport.strategies = strategies
   return passport
 }
 

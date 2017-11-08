@@ -38,11 +38,17 @@ class TableComponent extends Component {
     )
   }
 
+  clickRow(item, i) {
+    if(this.props.onRowClick) this.props.onRowClick(item, i)
+  }
+
   getRow(fields, item, i) {
     const selected = this.props.selected || []
     const data = this.props.data || []
+    const rowStyle = this.props.getRowStyle ? this.props.getRowStyle(item, i) : {}
+
     return (
-      <TableRow key={i} selected={selected.indexOf(i) >= 0}>
+      <TableRow key={i} selected={selected.indexOf(i) >= 0} style={rowStyle} onClick={() => this.clickRow(item, i)}>
         {
           fields.map((field, j) => {
             const style = field.getStyle ? field.getStyle(item, this.props) : {}
