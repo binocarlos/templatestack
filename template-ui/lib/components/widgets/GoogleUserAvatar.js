@@ -7,7 +7,7 @@ class GoogleUserAvatar extends Component {
   render() {
     return (
       <Avatar>
-        <GoogleImage size={64} user={ this.props.user } />
+        <GoogleImage size={ this.props.size } user={ this.props.user } />
       </Avatar>
     )
   }

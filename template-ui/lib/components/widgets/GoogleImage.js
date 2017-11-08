@@ -6,7 +6,7 @@ import selectors from './googleselectors'
 class GoogleImage extends Component {
 
   getURL() {
-    const size = this.props.size || 50
+    const size = this.props.size || 48
     const user = this.props.user || {}
     const photo = selectors.photo(user)
     if(!photo) return ''

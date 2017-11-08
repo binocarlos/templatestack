@@ -5,7 +5,10 @@
 
 .chip .text {
   font-weight: bold;
-  color: white;
   display: inline-block;
   margin-right: 10px;
+}
+
+.chip .whiteText {
+  color: white;
 }
