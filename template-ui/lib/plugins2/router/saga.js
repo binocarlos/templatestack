@@ -63,8 +63,10 @@ const RouterSaga = (opts = {}) => {
   // run a single hook
   function* runHook(name, payload) {
     consoleTools.devRun(() => {
-      console.log(`HOOK RUN: ${name}`)
-      if(payload) console.dir(payload)
+      if(!payload || !payload._nolog) {
+        console.log(`HOOK RUN: ${name}`)
+        if(payload) console.dir(payload)
+      }
     })
     const hook = getHook(name)
     if(!hook) throw new Error(`no hook found for ${name}`)
