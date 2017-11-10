@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
 import GoogleImage from './GoogleImage'
-import theme from './theme/googleimage.css'
+import theme from './theme/googleImage.css'
 
 import selectors from './googleselectors'
 
