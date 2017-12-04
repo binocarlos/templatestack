@@ -3,6 +3,7 @@ const icons = {
   help: 'help_outline',
   about: 'info_outline',
   home: 'home',
+  item: 'label',
   menu: 'menu',
   options: 'more_vert',
   logout: 'exit_to_app',
@@ -13,6 +14,7 @@ const icons = {
   save: 'send',
   add: 'add',
   edit: 'create',
+  project: 'layers',
   delete: 'delete',
   folder_open: 'keyboard_arrow_right',
   view: 'visibility',
@@ -27,14 +29,13 @@ const config = {
   title:'Example Admin Panel',
   basepath:'/admin',
   api: '/api/v1',
+  logout: '/api/v1/auth/logout',
   // the default state for the value reducer
   initialState: {
     value: {
-      config: {},
       initialized: false,
       user: null,
-      menuOpen: false,
-      test: 10
+      menuOpen: false
     }
   },  
   menu: {
@@ -47,6 +48,8 @@ const config = {
     ],
     user: [
       ['/dashboard', 'Dashboard', icons.dashboard],
+      ['/layout', 'Layout', icons.item],
+      ['/projects', 'Projects', icons.project],
       ['-'],
       ['/help', 'Help', icons.help],
       ['authLogout', 'Logout', icons.logout]

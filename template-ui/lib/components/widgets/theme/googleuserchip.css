@@ -1,0 +1,14 @@
+.chip {
+  padding: 0px;
+  background: none !important;
+}
+
+.chip .text {
+  font-weight: bold;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.chip .whiteText {
+  color: white;
+}

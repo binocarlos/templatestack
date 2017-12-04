@@ -1,0 +1,12 @@
+.inline {
+  display: inline-block;
+}
+
+.userInfo {
+  display: inline-block;
+}
+
+.rightMenu {
+  display: inline-block;
+  margin-bottom: 30px;
+}

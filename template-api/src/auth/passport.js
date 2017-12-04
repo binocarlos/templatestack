@@ -1,5 +1,6 @@
 'use strict'
 
+const async = require('async')
 const options = require('template-tools/src/utils/options')
 const passport = require('passport')
 
@@ -13,6 +14,44 @@ const Passport = (opts) => {
   })
 
   const authClient = opts.authClient  
+  const providers = opts.providers || []
+
+  let strategies = []
+
+  providers.forEach(provider => {
+    const strategy = new provider.strategy(provider.opts, (token, refresh_token, profile, done) => {
+      async.waterfall([
+        (next) => {
+          authClient.ensure({
+            username: profile.id,
+            password: profile.id
+          }, next)
+        },
+
+        (user, next) => {
+
+          const data = user.meta || {}
+          
+          data[provider.id] = profile
+          data[provider.id + 'Token'] = {
+            value: token,
+            refresh: refresh_token
+          }
+
+          authClient.update({
+            id: user.id,
+            data
+          }, next)
+        }
+      ], done)
+  
+    })
+    strategies.push({
+      provider,
+      strategy
+    })
+    passport.use(provider.id, strategy)
+  })
 
   passport.serializeUser((req, user, done) => {
     const id = opts.extractUserId ?
@@ -27,7 +66,8 @@ const Passport = (opts) => {
       id
     }, done)
   })
-    
+  
+  passport.strategies = strategies
   return passport
 }
 

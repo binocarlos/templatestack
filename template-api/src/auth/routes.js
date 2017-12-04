@@ -23,14 +23,19 @@ const AuthRoutes = (opts) => {
   })
 
   const client = opts.client
+  const getUserTags = opts.getUserTags
 
   // QUERIES
   const status = (req, res) => {
+    const user = req.user
+    const ret = user ? Object.assign({}, user, {
+      tags: getUserTags ? getUserTags(req.user) : {}
+    }) : null
     res
       .status(200)
       .json({
-        loggedIn: req.user ? true : false,
-        data: req.user
+        loggedIn: user ? true : false,
+        data: ret
       })
   }
 

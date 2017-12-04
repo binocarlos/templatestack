@@ -1,20 +1,26 @@
-import {
-  getFormValues
-} from 'redux-form'
-import APISelector from 'template-ui/lib/plugins/api/selectors'
-export { default as router } from 'template-ui/lib/plugins/router/selectors'
+import system from 'template-ui/lib/plugins2/system/selectors'
+import router from 'template-ui/lib/plugins2/router/selectors'
+import api from 'template-ui/lib/plugins2/api/selectors'
+import form from 'template-ui/lib/plugins2/form/selectors'
+import value from 'template-ui/lib/plugins2/value/selectors'
+import auth from 'template-ui/lib/plugins2/auth/selectors'
 
-export const valuesSelector = (state) => state.value || {}
-export const valueSelector = (state, name) => valuesSelector(state)[name]
-export const routeInfoSelector = (state) => state.router.result
-
-export const formValuesSelector = (name) => {
-  const selector = getFormValues(name)
-  const handler = (state) => {
-    const ret = selector(state)
-    return ret || {}
+const project = {
+  list: {
+    data: (state) => value.get(state, 'projectList') || [],
+    selected: (state) => value.get(state, 'projectSelected') || [],
+    deleteWindow: (state) => value.get(state, 'projectDeleteWindowOpen') ? true : false
   }
-  return handler
 }
 
-export const api = APISelector()
+const selectors = {
+  system,
+  auth,
+  router,
+  project,
+  api,
+  form,
+  value
+}
+
+export default selectors

@@ -3,6 +3,8 @@ import SnackBar from 'react-toolbox/lib/snackbar'
 import { Layout, NavDrawer, Sidebar, Panel } from 'react-toolbox/lib/layout'
 import { AppBar } from 'react-toolbox/lib/app_bar';
 
+import theme from './theme/appbar.css'
+
 class Application extends Component {
   render () {
     const bodyScroll = typeof(this.props.autoScroll) == 'boolean' ?
@@ -37,7 +39,7 @@ class Application extends Component {
         </AppBar>
         <Panel bodyScroll={ bodyScroll } style={ useStyle }>
           { this.props.children }
-        </Panel>       
+        </Panel>      
         <SnackBar
           active={this.props.snackbar ? true : false}
           label={this.props.snackbar || ''}

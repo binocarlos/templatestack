@@ -5,7 +5,7 @@ import Navigation from 'react-toolbox/lib/navigation'
 import ErrorText from './ErrorText'
 import Loading from './Loading'
 
-import formTheme from './theme/formWrapper.css'
+import formTheme from './theme/form.css'
 
 class FormWrapper extends Component {
 
@@ -31,7 +31,7 @@ class FormWrapper extends Component {
             null
         }
         <div className={ formTheme.fieldsWrapper }>
-          { this.props.fields }
+          { this.props.fields || this.props.children }
         </div>
         <Loading loading={this.props.loading}>
           <Navigation
