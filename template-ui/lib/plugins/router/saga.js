@@ -22,11 +22,7 @@ const RouterSaga = (opts = {}) => {
   // run each handler function with the same payload in series
   function* runHook(name, payload) {
     if(opts.trigger) opts.trigger(name, payload)
-    
-    consoleTools.devRun(() => {
-      console.log(`HOOK: ${name}`)
-      console.dir(payload)
-    })
+
     if(name.indexOf('/') == 0) {
       // replace `:param` with values from state
       const routerParams = yield select(state => state.router.params)
