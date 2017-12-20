@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-slopos
+  namespace: slopos
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: sandl.wk1.co
+    http:
+      paths:
+      - path: /api/v1
+        backend:
+          serviceName: api
+          servicePort: 80
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: 80

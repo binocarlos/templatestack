@@ -1,0 +1,43 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6.1
+    container_name: {{name}}_postgres
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+    env_file: env.dev
+  redis:
+    image: redis
+    container_name: {{name}}_redis
+    volumes:
+      - ./.data/redis:/data
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    container_name: {{name}}_frontend
+    depends_on:
+      - api
+    links:
+      - api:api
+    entrypoint:
+      - "bash"
+      - "run.sh"
+    environment:
+      - MANUALRUN
+      - NODE_ENV=development
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile.api
+    container_name: {{name}}_api
+    entrypoint:
+      - "bash"
+      - "run.sh"
+    env_file: env.dev
+    environment:
+      - MANUALRUN
+      - NODE_ENV=development
+    
