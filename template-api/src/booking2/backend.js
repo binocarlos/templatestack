@@ -12,8 +12,8 @@ const databaseTools = require('../database/tools')
 
 const REQUIRED = [
   'knex',
-  'getCalendar',
-  'getSchedule',
+  'getCalendar', // (type, installationid) => {}
+  'getSchedule', // (type, installationid) => {}
   'validateBookingOptions', // (booking) => {}
   'canBookSlot', // (booking, slot) => {}
   'sendCommunications', // (booking, opts, done) => {}
@@ -61,10 +61,10 @@ const BookingBackend = (opts) => {
   const isSlotBlocked = (slot) => selectors.slot.isBlocked(slot)
   const isSlotEmpty = (slot) => selectors.slot.isEmpty(slot)
 
-  const loadSlot = (projectid, booking, done) => {
+  const loadSlot = (installationid, booking, done) => {
     range({
       request:{
-        projectid,
+        installationid,
         type: booking.type,
         start: booking.date,
         end: booking.date
@@ -82,7 +82,7 @@ const BookingBackend = (opts) => {
   
     searchQuery
 
-    * projectid
+    * installationid
     * search
     * start
     * end
@@ -91,8 +91,8 @@ const BookingBackend = (opts) => {
     
   */
   const searchQuery = (query) => {
-    let parts = ['project = ?']
-    let params = [query.projectid]
+    let parts = ['installation = ?']
+    let params = [query.installationid]
     
     if(query.search) {
       let searchParts = []
@@ -160,7 +160,7 @@ ${limit}
   
     load
 
-      * projectid
+      * installationid
       * id
       * summary
     
@@ -172,7 +172,7 @@ ${limit}
       .from('booking')
       .where({
         id: req.id,
-        project: req.projectid
+        installation: req.installationid
       })
       .asCallback(databaseTools.singleExtractor((err, booking) => {
         if(err) return done(err)
@@ -187,7 +187,7 @@ ${limit}
   
     check
 
-      * projectid
+      * installationid
       * ctx
       * data
         * date
@@ -204,7 +204,7 @@ ${limit}
     const errors = validateBookingOptions(booking)
     if(errors) return done(null, errors)
 
-    loadSlot(req.projectid, booking, (err, slot) => {
+    loadSlot(req.installationid, booking, (err, slot) => {
       if(err) return done(err)
       if(!canBookSlot(booking, slot)) {
         return done(null, {
@@ -226,7 +226,7 @@ ${limit}
   
     slot
 
-      * projectid
+      * installationid
       * date
       * slot
       * type
@@ -237,7 +237,7 @@ ${limit}
     const req = call.request
     const booking = req.data
 
-    loadSlot(req.projectid, req, (err, slot) => {
+    loadSlot(req.installationid, req, (err, slot) => {
       if(err) return done(err)
       done(null, {
         ok: true,
@@ -252,7 +252,7 @@ ${limit}
   
     search
 
-      * projectid
+      * installationid
       * search
       * start
       * end
@@ -265,7 +265,7 @@ ${limit}
     const req = call.request
 
     const queryParams = {
-      projectid: req.projectid,
+      installationid: req.installationid,
       search: req.search,
       start: req.start,
       end: req.end,
@@ -291,7 +291,7 @@ ${limit}
   
     range
 
-      * projectid
+      * installationid
       * calendar
       * schedule
       * type
@@ -305,7 +305,7 @@ ${limit}
   
     search({
       request: {
-        projectid: req.projectid,
+        installationid: req.installationid,
         start: req.start,
         end: req.end,
         type: req.type,
@@ -318,8 +318,8 @@ ${limit}
         items: bookings,
         start: req.start,
         end: req.end,
-        calendar: getCalendar(req.type, req.projectid),
-        schedule: getSchedule(req.type, req.projectid),
+        calendar: getCalendar(req.type, req.installationid),
+        schedule: getSchedule(req.type, req.installationid),
         mergeSlot: {
           type: req.type
         },
@@ -358,7 +358,7 @@ ${limit}
 
     fields:
 
-      * projectid
+      * installationid
       * data
         * name
         * date
@@ -372,7 +372,7 @@ ${limit}
     transaction((trx, finish) => {
 
       const insertData = Object.assign({}, req.data, {
-        project: req.projectid
+        installation: req.installationid
       })
 
       knex('booking')
@@ -388,7 +388,7 @@ ${limit}
   
     update
 
-      * projectid
+      * installationid
       * id
       * data
     
@@ -401,7 +401,7 @@ ${limit}
       knex('booking')
         .where({
           id: req.id,
-          project: req.projectid
+          installation: req.installationid
         })
         .update(req.data)
         .transacting(trx)
@@ -418,7 +418,7 @@ ${limit}
     del
 
     * id
-    * projectid
+    * installationid
     
   */
   const del = (call, done) => {
@@ -429,7 +429,7 @@ ${limit}
       knex('booking')
         .where({
           id: req.id,
-          project: req.projectid
+          installation: req.installationid
         })
         .del()
         .transacting(trx)
@@ -445,7 +445,7 @@ ${limit}
   
     block
 
-      * projectid
+      * installationid
       * data
           * date
           * type
@@ -461,7 +461,7 @@ ${limit}
 
       // check that the slot is open - we cannot block a booked slot
       (next) => {
-        loadSlot(req.projectid, booking, (err, slot) => {
+        loadSlot(req.installationid, booking, (err, slot) => {
           if(err) return next(err)
           if(!isSlotEmpty(slot)) {
             return done(null, {
@@ -479,7 +479,7 @@ ${limit}
         const blockedBooking = selectors.booking.getBlockedBooking(booking, context.slot)
         create({
           request: {
-            projectid: req.projectid,
+            installationid: req.installationid,
             data: blockedBooking  
           }
         }, (err, result) => {
@@ -504,7 +504,7 @@ ${limit}
   
     unblock
 
-      * projectid
+      * installationid
       * data
           * date
           * type
@@ -522,7 +522,7 @@ ${limit}
 
       // check that the slot is open - we cannot block a booked slot
       (next) => {
-        loadSlot(req.projectid, booking, (err, slot) => {
+        loadSlot(req.installationid, booking, (err, slot) => {
           if(err) return next(err)
           if(isSlotEmpty(slot)) {
             return done(null, {
@@ -545,7 +545,7 @@ ${limit}
       (next) => {
         del({
           request: {
-            projectid: req.projectid,
+            installationid: req.installationid,
             id: context.booking.id
           }
         }, (err) => {
@@ -566,7 +566,7 @@ ${limit}
   
     submit
 
-      * projectid
+      * installationid
       * data
         * date
         * type
@@ -610,7 +610,7 @@ ${limit}
       (next) => {
         _create({
           request: {
-            projectid: req.projectid,
+            installationid: req.installationid,
             data: booking
           }
         }, (err, result) => {
@@ -650,7 +650,7 @@ ${limit}
   
     create - admin
 
-      * projectid
+      * installationid
       * data
         * communication
           * sms
@@ -681,7 +681,7 @@ ${limit}
       (next) => {
         check({
           request: {
-            projectid: req.projectid,
+            installationid: req.installationid,
             data: booking
           }
         }, (err, result) => {
@@ -696,7 +696,7 @@ ${limit}
 
       (next) => {
         _create({
-          projectid: req.projectid,
+          installationid: req.installationid,
           data: booking
         }, (err, result) => {
           if(err) return next(err)
@@ -735,7 +735,7 @@ ${limit}
   
     save - admin
 
-      * projectid
+      * installationid
       * id
       * data
         * communication
@@ -769,7 +769,7 @@ ${limit}
       (next) => {
         load({
           request: {
-            projectid: req.projectid,
+            installationid: req.installationid,
             id  
           }
         }, (err, result) => {
@@ -782,7 +782,7 @@ ${limit}
       (next) => {
         _save({
           request: {
-            projectid: req.projectid,
+            installationid: req.installationid,
             id: booking.id,
             data: booking
           }

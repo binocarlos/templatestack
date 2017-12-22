@@ -1,5 +1,6 @@
 'use strict'
 
+const refresh = require('passport-oauth2-refresh')
 const options = require('template-tools/src/utils/options')
 const async = require('async')
 const authTools = require('./tools')
@@ -44,7 +45,9 @@ const DEFAULTS = {
     delete(user.hashed_password)
     delete(user.created_at)
     return user
-  }
+  },
+
+  removeUserFields: (user) => user,
 }
 
 const AuthBackend = (opts) => {
@@ -132,6 +135,22 @@ const AuthBackend = (opts) => {
 
   /*
   
+    list
+
+      * search
+    
+  */
+  const list = (call, done) => {
+    storage.list({
+      search: call.request.search
+    }, (err, users) => {
+      if(err) return done(err)
+      done(null, users)
+    })
+  }
+
+  /*
+  
     login
 
       * username
@@ -214,13 +233,65 @@ const AuthBackend = (opts) => {
     })
   }
 
+
+  /*
+  
+    googleToken
+
+      * id
+    
+  */
+  const googleToken = (call, done) => {
+    async.waterfall([
+      (next) => load(call, next),
+      (user, next) => {
+        const token = (user.meta || {}).googleToken || {}
+        next(null, token.value || '')
+      }
+    ], done)
+  }
+
+  /*
+  
+    googleRefreshToken
+
+      * id
+    
+  */
+  const googleRefreshToken = (call, done) => {
+    async.waterfall([
+      (next) => load(call, next),
+      (user, next) => {
+        const token = (user.meta || {}).googleToken || {}
+        const refreshToken = token.refresh || token.secret
+        refresh.requestNewAccessToken('google', refreshToken, (err, accessToken) => {
+          if(err) return done(err)
+          user.meta.googleToken = {
+            value: accessToken,
+            refresh: refreshToken
+          }
+          authClient.update({
+            id: user.id,
+            data: user.meta
+          }, (err) => {
+            if(err) return next(err)
+            next(null, accessToken)
+          })
+        })
+      }
+    ], done)
+  }
+
   return {
     load,
+    list,
     login,
     ensure,
     register,
     save,
-    update
+    update,
+    googleToken,
+    googleRefreshToken
   }
 }
 

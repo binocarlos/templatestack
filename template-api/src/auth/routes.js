@@ -152,13 +152,89 @@ const AuthRoutes = (opts) => {
     })
   }
 
+
+  const list  = (req, res, next) => {
+    const qs = req.qs || {}
+    client.list({
+      search: qs.search
+    }, (err, users) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      users = users || []
+      res
+        .status(200)
+        .json(users)
+    })
+  }
+
+
+  const googleToken = (req, res, next) => {
+    if(req.user) {
+      client.googleToken({
+        id: req.user.id
+      }, (err, token) => {
+        if(err) return webserverTools.errorReply(next, res, err)
+        if(!token) {
+          res.status(404)
+          res.json({
+            ok: false
+          })
+        }
+        else {
+          res.json({
+            ok:true,
+            token
+          })  
+        }
+        
+      })
+    }
+    else {
+      res.status(404)
+      res.json({
+        ok: false
+      })
+    }
+  }
+
+  const googleRefreshToken = (req, res, next) => {
+    if(req.user) {
+      client.googleRefreshToken({
+        id: req.user.id
+      }, (err, token) => {
+        if(err) return webserverTools.errorReply(next, res, err)
+        if(!token) {
+          res.status(404)
+          res.json({
+            ok: false
+          })
+        }
+        else {
+          res.json({
+            ok:true,
+            token
+          })  
+        }
+        
+      })
+    }
+    else {
+      res.status(404)
+      res.json({
+        ok: false
+      })
+    }
+  }
+
   return {
     status,
     login,
     register,
     update,
     save,
-    logout
+    logout,
+    list,
+    googleToken,
+    googleRefreshToken,
   }
 }
 

@@ -11,7 +11,10 @@ const REQUIRED = [
 
 const DEFAULTS = {
   table: 'useraccount',
-  usernameField: 'username'
+  usernameField: 'username',
+  searchFields: [
+    'username'
+  ]
 }
 
 /*
@@ -27,7 +30,28 @@ const StorageSQL = (opts) => {
   })
 
   const knex = opts.knex
+  const searchFields = opts.searchFields
 
+  /*
+  
+    list
+
+      * search
+    
+  */
+  const list = (req, done) => {
+    const q = knex
+      .select()
+      .from(opts.table)
+
+    if(req.search) {
+      const sql = searchFields.map(f => `${f} ILIKE ?`).join(' or ')
+      const params = searchFields.map(f => `%${req.search}%`)
+      q.whereRaw(sql, params)
+    }
+    
+    q.asCallback(tools.allExtractor(done))
+  }
 
   /*
   
@@ -108,6 +132,7 @@ const StorageSQL = (opts) => {
   }
 
   return {
+    list,
     loadById,
     loadByUsername,
     create,

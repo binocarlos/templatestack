@@ -23,8 +23,14 @@ const AuthAccess = (opts) => {
     next()
   }
 
+  const filter = (fn) => (req, res, next) => {
+    if(!fn(req.user)) return webserverTools.errorReply(next, res, 'access denied', 403)
+    next()
+  }
+
   return {
-    loggedIn
+    loggedIn,
+    filter
   }
 }
 

@@ -17,6 +17,7 @@
     "moment": "^2.18.1",
     "moment-range": "^3.0.3",
     "passport": "^0.3.2",
+    "passport-oauth2-refresh": "^1.0.0",
     "pg": "^6.1.2",
     "stripe": "^4.24.0",
     "template-tools": "^1.0.0",
