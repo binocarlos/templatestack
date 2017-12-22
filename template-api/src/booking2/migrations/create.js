@@ -1,7 +1,7 @@
 'use strict'
 
 const DEFAULT_OPTS = {
-  userTablename: 'useraccount',
+  projectTablename: 'project',
   bookingTablename: 'booking',
 }
 
@@ -13,9 +13,9 @@ const BookingMigration = (opts = {}) => {
       knex.schema.createTable(opts.bookingTablename, (table) => {
         table.specificType('id', 'serial primary key not null')
         table
-          .integer(opts.userTablename)
+          .integer(opts.projectTablename)
           .references('id')
-          .inTable(opts.userTablename)
+          .inTable(opts.projectTablename)
           .onDelete('cascade')
         table.specificType('created_at', 'timestamp default now()')
         table.string('type')

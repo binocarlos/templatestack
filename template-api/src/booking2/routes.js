@@ -126,6 +126,35 @@ const BookingRoutes = (opts) => {
     })
   }
 
+
+  const check = (req, res, next) => {
+    const userid = req.installationid
+    const data = req.body
+    
+    client.check({
+      installationid,
+      data
+    }, (err, result) => {
+      if(err || !result.ok) {
+        res
+          .status(400)
+          .json({
+            ok: false,
+            error: err ? err.toString() : result.error
+          })
+      }
+      else {
+        res
+          .status(200)
+          .json({
+            ok: result.ok,
+            slot: result.slot
+          })  
+      }
+    })
+  }
+
+
   return {
     load,
     search,

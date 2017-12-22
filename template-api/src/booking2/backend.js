@@ -4,11 +4,20 @@
 const async = require('async')
 const options = require('template-tools/src/utils/options')
 const Range = require('template-tools/src/schedule/range')
- 
+const selectors = require('template-tools/src/booking/selectors')
+const idTools = require('template-tools/src/utils/id')
+const dateTools = require('template-tools/src/utils/date')
+
 const databaseTools = require('../database/tools')
 
 const REQUIRED = [
   'knex',
+  'getCalendar',
+  'getSchedule',
+  'validateBookingOptions', // (booking) => {}
+  'canBookSlot', // (booking, slot) => {}
+  'sendCommunications', // (booking, opts, done) => {}
+  'processPayment', // (booking, customerEmail, done) => {}
 ]
 
 const DEFAULTS = {
@@ -26,43 +35,54 @@ const BookingBackend = (opts) => {
     defaults: DEFAULTS
   })
 
-  const knex = opts.knex
+  const {
+    knex,
+    getCalendar,
+    getSchedule,
+    validateBookingOptions,
+    canBookSlot,
+    sendCommunications,
+    processPayment,
+  } = opts
+  
+  /*
+  
+    --------------------------------------------
+
+    HELPERS
+
+    --------------------------------------------
+    
+  */
+  
 
   const transaction = (handler, done) => databaseTools.knexTransaction(knex, handler, done)
 
-  /*
-  
-    load
+  const isSlotBlocked = (slot) => selectors.slot.isBlocked(slot)
+  const isSlotEmpty = (slot) => selectors.slot.isEmpty(slot)
 
-      * userid
-      * id
-      * summary
-    
-  */
-  const load = (call, done) => {
-    const req = call.request
-  
-    knex.select('*')
-      .from('booking')
-      .where({
-        id: req.id,
-        useraccount: req.userid
-      })
-      .asCallback(databaseTools.singleExtractor((err, booking) => {
-        if(err) return done(err)
-        booking = req.summary ?
-          opts.getSummary(booking) :
-          booking
-        done(null, booking)
-      }))
+  const loadSlot = (projectid, booking, done) => {
+    range({
+      request:{
+        projectid,
+        type: booking.type,
+        start: booking.date,
+        end: booking.date
+      }
+    }, (err, days) => {
+      if(err) return done(err)
+      const day = days[0]
+      if(!day) return done(new Error('no day found'))
+      const slot = selectors.day.slot(day, booking.slot)
+      done(null, slot)
+    })
   }
-
 
   /*
   
     searchQuery
 
-    * userid
+    * projectid
     * search
     * start
     * end
@@ -71,8 +91,8 @@ const BookingBackend = (opts) => {
     
   */
   const searchQuery = (query) => {
-    let parts = ['useraccount = ?']
-    let params = [query.userid]
+    let parts = ['project = ?']
+    let params = [query.projectid]
     
     if(query.search) {
       let searchParts = []
@@ -127,9 +147,112 @@ ${limit}
 
   /*
   
+    --------------------------------------------
+
+    QUERIES
+
+    --------------------------------------------
+    
+  */
+  
+
+  /*
+  
+    load
+
+      * projectid
+      * id
+      * summary
+    
+  */
+  const load = (call, done) => {
+    const req = call.request
+  
+    knex.select('*')
+      .from('booking')
+      .where({
+        id: req.id,
+        project: req.projectid
+      })
+      .asCallback(databaseTools.singleExtractor((err, booking) => {
+        if(err) return done(err)
+        booking = req.summary ?
+          opts.getSummary(booking) :
+          booking
+        done(null, booking)
+      }))
+  }
+
+  /*
+  
+    check
+
+      * projectid
+      * ctx
+      * data
+        * date
+        * type
+        * slot
+        * meta
+    
+  */
+  const check = (call, done) => {
+    const req = call.request
+    const booking = req.data
+
+    // TODO: use the drivers to validate
+    const errors = validateBookingOptions(booking)
+    if(errors) return done(null, errors)
+
+    loadSlot(req.projectid, booking, (err, slot) => {
+      if(err) return done(err)
+      if(!canBookSlot(booking, slot)) {
+        return done(null, {
+          ok: false,
+          error: 'there is no space left for this booking'
+        })
+      }
+      const returnSlot = Object.assign({}, slot)
+      delete(returnSlot._items)
+      done(null, {
+        ok: true,
+        slot: returnSlot
+      })
+    })
+  }
+
+
+  /*
+  
+    slot
+
+      * projectid
+      * date
+      * slot
+      * type
+      
+    
+  */
+  const slot = (call, done) => {
+    const req = call.request
+    const booking = req.data
+
+    loadSlot(req.projectid, req, (err, slot) => {
+      if(err) return done(err)
+      done(null, {
+        ok: true,
+        slot
+      })
+    })
+  }
+
+
+
+  /*
+  
     search
 
-      * userid
+      * projectid
       * search
       * start
       * end
@@ -142,7 +265,7 @@ ${limit}
     const req = call.request
 
     const queryParams = {
-      userid: req.userid,
+      projectid: req.projectid,
       search: req.search,
       start: req.start,
       end: req.end,
@@ -168,7 +291,7 @@ ${limit}
   
     range
 
-      * userid
+      * projectid
       * calendar
       * schedule
       * type
@@ -182,7 +305,7 @@ ${limit}
   
     search({
       request: {
-        userid: req.userid,
+        projectid: req.projectid,
         start: req.start,
         end: req.end,
         type: req.type,
@@ -195,8 +318,8 @@ ${limit}
         items: bookings,
         start: req.start,
         end: req.end,
-        calendar: req.calendar,
-        schedule: req.schedule,
+        calendar: getCalendar(req.type, req.projectid),
+        schedule: getSchedule(req.type, req.projectid),
         mergeSlot: {
           type: req.type
         },
@@ -213,6 +336,17 @@ ${limit}
     })
   }
 
+
+  /*
+  
+    --------------------------------------------
+
+    COMMANDS
+
+    --------------------------------------------
+    
+  */
+
   /*
   
     create
@@ -224,7 +358,7 @@ ${limit}
 
     fields:
 
-      * userid
+      * projectid
       * data
         * name
         * date
@@ -233,12 +367,12 @@ ${limit}
         * meta
     
   */
-  const create = (call, done) => {
+  const _create = (call, done) => {
     const req = call.request
     transaction((trx, finish) => {
 
-      const insertData = Object.assign({}, query.data, {
-        useraccount: query.userid
+      const insertData = Object.assign({}, req.data, {
+        project: req.projectid
       })
 
       knex('booking')
@@ -252,14 +386,14 @@ ${limit}
 
   /*
   
-    save
+    update
 
-      * userid
+      * projectid
       * id
       * data
     
   */
-  const save = (call, done) => {
+  const _save = (call, done) => {
     const req = call.request
   
     transaction((trx, finish) => {
@@ -267,7 +401,7 @@ ${limit}
       knex('booking')
         .where({
           id: req.id,
-          useraccount: req.userid
+          project: req.projectid
         })
         .update(req.data)
         .transacting(trx)
@@ -284,7 +418,7 @@ ${limit}
     del
 
     * id
-    * userid
+    * projectid
     
   */
   const del = (call, done) => {
@@ -295,15 +429,393 @@ ${limit}
       knex('booking')
         .where({
           id: req.id,
-          useraccount: req.userid
+          project: req.projectid
         })
         .del()
         .transacting(trx)
         .returning('*')
-        .asCallback(databaseTools.singleExtractor(done))
+        .asCallback(databaseTools.singleExtractor(finish))
 
     }, done)
 
+  }
+
+
+  /*
+  
+    block
+
+      * projectid
+      * data
+          * date
+          * type
+          * slot
+    
+  */
+  const block = (call, done) => {
+    const req = call.request
+    const booking = req.data
+    let context = {}
+
+    async.series([
+
+      // check that the slot is open - we cannot block a booked slot
+      (next) => {
+        loadSlot(req.projectid, booking, (err, slot) => {
+          if(err) return next(err)
+          if(!isSlotEmpty(slot)) {
+            return done(null, {
+              ok: false,
+              error: 'you cannot block a slot that has an existing booking'
+            })
+          }
+          context.slot = slot
+          next()
+        })
+      },
+
+      (next) => {
+
+        const blockedBooking = selectors.booking.getBlockedBooking(booking, context.slot)
+        create({
+          request: {
+            projectid: req.projectid,
+            data: blockedBooking  
+          }
+        }, (err, result) => {
+          if(err) return next(err)
+          if(!result) return next('no booking created')
+          context.booking = result
+          next()
+        })
+      }
+
+    ], err => {
+      if(err) return done(err)
+      done(null, {
+        ok: true,
+        booking: context.booking
+      })
+    })
+  }
+
+
+  /*
+  
+    unblock
+
+      * projectid
+      * data
+          * date
+          * type
+          * slot
+    
+  */
+  const unblock = (call, done) => {
+    const req = call.request
+    const booking = req.data
+    let context = {}
+
+    booking.date = dateTools.sqlDate(booking.date, true)
+
+    async.series([
+
+      // check that the slot is open - we cannot block a booked slot
+      (next) => {
+        loadSlot(req.projectid, booking, (err, slot) => {
+          if(err) return next(err)
+          if(isSlotEmpty(slot)) {
+            return done(null, {
+              ok: false,
+              error: 'you cannot unblock an empty slot'
+            })
+          }
+          if(!isSlotBlocked(slot)) {
+            return done(null, {
+              ok: false,
+              error: 'you cannot unblock an non blocked slot'
+            })
+          }
+          context.slot = slot
+          context.booking = selectors.slot.blockedBookings(slot)[0]
+          next()
+        })
+      },
+
+      (next) => {
+        del({
+          request: {
+            projectid: req.projectid,
+            id: context.booking.id
+          }
+        }, (err) => {
+          if(err) return next(err)
+          next()
+        })
+      }
+
+    ], err => {
+      if(err) return done(err)
+      done(null, {
+        ok: true
+      })
+    })
+  }
+
+  /*
+  
+    submit
+
+      * projectid
+      * data
+        * date
+        * type
+        * slot
+        * meta
+    
+  */
+  const submit = (call, done) => {
+    const req = call.request
+    let context = {}
+
+    const booking = req.data
+    booking.booking_reference = idTools.makeid()
+
+    const info = selectors.booking.info(booking)
+
+    const customerEmail = info.email
+    const customerPhone = info.mobile
+
+    async.series([
+
+      // this injects the slot from the database to prevent
+      // a false slot being submitted by the client being used
+      (next) => {
+        check({
+          request: req
+        }, (err, result) => {
+          if(err) return done(err)
+          if(!result.ok) return done(null, result)
+          let slot = result.slot
+
+          // important otherwise we write recursive data into our database
+          delete(slot._items)
+          booking.meta.slot = slot
+          next()
+        })
+      },
+
+      (next) => processPayment(booking, customerEmail, next),
+
+      (next) => {
+        _create({
+          request: {
+            projectid: req.projectid,
+            data: booking
+          }
+        }, (err, result) => {
+          if(err) return next(err)
+          if(!result) return next('no booking created')
+          context.booking = result
+          next()
+        })
+      },
+
+      (next) => {
+        sendCommunications(booking, {
+          email: true,
+          sms: true
+        }, (err, results) => {
+          if(err) return next(err)
+          context.comResults = results
+          next()
+        })
+      }
+
+    ], err => {
+      if(err) return done(err)
+      done(null, {
+        ok: true,
+        result: {
+          booking: context.booking,
+          email: context.comResults.email,
+          sms: context.comResults.sms
+        }
+      })
+    })
+  }
+
+
+  /*
+  
+    create - admin
+
+      * projectid
+      * data
+        * communication
+          * sms
+          * email
+        * booking
+          * date
+          * type
+          * slot
+          * meta
+    
+  */
+  const create = (call, done) => {
+    const req = call.request
+    let context = {}
+
+    const { booking, communication } = req.data
+    const { sms, email } = communication
+
+    booking.booking_reference = idTools.makeid()
+
+    const info = selectors.booking.info(booking)
+
+    const customerEmail = info.email
+    const customerPhone = info.mobile
+
+    async.series([
+
+      (next) => {
+        check({
+          request: {
+            projectid: req.projectid,
+            data: booking
+          }
+        }, (err, result) => {
+          if(err) return done(err)
+          if(!result.ok) return done(null, result)
+          let slot = result.slot
+          delete(slot._items)
+          booking.meta.slot = slot
+          next()
+        })
+      },
+
+      (next) => {
+        _create({
+          projectid: req.projectid,
+          data: booking
+        }, (err, result) => {
+          if(err) return next(err)
+          if(!result) return next('no booking created')
+          context.booking = result
+          next()
+        })
+      },
+
+      (next) => {
+        sendCommunications(booking, {
+          email,
+          sms
+        }, (err, results) => {
+          if(err) return next(err)
+          context.comResults = results
+          next()
+        })
+      }
+
+    ], err => {
+      if(err) return done(err)
+      done(null, {
+        ok: true,
+        result: {
+          booking: context.booking,
+          email: context.comResults.email,
+          sms: context.comResults.sms
+        }
+      })
+    })
+  }
+
+
+  /*
+  
+    save - admin
+
+      * projectid
+      * id
+      * data
+        * communication
+          * sms
+          * email
+        * booking
+          * date
+          * type
+          * slot
+          * meta
+    
+  */
+  const save = (call, done) => {
+    const req = call.request
+
+    let context = {}
+
+    const id = req.id
+    const { booking, communication } = req.data
+    const { sms, email } = communication
+
+    const info = selectors.booking.info(booking)
+
+    const customerEmail = info.email
+    const customerPhone = info.mobile
+
+    delete(booking.meta.slot._items)
+
+    async.series([
+
+      (next) => {
+        load({
+          request: {
+            projectid: req.projectid,
+            id  
+          }
+        }, (err, result) => {
+          if(err) return next(err)
+          if(!result) return next('no booking found')
+          next()
+        })
+      },
+
+      (next) => {
+        _save({
+          request: {
+            projectid: req.projectid,
+            id: booking.id,
+            data: booking
+          }
+        }, (err, result) => {
+          if(err) return next(err)
+          if(!result) return next('no booking saved')
+          context.booking = result
+          next()
+        })
+      },
+
+      (next) => {
+        sendCommunications(booking, {
+          email,
+          sms
+        }, (err, results) => {
+          if(err) return next(err)
+          context.comResults = results
+          next()
+        })
+      }
+
+    ], err => {
+      if(err) return done(err)
+      done(null, {
+        ok: true,
+        result: {
+          booking: context.booking,
+          email: context.comResults.email,
+          sms: context.comResults.sms
+        }
+      })
+    })
   }
 
   return {
@@ -311,8 +823,15 @@ ${limit}
     search,
     range,
     create,
+    _create,
     save,
-    del
+    _save,
+    del,
+    check,
+    block,
+    slot,
+    unblock,
+    submit,
   }
 
 }
