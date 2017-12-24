@@ -14,10 +14,14 @@ class GoogleUserChip extends Component {
     if(this.props.whiteText) {
       textThemes.push(theme.whiteText)
     }
-    return (
+    return selectors.type(user) == 'google' ? (
       <Chip theme={ theme }>
         <span className={ textThemes.join(' ') }>{ selectors.name(user) }</span>
         <GoogleUserAvatar size={ this.props.size } user={ user } />
+      </Chip>
+    ) : (
+      <Chip theme={ theme }>
+        <span className={ textThemes.join(' ') }>{ user.username }</span>
       </Chip>
     )
   }
