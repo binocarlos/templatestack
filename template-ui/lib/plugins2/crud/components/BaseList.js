@@ -16,22 +16,22 @@ const BaseListFactory = (opts = {}) => {
     getToolbar() {
       const icons = this.props.icons || {}
       const data = this.props.data || []
-      const selected = this.props.selected || []
+      const selected = opts.selectable ? (this.props.selected || []) : []
       const selectedItems = selected.map(i => data[i])
 
       const buttons = (
         <CrudButtonsListToolbar
           primary
           icons={icons}
-          selected={this.props.selected}
+          selected={selected}
           onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
         />
       )
 
-      const count = selected.length > 0 ? selected.length : data.length
+      const count = opts.selectable && selected.length > 0 ? selected.length : data.length
       let title = `${opts.title} (${count})`
 
-      if(selectedItems.length == 1) {
+      if(opts.selectable && selectedItems.length == 1) {
         title = selectedItems[0].name
       }
 
@@ -46,11 +46,14 @@ const BaseListFactory = (opts = {}) => {
 
     getRowButtons(item, i) {
       const icons = this.props.icons || {}
+      const rowButtons = opts.getRowButtons ? 
+        opts.getRowButtons(item, i) :
+        [
+          ['edit', 'Edit', icons.edit, {}]
+        ]
       return (
         <IconButtons
-          options={[
-            ['edit', 'Edit', icons.edit, {}]
-          ]}
+          options={ rowButtons }
           onClick={ (name) => this.props.itemClick(name, item, i) }
         />
       )
@@ -71,11 +74,14 @@ const BaseListFactory = (opts = {}) => {
 
       return (
         <Table
-          showHead
-          selectable={ false }
+          showHead={ opts.showHead }
+          selectable={ opts.selectable ? true : false }
+          multiSelectable={ opts.multiSelectable ? true : false }
           data={ data }
           schema={ opts.table }
           getRowButtons={ this.getRowButtons.bind(this) }
+          onSelect={ this.props.onSelect }
+          selected={ this.props.selected }
         />
       )
     }

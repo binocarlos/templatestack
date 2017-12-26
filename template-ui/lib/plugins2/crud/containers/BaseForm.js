@@ -43,11 +43,11 @@ const CrudFormFactory = (opts = {}) => {
       error: apiSelectors.error(state, `${name}Form`)
     }),
     (dispatch) => ({
-      toolbarClick: (name, props) => {
-        if(name == 'cancel') {
+      toolbarClick: (actionName, props) => {
+        if(actionName == 'cancel') {
           dispatch(routerActions.hook(`${name}Cancel`))
         }
-        else if(name == 'save') {
+        else if(actionName == 'save') {
           dispatch(routerActions.hook(`${name}Save`))
         }
       }

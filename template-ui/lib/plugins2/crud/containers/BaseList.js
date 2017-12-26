@@ -39,13 +39,13 @@ const CrudListFactory = (opts = {}) => {
       onSelect: (data) => {
         dispatch(actions.list.setSelected(data))
       },
-      itemClick: (name, item, index) => {
-        if(name == 'delete') {
+      itemClick: (actionName, item, index) => {
+        if(actionName == 'delete') {
           dispatch(actions.list.setSelected([index]))
           dispatch(actions.list.setDeleteWindow(true))
           return
         }
-        else if(name == 'edit') {
+        else if(actionName == 'edit') {
           dispatch(routerActions.hook(`${name}Edit`, item.id))
         }
       },
@@ -68,7 +68,7 @@ const CrudListFactory = (opts = {}) => {
       },
       confirmDeleteWindow: () => {
         dispatch(actions.list.setDeleteWindow(false))
-        dispatch(routerActions.hook('productDelete'))
+        dispatch(routerActions.hook(`${name}Delete`))
       }
     })
   )(opts.component)

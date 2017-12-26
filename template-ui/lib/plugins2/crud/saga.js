@@ -38,7 +38,8 @@ const CrudSagas = (opts = {}) => {
 
   const {
     name,
-    actions
+    actions,
+    selectors
   } = opts
 
   function* list() {
@@ -79,7 +80,7 @@ const CrudSagas = (opts = {}) => {
   }
 
   function* save() {
-    const itemData = yield select(state => formSelectors.values(state, 'product'))
+    const itemData = yield select(state => formSelectors.values(state, 'installation'))
 
     const apiName = itemData.id ? `${name}Save` : `${name}Create`
     const apiHandler = itemData.id ? apis.save : apis.create
@@ -102,10 +103,18 @@ const CrudSagas = (opts = {}) => {
     }
   }
 
+  function* del(payload) {
+    const selected = yield select(state => selectors.list.selectedItems(state))
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(selected)
+  }
+
   return {
     list,
     load,
-    save
+    save,
+    del
   }
 }
 

@@ -21,7 +21,7 @@ class CrudDeleteModal extends Component {
         onCancel={this.props.onCancel}
         onConfirm={this.props.onConfirm}
       >
-        Are you sure you want to delete {count} {title} {count == 1 ? '' : 's'}?
+        Are you sure you want to delete {count} {title}{count == 1 ? '' : 's'}?
       </Modal>
     )
   }
