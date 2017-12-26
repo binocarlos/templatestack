@@ -13,10 +13,24 @@ const DEFAULTS = {
   table: 'useraccount',
   usernameField: 'username',
   searchFields: [
-    'username'
+    'username',
+    `meta->'google'->>'displayName'`
   ]
 }
 
+const SCRUB_FIELDS = [
+  'hashed_password',
+  'salt',
+]
+
+const scrubUser = (user) => {
+  return Object.keys(user || {}).reduce((all, field) => {
+    if(SCRUB_FIELDS.indexOf(field) < 0) {
+      all[field] = user[field]
+    }
+    return all
+  }, {})
+}
 /*
 
   user namespace
@@ -50,7 +64,10 @@ const StorageSQL = (opts) => {
       q.whereRaw(sql, params)
     }
     
-    q.asCallback(tools.allExtractor(done))
+    q.asCallback(tools.allExtractor((err, users) => {
+      if(err) return done(err)
+      done(null, users.map(scrubUser))
+    }))
   }
 
   /*

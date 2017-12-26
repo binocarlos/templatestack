@@ -10,6 +10,9 @@ import {
   change
 } from 'redux-form'
 
+import apiSaga from '../api/saga'
+
+import systemActions from '../system/actions'
 import valueActions from '../value/actions'
 import valueSelectors from '../value/selectors'
 
@@ -112,8 +115,10 @@ const List = (opts = {}) => {
 const Item = (opts = {}) => {
   function* edit(payload) {
     const { id, item, index } = payload
-    yield put(actions.initialize(id, item))    
+    yield put(actions.initialize(id, item))
     yield put(valueActions.set(`${id}_itemWindow`, true))
+    yield put(valueActions.set(`itemSearchResults_${id}`, null))
+    yield put(valueActions.set(`itemSearch_${id}`, ''))
   }
 
   function* cancel(payload) {
@@ -137,10 +142,42 @@ const Item = (opts = {}) => {
     })
   }
 
+
+  function* search(req) {
+
+    const searchString = req.payload
+    const api = req.api
+    const id = req.id
+
+    yield put(valueActions.set(`itemSearch_${id}`, searchString))
+
+    if(!searchString) {
+      yield put(valueActions.set(`itemSearchResults_${id}`, null))
+      return
+    }
+
+    let { answer, error } = yield call(apiSaga, {
+      name: `itemSearchApi_${id}`,
+      handler: api,
+      payload: {
+        search: searchString
+      }
+    })
+    if(error) {
+      yield put(systemActions.message(error))
+      yield put(valueActions.set(`itemSearchResults_${id}`, null))
+    }
+    else {
+      yield put(valueActions.set(`itemSearchResults_${id}`, answer))
+    }
+    
+  }
+
   return {
     edit,
     cancel,
-    confirmItem
+    confirmItem,
+    search
   } 
 }
 
@@ -168,7 +205,7 @@ const FormSagas = (opts = {}) => {
 
   return {
     list: listController,
-    item: itemController
+    item: itemController,
   }
 }
 

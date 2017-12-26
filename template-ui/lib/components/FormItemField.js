@@ -11,6 +11,7 @@ import CrudDeleteModal from './CrudDeleteModal'
 import Modal from './Modal'
 import FormLayout from './FormLayout'
 import FormModal from './FormModal'
+import SearchResultsModal from './SearchResultsModal'
 
 import formUtils from 'template-ui/lib/plugins2/form/utils'
 import horizontal from './theme/horizontal.css'
@@ -34,7 +35,7 @@ class FormItemField extends Component {
       />
     )
 
-    const title = (this.props.getTitle ? this.props.getTitle() : this.props.title)
+    const title = (this.props.getTitle ? this.props.getTitle(this.props) : this.props.title)
 
     return (
       <Toolbar
@@ -55,19 +56,37 @@ class FormItemField extends Component {
         <ItemWindowComponent {...this.props} />
       )
     }
-    return (
-      <FormModal
-        active={ this.props.itemWindow ? true : false}
-        title={ this.props.itemTitle || this.props.label }
-        form={ this.props.id }
-        schema={ this.props.schema }
-        values={ this.props.values }
-        onCancel={ this.props.cancelItemWindow }
-        onConfirm={ this.props.confirmItemWindow }
-        onTouchForm={ this.props.touchItemWindow }
-        valid={ this.props.valid }
-      />
-    )
+    else if(this.props.itemWindowMode == 'search') {
+      return (
+        <SearchResultsModal
+          active={ this.props.itemWindow ? true : false}
+          title={ this.props.itemTitle || this.props.label }
+          value={ this.props.searchValue }
+          data={ this.props.searchResults }
+          icon={ this.props.icon }
+          getItemTitle={ this.props.getItemTitle }
+          onSearch={ this.props.searchBoxChanged }
+          onCancel={ this.props.cancelItemWindow }
+          onConfirm={ this.props.confirmItemWindow }
+        />
+      )
+    }
+    else {
+      return (
+        <FormModal
+          active={ this.props.itemWindow ? true : false}
+          title={ this.props.itemTitle || this.props.label }
+          form={ this.props.id }
+          schema={ this.props.schema }
+          values={ this.props.values }
+          onCancel={ this.props.cancelItemWindow }
+          onConfirm={ this.props.confirmItemWindow }
+          onTouchForm={ this.props.touchItemWindow }
+          valid={ this.props.valid }
+        />
+      )
+    }
+    
   }
 
   getDataLine() {
