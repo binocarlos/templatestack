@@ -138,11 +138,61 @@ const AuthSagas = (opts = {}) => {
     return true
   }
 
+  function* loadToken() {
+    if(!apis.loadToken) throw new Error('apis.loadToken needed')
+    const { answer, error } = yield call(apiSaga, {
+      name: 'authLoadToken',
+      handler: apis.loadToken
+    })
+    if(error || !answer.ok) {
+      yield put(systemSagas.message(error || 'no token found'))
+      yield put(actions.setToken(''))
+    }
+    else {
+      yield put(actions.setToken(answer.token))
+    }
+  }
+
+  function* refreshToken() {
+    if(!apis.refreshToken) throw new Error('apis.loadToken needed')
+    const { answer, error } = yield call(apiSaga, {
+      name: 'authRefreshToken',
+      handler: apis.refreshToken
+    })
+    if(error || !answer.ok) {
+      yield put(systemSagas.message(error || 'no token found'))
+      yield put(actions.setToken(''))
+    }
+    else {
+      yield put(actions.setToken(answer.token))
+    }
+  }
+
+  // higher order function that retries an api call to google
+  // it retries once under the assumption the users api key has expired
+  // it re-loads the api key before trying the google api request one more time
+  const TokenApiWrapper = (opts = {}) => {
+    function* tokenApi(requestOpts) {
+      let ret = yield call(apiSaga, requestOpts)
+      const error = ret.error
+      if(error && error.code == 401 && error.message == 'Invalid Credentials') {
+        yield call(refreshToken)
+        ret = yield call(apiSaga, requestOpts)
+      }
+      return ret
+    }
+
+    return tokenApi
+  }
+
   return {
     status,
     login,
     register,
-    checkRoute
+    checkRoute,
+    loadToken,
+    refreshToken,
+    TokenApiWrapper,
   }
  
 }

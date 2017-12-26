@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import options from 'template-tools/src/utils/options'
+
 import apiSelectors from '../../api/selectors'
 import routerActions from '../../router/actions'
 
@@ -20,16 +22,9 @@ const CrudListFactory = (opts = {}) => {
 
   const {
     name,
-    component,
+    actions,
+    selectors
   } = opts
-
-  class ListContainer extends Component {
-    render() {
-      return (
-        <component {...this.props} />
-      )
-    }
-  }
 
   return connect(
     (state, ownProps) => ({
@@ -37,7 +32,8 @@ const CrudListFactory = (opts = {}) => {
       selected: selectors.list.selected(state),
       deleteActive: selectors.list.deleteWindow(state),
       loaded: apiSelectors.loaded(state, `${name}List`),
-      error: apiSelectors.error(state, `${name}List`)
+      error: apiSelectors.error(state, `${name}List`),
+      icons: opts.icons,
     }),
     (dispatch) => ({
       onSelect: (data) => {
@@ -75,7 +71,7 @@ const CrudListFactory = (opts = {}) => {
         dispatch(routerActions.hook('productDelete'))
       }
     })
-  )(ListContainer)
+  )(opts.component)
 
 }
 

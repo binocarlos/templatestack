@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 
+import options from 'template-tools/src/utils/options'
+
 import formSelectors from '../../form/selectors'
 import apiSelectors from '../../api/selectors'
 import routerActions from '../../router/actions'

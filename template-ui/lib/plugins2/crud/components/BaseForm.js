@@ -10,18 +10,16 @@ import LongText from 'template-ui/lib/components/widgets/LongText'
 import horizontal from 'template-ui/lib/components/theme/horizontal.css'
 
 import formUtils from 'template-ui/lib/plugins2/form/utils'
-import config from '../config'
-import forms from '../forms'
 
 const BaseFormFactory = (opts = {}) => {
   return class BaseForm extends Component {
     getToolbar() {
-
+      const icons = this.props.icons || {}
       const buttons = (
         <CrudButtonsForm
           valid={this.props.valid}
           loading={this.props.loading}
-          icons={config.icons}
+          icons={icons}
           onClick={ (name) => this.props.toolbarClick(name, this.props) }
         />
       )

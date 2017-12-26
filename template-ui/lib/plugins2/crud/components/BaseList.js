@@ -10,13 +10,11 @@ import CrudDeleteModal from 'template-ui/lib/components/CrudDeleteModal'
 
 import horizontal from 'template-ui/lib/components/theme/horizontal.css'
 
-import config from '../config'
-import tables from '../tables'
-
 const BaseListFactory = (opts = {}) => {
   return class BaseList extends Component {
 
     getToolbar() {
+      const icons = this.props.icons || {}
       const data = this.props.data || []
       const selected = this.props.selected || []
       const selectedItems = selected.map(i => data[i])
@@ -24,7 +22,7 @@ const BaseListFactory = (opts = {}) => {
       const buttons = (
         <CrudButtonsListToolbar
           primary
-          icons={config.icons}
+          icons={icons}
           selected={this.props.selected}
           onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
         />
@@ -47,10 +45,11 @@ const BaseListFactory = (opts = {}) => {
     }
 
     getRowButtons(item, i) {
+      const icons = this.props.icons || {}
       return (
         <IconButtons
           options={[
-            ['edit', 'Edit', config.icons.edit, {}]
+            ['edit', 'Edit', icons.edit, {}]
           ]}
           onClick={ (name) => this.props.itemClick(name, item, i) }
         />

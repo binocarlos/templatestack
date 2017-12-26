@@ -104,8 +104,7 @@ const CrudSagas = (opts = {}) => {
 
   return {
     list,
-    addView,
-    editView,
+    load,
     save
   }
 }
