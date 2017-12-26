@@ -7,6 +7,7 @@ import Table from 'template-ui/lib/components/Table'
 import CrudButtonsListToolbar from 'template-ui/lib/components/CrudButtonsListToolbar'
 import IconButtons from 'template-ui/lib/components/IconButtons'
 import CrudDeleteModal from 'template-ui/lib/components/CrudDeleteModal'
+import CrudSearchModal from 'template-ui/lib/components/CrudSearchModal'
 
 import horizontal from 'template-ui/lib/components/theme/horizontal.css'
 
@@ -24,6 +25,7 @@ const BaseListFactory = (opts = {}) => {
           primary
           icons={icons}
           selected={selected}
+          search={opts.searchActive}
           onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
         />
       )
@@ -101,6 +103,12 @@ const BaseListFactory = (opts = {}) => {
             items={ selectedItems }
             onCancel={ this.props.cancelDeleteWindow }
             onConfirm={ this.props.confirmDeleteWindow }
+          />
+          <CrudSearchModal
+            title={ `Search ${opts.title}s` }
+            active={ this.props.searchActive }
+            onCancel={ this.props.cancelSearchWindow }
+            onConfirm={ this.props.confirmSearchWindow }
           />
         </ToolbarLayout>
       )

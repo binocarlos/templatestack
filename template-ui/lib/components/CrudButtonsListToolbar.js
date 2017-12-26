@@ -16,6 +16,10 @@ class CrudButtonsList extends Component {
         primary: this.props.primary,
         accent: this.props.secondary,
       }])
+
+      if(this.props.search) {
+        options.push(['search', 'Search', icons.search, {}])
+      }
     }
     else {
       if(selected >=1) {

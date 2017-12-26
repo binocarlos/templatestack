@@ -43,8 +43,10 @@ const InstallationRoutes = (opts) => {
   }
 
   const list = (req, res, next) => {
+    const qs = urlparse(req.url, true).query || {}    
     client.list({
-      userid: req.userid
+      userid: req.userid,
+      search: qs.search,
     }, (err, installations) => {
       if(err) return webserverTools.errorReply(next, res, err)
       res

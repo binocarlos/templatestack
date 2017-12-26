@@ -73,9 +73,6 @@ class TableComponent extends Component {
     const data = this.props.data || []
     const fields = this.getFields()
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(selected)
     return (
       <Table
         selectable={ this.props.selectable && data.length > 0 }

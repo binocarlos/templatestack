@@ -76,11 +76,13 @@ const InstallationBackend = (opts) => {
     list
 
       * userid
+      * search
     
   */
   const list = (call, done) => {
     storage.list({
-      userid: call.request.userid
+      userid: call.request.userid,
+      search: call.request.search
     }, done)
   }
 

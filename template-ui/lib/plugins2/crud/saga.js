@@ -43,10 +43,11 @@ const CrudSagas = (opts = {}) => {
   } = opts
 
   function* list() {
+    const searchForm = yield select(state => formSelectors.values(state, `${name}Search`))
     const { answer, error } = yield call(apiSaga, {
       name: `${name}List`,
       handler: apis.list,
-      payload: {}
+      payload: searchForm
     })
     if(error) {
       yield put(systemActions.message(error))
@@ -59,7 +60,6 @@ const CrudSagas = (opts = {}) => {
 
   function* load() {
     const id = yield select(state => routerSelectors.param(state, 'id'))
-
     if(id) {
       const { answer, error } = yield call(apiSaga, {
         name: `${name}Load`,
@@ -80,7 +80,7 @@ const CrudSagas = (opts = {}) => {
   }
 
   function* save() {
-    const itemData = yield select(state => formSelectors.values(state, 'installation'))
+    const itemData = yield select(state => formSelectors.values(state, name))
 
     const apiName = itemData.id ? `${name}Save` : `${name}Create`
     const apiHandler = itemData.id ? apis.save : apis.create

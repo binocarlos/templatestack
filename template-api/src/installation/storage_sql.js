@@ -34,7 +34,16 @@ const InstallationStorageSQL = (opts) => {
 
   const knex = opts.knex
 
-  const LIST_INSTALLATION_QUERY = () => `select 
+  const LIST_INSTALLATION_QUERY = (req) => {
+    let params = [req.userid]
+    let searchSql = ''
+
+    if(req.search) {
+      searchSql = `and ${tables.installation}.name ILIKE ?`
+      params.push(`%${req.search}%`)
+    }
+    
+    const sql = `select 
   ${tables.installation}.*
 from
   ${tables.installation}
@@ -44,9 +53,16 @@ on
   (${tables.collaboration}.${tables.installation} = ${tables.installation}.id)
 where
   ${tables.collaboration}.${tables.user} = ?
+  ${searchSql}
 order by
   installation.name
 `
+
+    return {
+      sql,
+      params
+    }
+  }
 
   const LIST_USERS_QUERY = (meta = {}) => `select
   ${tables.collaboration}.meta as collaboration,
@@ -97,11 +113,13 @@ where
     list
 
       * userid
+      * search
     
   */
   const list = (req, done) => {
+    const query = LIST_INSTALLATION_QUERY(req)
     knex
-      .raw(LIST_INSTALLATION_QUERY(), [req.userid])
+      .raw(query.sql, query.params)
       .asCallback(tools.allExtractor(done))
   }
   

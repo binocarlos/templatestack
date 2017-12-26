@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { reduxForm } from 'redux-form'
 
 import options from 'template-tools/src/utils/options'
 
+import formSelectors from '../../form/selectors'
 import apiSelectors from '../../api/selectors'
 import routerActions from '../../router/actions'
 
@@ -26,11 +28,24 @@ const CrudListFactory = (opts = {}) => {
     selectors
   } = opts
 
+  const SearchFormWrapper = reduxForm({
+    form: `${name}Search`
+  })(opts.component)
+
+  class ListContainer extends Component {
+    render() {
+      return (
+        <SearchFormWrapper {...this.props} />
+      )
+    }
+  }
+
   return connect(
     (state, ownProps) => ({
       data: selectors.list.data(state),
       selected: selectors.list.selected(state),
       deleteActive: selectors.list.deleteWindow(state),
+      searchActive: selectors.list.searchWindow(state),
       loaded: apiSelectors.loaded(state, `${name}List`),
       error: apiSelectors.error(state, `${name}List`),
       icons: opts.icons,
@@ -62,6 +77,9 @@ const CrudListFactory = (opts = {}) => {
         else if(actionName == 'add') {
           dispatch(routerActions.hook(`${name}Add`))
         }
+        else if(actionName == 'search') {
+          dispatch(actions.list.setSearchWindow(true))
+        }
       },
       cancelDeleteWindow: () => {
         dispatch(actions.list.setDeleteWindow(false))
@@ -69,9 +87,16 @@ const CrudListFactory = (opts = {}) => {
       confirmDeleteWindow: () => {
         dispatch(actions.list.setDeleteWindow(false))
         dispatch(routerActions.hook(`${name}Delete`))
+      },
+      cancelSearchWindow: () => {
+        dispatch(actions.list.setSearchWindow(false))
+      },
+      confirmSearchWindow: () => {
+        dispatch(actions.list.setSearchWindow(false))
+        dispatch(routerActions.hook(`${name}List`))
       }
     })
-  )(opts.component)
+  )(ListContainer)
 
 }
 

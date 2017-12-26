@@ -18,7 +18,7 @@ const CrudApi = (opts = {}) => {
       method: 'get',
       url: `${BASE_URL}`,
       params: {
-        
+        search: payload.search 
       }
     })
   }
