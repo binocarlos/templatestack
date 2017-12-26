@@ -49,17 +49,17 @@ const CrudListFactory = (opts = {}) => {
           dispatch(routerActions.hook(`${name}Edit`, item.id))
         }
       },
-      toolbarClick: (name, selectedItems) => {
-        if(name == 'delete') {
+      toolbarClick: (actionName, selectedItems) => {
+        if(actionName == 'delete') {
           dispatch(actions.list.setDeleteWindow(true))
         }
-        else if(name == 'edit') {
+        else if(actionName == 'edit') {
           const item = selectedItems[0]
           if(item) {
             dispatch(routerActions.hook(`${name}Edit`, item.id))
           }
         }
-        else if(name == 'add') {
+        else if(actionName == 'add') {
           dispatch(routerActions.hook(`${name}Add`))
         }
       },
