@@ -85,7 +85,7 @@ export const radio = ({
   return (
     <div>
       <div className={ theme.radioTitle }>{ label }</div>
-      <RadioGroup {...input}>
+      <RadioGroup value={input.value || props.default} onChange={input.onChange}>
         {
           source.map((item, i) => {
             return (

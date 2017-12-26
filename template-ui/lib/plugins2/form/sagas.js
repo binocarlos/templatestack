@@ -131,6 +131,11 @@ const Item = (opts = {}) => {
 
     const valid = yield select(state => formSelectors.valid(state, id))
 
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('valid')
+    console.dir(valid)
+
     if(!valid) {
       yield put(actions.form.touchAll(id, schema))
       return
