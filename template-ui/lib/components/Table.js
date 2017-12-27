@@ -53,7 +53,7 @@ class TableComponent extends Component {
           fields.map((field, j) => {
             const style = field.getStyle ? field.getStyle(item, this.props) : {}
             return (
-              <TableCell key={ j } style={style}>{field.value(item, this.props, j) || ''}</TableCell>
+              <TableCell key={ j } style={style}>{field.value(item, this.props, i) || ''}</TableCell>
             )
           })
         }

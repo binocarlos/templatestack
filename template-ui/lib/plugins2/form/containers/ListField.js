@@ -148,13 +148,15 @@ export default connect(
           payload: val
         }))
       },
-      updateItemValue: (index, field, value) => {
+      updateItemValue: (itemIndex, itemField, itemValue) => {
         dispatch(routerActions.hook('formList', {
           action: 'updateItemValue',
-          id,
-          index,
+          itemIndex,
+          itemField,
+          itemValue,
+          form,
           field,
-          value
+          id
         }))
       }
     }

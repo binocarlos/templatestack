@@ -133,11 +133,18 @@ const List = (opts = {}) => {
     yield put(actions.change(form, field, value))
   }
 
+  // this is used for inline table editing
   function* updateItemValue(payload) {
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(payload)
+    const { id, form, field, itemIndex, itemField, itemValue } = payload
+    const allValues = yield select(state => selectors.values(state, form))
+    const list = allValues[field]
+    const item = list[itemIndex]
+
+    const newItem = Object.assign({}, item, {
+      [itemField]: itemValue
+    })
+
+    yield put(arraySplice(form, field, itemIndex, 1, newItem))
   }
 
   return {
