@@ -55,6 +55,8 @@ class FormListField extends Component {
     return (
       <CrudButtonsListItem
         icons={icons}
+        hideDelete={this.props.hideTableDelete}
+        hideEdit={this.props.hideTableEdit}
         onClick={ (name) => this.props.itemClick(name, item, i) }
       />
     )
@@ -72,13 +74,14 @@ class FormListField extends Component {
     const selectedItems = selected.map(i => data[i])
     return (
       <Table
-        selectable={ true }
-        multiSelectable={ true }
+        selectable={ this.props.selectable ? true : false }
+        multiSelectable={ this.props.multiSelectable ? true : false }
         data={ data }
         selected={ selected }
         schema={ this.props.table }
         getRowButtons={ this.getRowButtons.bind(this) }
         onSelect={ this.props.onSelect }
+        onItemUpdate={ this.props.updateItemValue }
       />
     )
   }

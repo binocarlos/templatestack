@@ -33,8 +33,8 @@ export default connect(
       selected: formSelectors.list.selected(state, id),
       deleteWindow: formSelectors.list.deleteWindow(state, id),
       itemWindow: formSelectors.list.itemWindow(state, id),
-      searchValue: valueSelectors.get(state, `itemSearch_${id}`),
-      searchResults: valueSelectors.get(state, `itemSearchResults_${id}`),
+      searchValue: valueSelectors.get(state, `${id}_itemSearch`),
+      searchResults: valueSelectors.get(state, `${id}_itemSearchResults`),
     }
   },
   (dispatch, ownProps) => {
@@ -104,6 +104,7 @@ export default connect(
         }))
       },
       confirmItemWindow: (values) => {
+        values = ownProps.processNewItem ? ownProps.processNewItem(values) : values
         dispatch(routerActions.hook('formList', {
           action: 'confirmItem',
           id,
@@ -145,6 +146,15 @@ export default connect(
           id,
           api: ownProps.api,
           payload: val
+        }))
+      },
+      updateItemValue: (index, field, value) => {
+        dispatch(routerActions.hook('formList', {
+          action: 'updateItemValue',
+          id,
+          index,
+          field,
+          value
         }))
       }
     }

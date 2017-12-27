@@ -33,20 +33,19 @@ const DEFAULTS = {
 
 function* search(req) {
 
-  const section = 'itemSearch'
   const searchString = req.payload
   const api = req.api
   const id = req.id
 
-  yield put(valueActions.set(`${section}_${id}`, searchString))
+  yield put(valueActions.set(`${id}_itemSearch`, searchString))
 
   if(!searchString) {
-    yield put(valueActions.set(`${section}Results_${id}`, null))
+    yield put(valueActions.set(`${id}_itemSearchResults`, null))
     return
   }
 
   let { answer, error } = yield call(apiSaga, {
-    name: `${section}Api_${id}`,
+    name: `itemSearchApi_${id}`,
     handler: api,
     payload: {
       search: searchString
@@ -54,10 +53,10 @@ function* search(req) {
   })
   if(error) {
     yield put(systemActions.message(error))
-    yield put(valueActions.set(`${section}Results_${id}`, null))
+    yield put(valueActions.set(`${id}_itemSearchResults`, null))
   }
   else {
-    yield put(valueActions.set(`${section}Results_${id}`, answer))
+    yield put(valueActions.set(`${id}_itemSearchResults`, answer))
   }
   
 }
@@ -93,6 +92,8 @@ const List = (opts = {}) => {
     yield put(valueActions.set(`${id}_itemIndex`, null))
     yield put(valueActions.set(`${id}_itemWindow`, false))
     yield put(valueActions.set(`${id}_deleteWindow`, false))
+    yield put(valueActions.set(`${id}_itemSearch`, ''))
+    yield put(valueActions.set(`${id}_itemSearchResults`, null))
   }
 
   function* confirmItem(payload) {
@@ -132,6 +133,13 @@ const List = (opts = {}) => {
     yield put(actions.change(form, field, value))
   }
 
+  function* updateItemValue(payload) {
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(payload)
+  }
+
   return {
     add,
     edit,
@@ -140,7 +148,8 @@ const List = (opts = {}) => {
     cancel,
     confirmItem,
     confirmDelete,
-    search
+    search,
+    updateItemValue
   } 
 }
 
@@ -149,13 +158,15 @@ const Item = (opts = {}) => {
     const { id, item, index } = payload
     yield put(actions.initialize(id, item))
     yield put(valueActions.set(`${id}_itemWindow`, true))
-    yield put(valueActions.set(`itemSearchResults_${id}`, null))
-    yield put(valueActions.set(`itemSearch_${id}`, ''))
+    yield put(valueActions.set(`${id}_itemSearch`, ''))
+    yield put(valueActions.set(`${id}_itemSearchResults`, null))
   }
 
   function* cancel(payload) {
     const { id } = payload
     yield put(valueActions.set(`${id}_itemWindow`, false))
+    yield put(valueActions.set(`${id}_itemSearch`, ''))
+    yield put(valueActions.set(`${id}_itemSearchResults`, null))
   }
 
   function* confirmItem(payload) {

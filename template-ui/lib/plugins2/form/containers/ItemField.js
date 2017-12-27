@@ -30,8 +30,8 @@ export default connect(
       values: formSelectors.values(state, id),
       errors: formSelectors.errors(state, id),
       data: ownProps.input.value,
-      searchValue: valueSelectors.get(state, `itemSearch_${id}`),
-      searchResults: valueSelectors.get(state, `itemSearchResults_${id}`),
+      searchValue: valueSelectors.get(state, `${id}_itemSearch`),
+      searchResults: valueSelectors.get(state, `${id}_itemSearchResults`),
       itemWindow: formSelectors.list.itemWindow(state, id),
     }
   },

@@ -8,11 +8,16 @@ class CrudButtonsItem extends Component {
     const buttons = []
     const icons = this.props.icons || {}
 
-    const options = [
-      ['delete', 'Delete', icons.delete, {}],
-      ['edit', 'Edit', icons.edit, {}]
-    ]
-    
+    let options = []
+
+    if(!this.props.hideDelete) {
+      options.push(['delete', 'Delete', icons.delete, {}])
+    }
+
+    if(!this.props.hideEdit) {
+      options.push(['edit', 'Edit', icons.edit, {}])
+    }
+
     return (
       <IconButtons
         options={options}
