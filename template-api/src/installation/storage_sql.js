@@ -84,6 +84,20 @@ where
   }
 `
 
+const LIST_COLLABORATIONS_QUERY = (meta = {}) => `select
+  json_extract_path_text(${tables.collaboration}.meta, 'permission') as collaboration_permission,
+  json_extract_path_text(${tables.collaboration}.meta, 'type') as collaboration_type,
+  ${tables.user}.*
+from
+  ${tables.user}
+join
+  ${tables.collaboration}
+on
+  (${tables.collaboration}.${tables.user} = ${tables.user}.id)
+  and
+  (${tables.collaboration}.${tables.installation} = ?)
+`
+
   const createCollaboration = ({ installationid, userid, meta } = opts) => {
     return knex
       .insert({
@@ -103,9 +117,25 @@ where
     
   */
   const loadById = (req, done) => {
-    knex(tables.installation)
-      .where('id', req.id)
-      .asCallback(tools.singleExtractor(done))
+
+    async.parallel({
+      installation: (next) => {
+        knex(tables.installation)
+          .where('id', req.id)
+          .asCallback(tools.singleExtractor(next))
+      },
+      collaborators: (next) => {
+        list_collaborators({
+          id: req.id
+        }, next)
+      }
+    }, (err, results) => {
+      if(err) return done(err)
+      const installation = results.installation
+      installation.collaborators = results.collaborators
+      done(null, installation)
+    })
+    
   }
 
   /*
@@ -234,6 +264,19 @@ where
         [tables.installation]: req.id,
         [tables.user]: req.userid
       })
+      .asCallback(tools.allExtractor(done))
+  }
+
+  /*
+  
+    list_collaborators
+
+      * id
+    
+  */
+  const list_collaborators = (req, done) => {
+    knex
+      .raw(LIST_COLLABORATIONS_QUERY(), [req.id])
       .asCallback(tools.allExtractor(done))
   }
 

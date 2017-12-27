@@ -1,0 +1,8 @@
+.thinDropdown > [data-react-toolbox=input] {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.thinDropdown > [data-react-toolbox=input] > input {
+  font-size: 1em !important;
+}

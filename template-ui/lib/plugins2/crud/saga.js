@@ -99,7 +99,7 @@ const CrudSagas = (opts = {}) => {
     }
     else {
       yield put(routerActions.hook(`${name}Cancel`))
-      yield put(systemActions.message(`Product Saved`))
+      yield put(systemActions.message(`items saved`))
     }
   }
 

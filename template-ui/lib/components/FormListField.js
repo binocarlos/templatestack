@@ -22,13 +22,13 @@ class FormListField extends Component {
 
   getToolbar() {
     const data = this.props.data || []
-    const selected = this.props.selected || []
+    const selected = this.props.hideTableEdit ? [] : (this.props.selected || [])
     const selectedItems = selected.map(i => data[i]).filter(i => i)
 
     const buttons = this.props.getToolbarButtons ? this.props.getToolbarButtons(this.props) : (
       <CrudButtonsListToolbar
         icons={icons}
-        selected={this.props.selected}
+        selected={ selected }
         onClick={ (name) => this.props.toolbarClick(name, selectedItems, selected) }
       />
     )
@@ -52,7 +52,7 @@ class FormListField extends Component {
   }
 
   getRowButtons(item, i) {
-    return (
+    const buttons = (
       <CrudButtonsListItem
         icons={icons}
         hideDelete={this.props.hideTableDelete}
@@ -60,6 +60,13 @@ class FormListField extends Component {
         onClick={ (name) => this.props.itemClick(name, item, i) }
       />
     )
+
+    if(this.props.wrapRowButtons) {
+      return this.props.wrapRowButtons(item, buttons)
+    }
+    else {
+      return buttons
+    }
   }
 
 /*
@@ -74,6 +81,7 @@ class FormListField extends Component {
     const selectedItems = selected.map(i => data[i])
     return (
       <Table
+        showHead={ this.props.showHead }
         selectable={ this.props.selectable ? true : false }
         multiSelectable={ this.props.multiSelectable ? true : false }
         data={ data }

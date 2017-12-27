@@ -5,6 +5,7 @@ import { reduxForm } from 'redux-form'
 import routerActions from '../../router/actions'
 import valueActions from '../../value/actions'
 import formActions from '../../form/actions'
+import systemActions from '../../system/actions'
 
 import valueSelectors from '../../value/selectors'
 import formSelectors from '../../form/selectors'
@@ -62,6 +63,8 @@ export default connect(
       }))
     }
 
+    const currentData = ownProps.input.value || []
+
     return {
       onSelect: (data) => dispatch(valueActions.set(`${id}_selected`, data)),
       itemClick: (name, item, index) => {
@@ -104,6 +107,17 @@ export default connect(
         }))
       },
       confirmItemWindow: (values) => {
+        if(ownProps.filterNewItem) {
+          const error = ownProps.filterNewItem(values, currentData)
+          if(error) {
+            dispatch(systemActions.message(error))
+            dispatch(routerActions.hook('formList', {
+              action: 'cancel',
+              id
+            }))
+            return
+          }
+        }
         values = ownProps.processNewItem ? ownProps.processNewItem(values) : values
         dispatch(routerActions.hook('formList', {
           action: 'confirmItem',
