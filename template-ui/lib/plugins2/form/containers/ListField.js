@@ -33,6 +33,8 @@ export default connect(
       selected: formSelectors.list.selected(state, id),
       deleteWindow: formSelectors.list.deleteWindow(state, id),
       itemWindow: formSelectors.list.itemWindow(state, id),
+      searchValue: valueSelectors.get(state, `itemSearch_${id}`),
+      searchResults: valueSelectors.get(state, `itemSearchResults_${id}`),
     }
   },
   (dispatch, ownProps) => {
@@ -110,16 +112,6 @@ export default connect(
           values,
           schema
         }))
-        /*
-        dispatch(routerActions.hook('formList', {
-          action: 'selected',
-          id,
-          selected: [],
-        }))
-        dispatch(routerActions.hook('formList', {
-          action: 'cancel',
-          id
-        }))*/
       },
       touchItemWindow: () => {
         dispatch(formActions.touchAll(id, ownProps.schema))
@@ -145,6 +137,14 @@ export default connect(
         dispatch(routerActions.hook('formList', {
           action: 'cancel',
           id
+        }))
+      },
+      searchBoxChanged: (val) => {
+        dispatch(routerActions.hook('formList', {
+          action: 'search',
+          id,
+          api: ownProps.api,
+          payload: val
         }))
       }
     }

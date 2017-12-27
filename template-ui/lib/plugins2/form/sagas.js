@@ -31,6 +31,37 @@ const DEFAULTS = {
   
 }
 
+function* search(req) {
+
+  const section = 'itemSearch'
+  const searchString = req.payload
+  const api = req.api
+  const id = req.id
+
+  yield put(valueActions.set(`${section}_${id}`, searchString))
+
+  if(!searchString) {
+    yield put(valueActions.set(`${section}Results_${id}`, null))
+    return
+  }
+
+  let { answer, error } = yield call(apiSaga, {
+    name: `${section}Api_${id}`,
+    handler: api,
+    payload: {
+      search: searchString
+    }
+  })
+  if(error) {
+    yield put(systemActions.message(error))
+    yield put(valueActions.set(`${section}Results_${id}`, null))
+  }
+  else {
+    yield put(valueActions.set(`${section}Results_${id}`, answer))
+  }
+  
+}
+
 const List = (opts = {}) => {
   function* add(payload) {
     const { id, item, schema } = payload
@@ -108,7 +139,8 @@ const List = (opts = {}) => {
     selected,
     cancel,
     confirmItem,
-    confirmDelete
+    confirmDelete,
+    search
   } 
 }
 
@@ -131,11 +163,6 @@ const Item = (opts = {}) => {
 
     const valid = yield select(state => formSelectors.valid(state, id))
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('valid')
-    console.dir(valid)
-
     if(!valid) {
       yield put(actions.form.touchAll(id, schema))
       return
@@ -145,37 +172,6 @@ const Item = (opts = {}) => {
     yield call(cancel, {
       id
     })
-  }
-
-
-  function* search(req) {
-
-    const searchString = req.payload
-    const api = req.api
-    const id = req.id
-
-    yield put(valueActions.set(`itemSearch_${id}`, searchString))
-
-    if(!searchString) {
-      yield put(valueActions.set(`itemSearchResults_${id}`, null))
-      return
-    }
-
-    let { answer, error } = yield call(apiSaga, {
-      name: `itemSearchApi_${id}`,
-      handler: api,
-      payload: {
-        search: searchString
-      }
-    })
-    if(error) {
-      yield put(systemActions.message(error))
-      yield put(valueActions.set(`itemSearchResults_${id}`, null))
-    }
-    else {
-      yield put(valueActions.set(`itemSearchResults_${id}`, answer))
-    }
-    
   }
 
   return {

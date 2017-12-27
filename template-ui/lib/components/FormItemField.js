@@ -101,9 +101,6 @@ class FormItemField extends Component {
   }
 
   render() {
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(this.props)
     return (
       <div>
         { this.getToolbar() }
