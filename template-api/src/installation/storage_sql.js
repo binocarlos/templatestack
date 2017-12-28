@@ -98,6 +98,8 @@ on
   (${tables.collaboration}.${tables.installation} = ?)
 `
 
+  const transaction = (handler, done) => tools.knexTransaction(knex, handler, done)
+
   const createCollaboration = ({ installationid, userid, meta } = opts) => {
     return knex
       .insert({
@@ -152,6 +154,29 @@ on
       .raw(query.sql, query.params)
       .asCallback(tools.allExtractor(done))
   }
+
+  const deleteCollaborations = (id, done) => {
+    knex(tables.collaboration)
+      .where({
+        installation: id
+      })
+      .del()
+      .asCallback(done)
+  }
+
+  const createCollaborations = (id, collaborators, done) => {
+    async.map(collaborators, (collaborator, next) => {
+      const req = createCollaboration({
+        installationid: id,
+        userid: collaborator.id,
+        meta: {
+          permission: collaborator.collaboration_permission,
+          type: 'user'
+        }
+      })
+      req.asCallback(tools.singleExtractor(next))
+    }, done)
+  }
   
 
   /*
@@ -162,32 +187,27 @@ on
       * data
         * name
         * meta
-      * collaboration
-        * ?
+        * collaborators
     
   */
   const create = (req, done) => {
-    knex.transaction(function(trx) {
-      return knex
-        .insert(req.data)
-        .into(tables.installation)
-        .returning('*')
-        .then((installations) => {
-
-          const installation = installations[0]
-          
-          return createCollaboration({
-            installationid: installation.id,
-            userid: req.userid,
-            meta: req.collaboration
-          }).then((collaboration) => installation)
-
-        })
-    })
-    .then((installation) => {
-      done(null, installation)
-    })
-    .catch(done)
+    const insertData = Object.assign({}, req.data)
+    const collaborators = insertData.collaborators
+    delete(insertData.collaborators)
+    transaction((trx, finish) => {
+      async.waterfall([
+        (next) => {
+          return knex
+            .insert(insertData)
+            .into(tables.installation)
+            .returning('*')
+            .asCallback(tools.singleExtractor(next))
+        },
+        (installation, next) => {
+          createCollaborations(installation.id, collaborators, next)
+        }
+      ], finish)
+    }, done)
   }
 
   /*
@@ -202,10 +222,25 @@ on
   */
 
   const save = (req, done) => {
-    knex(tables.installation)
-      .where({id: req.id})
-      .update(req.data)
-      .asCallback(tools.singleExtractor(done))
+    const saveData = Object.assign({}, req.data)
+    const collaborators = saveData.collaborators
+    delete(saveData.collaborators)
+    transaction((trx, finish) => {
+      async.series([
+        (next) => {
+          knex(tables.installation)
+            .where({id: req.id})
+            .update(saveData)
+            .asCallback(tools.singleExtractor(next))
+        },
+        (next) => {
+          deleteCollaborations(req.id, next)
+        },
+        (next) => {
+          createCollaborations(req.id, collaborators, next)
+        }
+      ], finish)
+    }, done)    
   }
 
   /*

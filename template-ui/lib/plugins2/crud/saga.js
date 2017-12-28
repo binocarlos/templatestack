@@ -75,7 +75,11 @@ const CrudSagas = (opts = {}) => {
       }
     }
     else {
-      yield put(formActions.initialize(name, {}))
+      let initialData = {}
+      if(opts.loadInitialData) {
+        initialData = yield call(opts.loadInitialData)
+      }
+      yield put(formActions.initialize(name, initialData))
     }
   }
 

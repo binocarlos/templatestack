@@ -100,8 +100,7 @@ const InstallationBackend = (opts) => {
   const create = (call, done) => {
     storage.create({
       userid: call.request.userid,
-      data: call.request.data,
-      collaboration: COLLABORATION_TEMPLATE
+      data: call.request.data
     }, done)
   }
   
