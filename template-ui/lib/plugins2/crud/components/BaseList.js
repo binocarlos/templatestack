@@ -26,6 +26,7 @@ const BaseListFactory = (opts = {}) => {
           icons={icons}
           selected={selected}
           search={opts.searchActive}
+          activeButtons={opts.activeButtons}
           onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
         />
       )
