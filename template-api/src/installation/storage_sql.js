@@ -44,7 +44,8 @@ const InstallationStorageSQL = (opts) => {
     }
     
     const sql = `select 
-  ${tables.installation}.*
+  ${tables.installation}.*,
+  ${tables.collaboration}.meta as collaboration_meta
 from
   ${tables.installation}
 join

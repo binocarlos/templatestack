@@ -4,6 +4,7 @@ import { reduxForm } from 'redux-form'
 
 import options from 'template-tools/src/utils/options'
 
+import authSelectors from '../../auth/selectors'
 import formSelectors from '../../form/selectors'
 import apiSelectors from '../../api/selectors'
 import routerActions from '../../router/actions'
@@ -49,6 +50,7 @@ const CrudListFactory = (opts = {}) => {
       loaded: apiSelectors.loaded(state, `${name}List`),
       error: apiSelectors.error(state, `${name}List`),
       icons: opts.icons,
+      user: authSelectors.user(state),
     }),
     (dispatch) => ({
       onSelect: (data) => {

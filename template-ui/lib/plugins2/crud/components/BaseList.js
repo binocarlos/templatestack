@@ -50,7 +50,7 @@ const BaseListFactory = (opts = {}) => {
     getRowButtons(item, i) {
       const icons = this.props.icons || {}
       const rowButtons = opts.getRowButtons ? 
-        opts.getRowButtons(item, i) :
+        opts.getRowButtons(item, this.props, i) :
         [
           ['edit', 'Edit', icons.edit, {}]
         ]
