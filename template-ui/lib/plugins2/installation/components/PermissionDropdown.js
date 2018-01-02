@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import Dropdown from 'react-toolbox/lib/dropdown'
 
-import theme from './utils.css'
+import theme from './styles.css'
 
 const PERMISSIONS = [
   { value: 'owner', label: 'owner' },

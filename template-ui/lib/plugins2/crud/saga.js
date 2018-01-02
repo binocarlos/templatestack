@@ -131,11 +131,18 @@ const CrudSagas = (opts = {}) => {
     yield call(list)
   }
 
+  function* tableAction(payload) {
+    if(opts.tableAction) {
+      yield call(opts.tableAction, payload)
+    }
+  }
+
   return {
     list,
     load,
     save,
-    del
+    del,
+    tableAction
   }
 }
 

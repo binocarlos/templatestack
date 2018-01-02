@@ -65,6 +65,12 @@ const CrudListFactory = (opts = {}) => {
         else if(actionName == 'edit') {
           dispatch(routerActions.hook(`${name}Edit`, item.id))
         }
+        else {
+          dispatch(routerActions.hook(`${name}TableAction`, {
+            name: actionName,
+            item
+          }))
+        }
       },
       toolbarClick: (actionName, selectedItems) => {
         if(actionName == 'delete') {

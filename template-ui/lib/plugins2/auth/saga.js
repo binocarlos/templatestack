@@ -22,7 +22,8 @@ const REQUIRED = [
 const REQUIRED_APIS = [
   'status',
   'login',
-  'register'
+  'register',
+  'update',
 ]
 
 const DEFAULTS = {
@@ -82,7 +83,22 @@ const AuthSagas = (opts = {}) => {
     if(error) return
     const user = answer.loggedIn ? answer.data : null
     yield put(actions.setUser(user))
+    if(opts.hooks && opts.hooks.status) {
+      yield call(opts.hooks.status)
+    }
     return user
+  }
+
+  function* update(payload) {
+    const { answer, error } = yield call(apiSaga, {
+      name: 'authUpdate',
+      handler: apis.update,
+      payload
+    })
+    if(error) {
+      yield put(systemSagas.message(error))
+    }
+    yield call(status)
   }
 
   function* login(action = {}) {
@@ -189,6 +205,7 @@ const AuthSagas = (opts = {}) => {
     status,
     login,
     register,
+    update,
     checkRoute,
     loadToken,
     refreshToken,

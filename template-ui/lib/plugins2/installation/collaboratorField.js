@@ -4,8 +4,8 @@ import fields from '../form/fields'
 import utils from '../form/utils'
 import validators from 'template-tools/src/utils/validators'
 
-import CurrentUserFilter from '../../containers/collaborator/CurrentUserFilter'
-import PermissionDropdown from '../../containers/collaborator/PermissionDropdown'
+import CurrentUserFilter from './containers/CurrentUserFilter'
+import PermissionDropdown from './containers/PermissionDropdown'
 
 const CollaboratorField = (opts = {}) => {
 

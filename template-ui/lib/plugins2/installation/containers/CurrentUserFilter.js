@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import authSelectors from '../../plugins2/auth/selectors'
-import PermissionDropdown from '../../components/form/PermissionDropdown'
+import authSelectors from '../../auth/selectors'
 
-class PermissionDropdownContainer extends Component {
+// do not show content if 'row.id' == currentuser.id
+class CurrentUserFilter extends Component {
   render() {
-    return (
-      <PermissionDropdown {...this.props} />
-    )
+    return this.props.readOnly ? null : this.props.children
   }
 }
 
@@ -24,4 +22,4 @@ export default connect(
   (dispatch, ownProps) => {
     return {}
   }
-)(PermissionDropdownContainer)
+)(CurrentUserFilter)

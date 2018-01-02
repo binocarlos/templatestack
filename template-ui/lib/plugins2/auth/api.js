@@ -50,6 +50,14 @@ const AuthApi = (opts = {}) => {
     })
   }
 
+  const update = (payload = {}) => {
+    return request({
+      method: 'put',
+      url: `${BASE_URL}/update`,
+      data: payload
+    })
+  }
+
 
   return {
     status,
@@ -57,6 +65,7 @@ const AuthApi = (opts = {}) => {
     register,
     loadToken,
     refreshToken,
+    update,
   }
 }
 
