@@ -64,7 +64,9 @@ const CrudSagas = (opts = {}) => {
       const { answer, error } = yield call(apiSaga, {
         name: `${name}Load`,
         handler: apis.get,
-        payload: id
+        payload: {
+          id
+        }
       })
 
       if(error) {

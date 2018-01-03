@@ -23,10 +23,10 @@ const CrudApi = (opts = {}) => {
     })
   }
 
-  const get = (id) => {
+  const get = (payload) => {
     return request({
       method: 'get',
-      url: `${BASE_URL}/${id}`
+      url: `${BASE_URL}/${payload.id}`
     })
   }
 

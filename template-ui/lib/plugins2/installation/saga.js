@@ -38,7 +38,7 @@ const InstallationSaga = (opts = {}) => {
     const { answer, error } = yield call(apiSaga, {
       name: `installationActiveLoad`,
       handler: opts.apis.get,
-      payload: id
+      payload: {id}
     })
     if(error) {
       yield put(systemActions.message(error))

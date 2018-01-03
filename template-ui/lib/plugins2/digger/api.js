@@ -29,9 +29,18 @@ const DiggerApi = (opts = {}) => {
     })
   }
 
-  const children = (id) => {
+  const children = (payload) => {
     let url =  `${BASE_URL}/children`
-    if(id) url += `/${id}`
+    if(payload.id) url += `/${payload.id}`
+
+    return new Promise(resolve => {
+      resolve([{
+        id: 1,
+        name: 'top'
+      }])
+    })
+
+    /*
     return request({
       method: 'get',
       url,
@@ -41,6 +50,7 @@ const DiggerApi = (opts = {}) => {
         namespace: payload.namespace,
       }
     })
+    */
   }
 
   const descendents = (payload, state) => {
@@ -75,16 +85,16 @@ const DiggerApi = (opts = {}) => {
     })*/
   }
 
-  const links = (id) => {
+  const links = (payload) => {
     return request({
       method: 'get',
-      url: `${BASE_URL}/links/${id}`
+      url: `${BASE_URL}/links/${payload.id}`
     })
   }
 
   const create = (payload) => {
     let url =  `${BASE_URL}`
-    if(payload.id) url += `/${id}`
+    if(payload.id) url += `/${payload.id}`
     return request({
       method: 'post',
       url,

@@ -19,6 +19,7 @@ const BaseTreeFactory = (opts = {}) => {
       return (
         <TreeLayout
           tree={ tree }
+          width={ opts.width }
         >
           { this.props.children }
         </TreeLayout>
