@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 import { Menu, MenuItem, MenuDivider } from 'react-toolbox/lib/menu'
 import { Button, IconButton } from 'react-toolbox/lib/button'
+import Tooltip from 'react-toolbox/lib/tooltip'
+
+const TooltipButton = Tooltip(Button)
 
 import whiteIconMenuTheme from './theme/whiteIconMenu.css'
 import theme from './theme/buttonMenu.css'
@@ -48,13 +51,16 @@ export class ButtonMenu extends Component {
     const options = this.props.options || []
     return (
       <div className={ theme.container }>
-        <Button
+        <TooltipButton
           label={ this.props.label }
           icon={ this.props.icon }
           onClick={this.handleButtonClick}
           accent={this.props.accent}
           primary={this.props.primary}
           raised={this.props.raised}
+          floating={this.props.floating}
+          mini={this.props.mini}
+          tooltip={this.props.tooltip}
         />
         <Menu
           active={this.state.active}

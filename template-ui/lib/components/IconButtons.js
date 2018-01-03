@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 
-import {Button} from 'react-toolbox/lib/button'
+import {Button, IconButton} from 'react-toolbox/lib/button'
 import Tooltip from 'react-toolbox/lib/tooltip'
 import Navigation from 'react-toolbox/lib/navigation'
+import ButtonMenu from './ButtonMenu'
 
 const TooltipButton = Tooltip(Button)
 
@@ -14,18 +15,34 @@ export class IconButtons extends Component {
     const title = option[1]
     const icon = option[2]
     const props = option[3]
+    const options = option[4]
     
-    return (
-      <TooltipButton
-        tooltip={ title } 
-        icon={ icon }
-        onClick={ () => this.props.onClick(id) }
-        key={ i }
-        floating
-        mini
-        {...props}
-      />
-    )
+    if(options) {
+      return (
+        <ButtonMenu
+          icon={ icon }
+          tooltip={ title }
+          key={ i }
+          options={ options }
+          onClick={ () => this.props.onClick(id) }
+          {...props}
+        />
+      )
+    }
+    else {
+      return (
+        <TooltipButton
+          tooltip={ title } 
+          icon={ icon }
+          onClick={ () => this.props.onClick(id) }
+          key={ i }
+          floating
+          mini
+          {...props}
+        />
+      )
+    }
+    
   }
 
   render () {
