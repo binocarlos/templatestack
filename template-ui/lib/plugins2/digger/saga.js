@@ -54,7 +54,8 @@ const DiggerSagas = (opts = {}) => {
       handler: apis.descendents,
       payload: {
         namespace,
-        type
+        type,
+        tree: true
       }
     })
 
@@ -72,14 +73,19 @@ const DiggerSagas = (opts = {}) => {
   }
 
   function* list() {
-    //const searchForm = yield select(state => formSelectors.values(state, `${name}Search`))
+    let searchForm = yield select(state => formSelectors.values(state, `${name}Search`))
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
+
+    searchForm = searchForm || {}
 
     const { answer, error } = yield call(apiSaga, {
       name: `${name}List`,
-      handler: apis.descendents,
+      handler: searchForm.search ? apis.descendents : apis.children,
       payload: {
         namespace,
+        id: viewid,
+        search: searchForm.search
       }
     })
 
@@ -89,6 +95,7 @@ const DiggerSagas = (opts = {}) => {
     }
     else {
       yield put(actions.list.setData(answer))
+      yield put(formActions.initialize(`${name}Search`, {}))
     }
   }
 
@@ -125,6 +132,7 @@ const DiggerSagas = (opts = {}) => {
 
   function* save() {
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
     const itemData = yield select(state => formSelectors.values(state, name))
 
     const saveData = Object.assign({}, itemData, {
@@ -138,7 +146,7 @@ const DiggerSagas = (opts = {}) => {
       name: apiName,
       handler: apiHandler,
       payload: {
-        id: itemData.id,
+        id: viewid,
         data: saveData
       }
     })

@@ -54,7 +54,7 @@ const DiggerApi = (opts = {}) => {
         type: payload.type,
         search: payload.search,
         namespace: payload.namespace,
-        tree: 'y'
+        tree: payload.tree ? 'y' : ''
       }
     })
   }

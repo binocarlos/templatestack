@@ -25,7 +25,7 @@ class ListTree extends Component {
 
     return (
       <ListItem
-        key={ index }
+        key={ index + '-' + depth }
         caption={ item.name }
         leftIcon={ this.getIcon(item) }
         onClick={ () => this.props.onClick(item) }

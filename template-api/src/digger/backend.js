@@ -133,7 +133,7 @@ const DiggerBackend = (opts) => {
   */
   const descendents = (call, done) => {
     const req = call.request
-  
+
     const query = {
       installationid: req.installationid,
       id: req.id,
@@ -156,7 +156,7 @@ const DiggerBackend = (opts) => {
       },
       (descendents, next) => {
         if(!descendents) return next()
-        if(!req.tree) return next(null, tools.createResourceTree(descendents))
+        if(req.tree) return next(null, tools.createResourceTree(descendents))
         return next(null, descendents)
       }
     ], done)

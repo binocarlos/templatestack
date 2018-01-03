@@ -56,6 +56,7 @@ const CrudSagas = (opts = {}) => {
     else {
       yield put(actions.list.setData(answer))
     }
+    yield put(formActions.initialize(`${name}Search`, {}))
   }
 
   function* load() {

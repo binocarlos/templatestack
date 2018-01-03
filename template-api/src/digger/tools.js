@@ -137,6 +137,7 @@ const createResourceTree = (resources) => {
       rootItems.push(item)
     }
   })
+
   return rootItems
 }
 
