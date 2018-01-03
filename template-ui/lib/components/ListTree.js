@@ -26,7 +26,6 @@ class ListTree extends Component {
     return (
       <ListItem
         key={ index }
-        className={ theme['depth' + depth] }
         caption={ item.name }
         leftIcon={ this.getIcon(item) }
         onClick={ () => this.props.onClick(item) }
@@ -34,7 +33,7 @@ class ListTree extends Component {
           itemAction: theme.itemAction,
           listItem: selected ? theme.selectedItem : '',
           itemText: selected ? theme.selectedText : '',
-          left: selected ? theme.selectedLeft : '',
+          left: [theme['depth' + depth], selected ? theme.selectedLeft : ''].join(' '),
         }}
       />
     )
