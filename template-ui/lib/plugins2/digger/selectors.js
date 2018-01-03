@@ -13,7 +13,7 @@ const DiggerSelectors = (opts = {}) => {
   return {
     list: crudSelectors.list,
     tree: {
-      data: (state) => value.get(state, `${name}Tree`) || [],
+      data: (state) => value.get(state, `${name}Descendents`) || [],
     }
   }
 }

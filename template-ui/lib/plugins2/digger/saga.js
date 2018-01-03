@@ -56,34 +56,13 @@ const DiggerSagas = (opts = {}) => {
       }
     })
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(answer)
-    console.dir(error)
-    /*
-    const id = yield select(state => routerSelectors.param(state, 'id')) 
-    if(id) {
-      const { answer, error } = yield call(apiSaga, {
-        name: `${name}Tree`,
-        handler: apis.get,
-        payload: id
-      })
-
-      if(error) {
-        yield put(systemActions.message(error))
-      }
-      else {
-        yield put(formActions.initialize(name, answer))
-      }
+    if(error) {
+      yield put(systemActions.message(error))
+      yield put(actions.tree.setData([]))
     }
     else {
-      let initialData = {}
-      if(opts.loadInitialData) {
-        initialData = yield call(opts.loadInitialData)
-      }
-      yield put(formActions.initialize(name, initialData))
+      yield put(actions.tree.setData(answer))
     }
-  */
   }
 
 

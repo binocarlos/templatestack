@@ -98,7 +98,8 @@ const DiggerRoutes = (opts) => {
       type: req.qs.type,
       search: req.qs.search,
       namespace: req.qs.namespace,
-      withLinks: req.qs.links ? true : false
+      withLinks: req.qs.links ? true : false,
+      tree: req.qs.tree ? true : false,
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(areResourcesFromDifferentInstallation(installationid, resources)) return webserverTools.errorReply(next, res, 'wrong installation id', 403)

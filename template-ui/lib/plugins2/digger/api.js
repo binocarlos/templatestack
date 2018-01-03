@@ -46,6 +46,23 @@ const DiggerApi = (opts = {}) => {
   const descendents = (payload, state) => {
     let url =  `${BASE_URL(state)}/descendents`
     if(payload.id) url += `/${payload.id}`
+
+    return new Promise(resolve => {
+      resolve([{
+        id: 1,
+        name: 'top',
+        children: [{
+          id: 2,
+          name: 'middle',
+          children: [{
+            id: 3,
+            name: 'bottom'
+          }]
+        }]
+      }])
+    })
+
+    /*
     return request({
       method: 'get',
       url,
@@ -53,8 +70,9 @@ const DiggerApi = (opts = {}) => {
         type: payload.type,
         search: payload.search,
         namespace: payload.namespace,
+        tree: 'y'
       }
-    })
+    })*/
   }
 
   const links = (id) => {

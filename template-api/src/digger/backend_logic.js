@@ -60,7 +60,7 @@ const BackendLogic = (storage, opts = {}) => {
     })
   }
 
-  // load and inject links for some already loaded resources
+  // load and inject links for some already loaded resources 
   const injectLinks = (query, done) => {
     const resources = query.resources
     linkTree({
@@ -101,6 +101,7 @@ const BackendLogic = (storage, opts = {}) => {
   // * id
   // * type
   // * search
+  // * namespace
   const tree = (query, done) => {
     descendents(query, (err, results) => {
       if(err) return done(err)

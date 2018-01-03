@@ -128,6 +128,7 @@ const DiggerBackend = (opts) => {
       * search
       * withLinks
       * namespace
+      * tree
     
   */
   const descendents = (call, done) => {
@@ -152,6 +153,11 @@ const DiggerBackend = (opts) => {
           resources: descendents
         }, next)
         
+      },
+      (descendents, next) => {
+        if(!descendents) return next()
+        if(!req.tree) return next(null, tools.createResourceTree(descendents))
+        return next(null, descendents)
       }
     ], done)
     

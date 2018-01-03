@@ -13,7 +13,7 @@ const DiggerActions = (opts = {}) => {
   return {
     list: crudActions.list,
     tree: {
-      setData: (data) => value.set(`${name}Tree`, data), 
+      setData: (data) => value.set(`${name}Descendents`, data), 
     }
   }
 }
