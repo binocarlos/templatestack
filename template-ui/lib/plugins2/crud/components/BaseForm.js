@@ -36,7 +36,7 @@ const BaseFormFactory = (opts = {}) => {
     }
 
     render() {
-      const useForm = opts.getForm ? opts.getForm(props) : opts.form
+      const useForm = opts.getForm ? opts.getForm(this.props) : opts.form
       const fields = formUtils.getFields(useForm)
       
       return (

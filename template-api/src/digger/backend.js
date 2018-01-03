@@ -234,11 +234,14 @@ const DiggerBackend = (opts) => {
       data
     } = req
 
+    const useData = Object.assign({}, data)
+    delete(useData.id)
+
     logic.transaction((trx, finish) => {
       logic.save(trx, {
         installationid,
         id,
-        data
+        data: useData
       }, finish)
     }, done)
     

@@ -103,6 +103,7 @@ const DiggerSagas = (opts = {}) => {
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
     const type = yield select(state => routerSelectors.param(state, 'type'))
     const id = yield select(state => routerSelectors.param(state, 'id'))
+    yield put(formActions.initialize(name, {}))
     if(id) {
       const { answer, error } = yield call(apiSaga, {
         name: `${name}Load`,
@@ -141,12 +142,13 @@ const DiggerSagas = (opts = {}) => {
 
     const apiName = itemData.id ? `${name}Save` : `${name}Create`
     const apiHandler = itemData.id ? apis.save : apis.create
+    const id = itemData.id ? itemData.id : viewid
 
     const { answer, error } = yield call(apiSaga, {
       name: apiName,
       handler: apiHandler,
       payload: {
-        id: viewid,
+        id,
         data: saveData
       }
     })
