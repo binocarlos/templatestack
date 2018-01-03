@@ -11,6 +11,8 @@ import routerSelectors from '../router/selectors'
 import formSelectors from '../form/selectors'
 import formUtils from '../form/utils'
 
+import tools from './tools'
+
 const REQUIRED = [
   'name',
   'actions',
@@ -94,7 +96,7 @@ const DiggerSagas = (opts = {}) => {
       yield put(actions.list.setData([]))
     }
     else {
-      yield put(actions.list.setData(answer))
+      yield put(actions.list.setData(tools.sortItems(answer)))
       yield put(formActions.initialize(`${name}Search`, {}))
     }
   }

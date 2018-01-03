@@ -1,0 +1,10 @@
+@import 'react-toolbox/lib/colors.css';
+@import 'react-toolbox/lib/variables.css';
+
+.primaryBadge {
+  background-color: var(--color-primary-light) !important;
+}
+
+.primaryDarkBadge {
+  background-color: var(--color-primary-dark) !important;
+}

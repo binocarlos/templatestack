@@ -85,7 +85,7 @@ const BaseListFactory = (opts = {}) => {
       const data = this.props.data || []
       const selected = this.props.selected || []
       const selectedItems = selected.map(i => data[i])
-      if(!this.props.loaded) {
+      if(!opts.noLoading && !this.props.loaded) {
         return (
           <ProgressBar
             type="circular"
@@ -125,7 +125,7 @@ const BaseListFactory = (opts = {}) => {
         >
           { this.getTable() }
           <CrudDeleteModal
-            title={ title }
+            title={ opts.title }
             active={ this.props.deleteActive }
             items={ selectedItems }
             onCancel={ this.props.cancelDeleteWindow }
