@@ -80,7 +80,7 @@ const DiggerSagas = (opts = {}) => {
     const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
 
     searchForm = searchForm || {}
-
+    
     const { answer, error } = yield call(apiSaga, {
       name: `${name}List`,
       handler: searchForm.search ? apis.descendents : apis.children,
@@ -164,12 +164,19 @@ const DiggerSagas = (opts = {}) => {
     }
   }
 
+  function* tableAction(payload) {
+    if(opts.tableAction) {
+      yield call(opts.tableAction, payload)
+    }
+  }
+
 
   const digger = {    
     descendents,
     list,
     load,
     save,
+    tableAction,
   }
 
   return digger

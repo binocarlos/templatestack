@@ -92,6 +92,13 @@ const CrudListFactory = (opts = {}) => {
         else if(actionName == 'search') {
           dispatch(actions.list.setSearchWindow(true))
         }
+        else {
+          dispatch(routerActions.hook(`${name}TableAction`, {
+            name: actionName,
+            selectedItems,
+            clickName
+          }))
+        }
       },
       cancelDeleteWindow: () => {
         dispatch(actions.list.setDeleteWindow(false))
