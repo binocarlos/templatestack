@@ -17,10 +17,10 @@ const DiggerApi = (opts = {}) => {
     return `${opts.url}/installation/${installationid}${opts.suburl}`
   }
 
-  const search = (payload = {}) => {
+  const search = (payload = {}, state) => {
     return request({
       method: 'get',
-      url: `${BASE_URL}`,
+      url: `${BASE_URL(state)}`,
       params: {
         type: payload.type,
         search: payload.search,
@@ -29,18 +29,10 @@ const DiggerApi = (opts = {}) => {
     })
   }
 
-  const children = (payload = {}) => {
-    let url =  `${BASE_URL}/children`
+  const children = (payload = {}, state) => {
+    let url =  `${BASE_URL(state)}/children`
     if(payload.id) url += `/${payload.id}`
 
-    return new Promise(resolve => {
-      resolve([{
-        id: 1,
-        name: 'top'
-      }])
-    })
-
-    /*
     return request({
       method: 'get',
       url,
@@ -50,32 +42,11 @@ const DiggerApi = (opts = {}) => {
         namespace: payload.namespace,
       }
     })
-    */
   }
 
   const descendents = (payload = {}, state) => {
     let url =  `${BASE_URL(state)}/descendents`
     if(payload.id) url += `/${payload.id}`
-
-    return new Promise(resolve => {
-      resolve([{
-        id: 1,
-        type: 'folder',
-        name: 'top',
-        children: [{
-          id: 2,
-          type: 'folder',
-          name: 'middle',
-          children: [{
-            id: 3,
-            type: 'item',
-            name: 'bottom'
-          }]
-        }]
-      }])
-    })
-
-    /*
     return request({
       method: 'get',
       url,
@@ -85,18 +56,18 @@ const DiggerApi = (opts = {}) => {
         namespace: payload.namespace,
         tree: 'y'
       }
-    })*/
-  }
-
-  const links = (payload) => {
-    return request({
-      method: 'get',
-      url: `${BASE_URL}/links/${payload.id}`
     })
   }
 
-  const create = (payload) => {
-    let url =  `${BASE_URL}`
+  const links = (payload = {}, state) => {
+    return request({
+      method: 'get',
+      url: `${BASE_URL(state)}/links/${payload.id}`
+    })
+  }
+
+  const create = (payload = {}, state) => {
+    let url =  `${BASE_URL(state)}`
     if(payload.id) url += `/${payload.id}`
     return request({
       method: 'post',
@@ -105,25 +76,25 @@ const DiggerApi = (opts = {}) => {
     })
   }
 
-  const load = (payload) => {
+  const load = (payload = {}, state) => {
     return request({
       method: 'get',
-      url: `${BASE_URL}/${payload.id}`
+      url: `${BASE_URL(state)}/${payload.id}`
     })
   }
 
-  const save = (payload) => {
+  const save = (payload = {}, state) => {
     return request({
       method: 'put',
-      url: `${BASE_URL}/${payload.id}`,
+      url: `${BASE_URL(state)}/${payload.id}`,
       data: payload.data
     })
   }
 
-  const del = (payload) => {
+  const del = (payload = {}, state) => {
     return request({
       method: 'delete',
-      url: `${BASE_URL}/${payload.id}`
+      url: `${BASE_URL(state)}/${payload.id}`
     })
   }
 

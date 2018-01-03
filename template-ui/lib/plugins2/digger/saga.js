@@ -123,10 +123,41 @@ const DiggerSagas = (opts = {}) => {
     }
   }
 
+  function* save() {
+    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const itemData = yield select(state => formSelectors.values(state, name))
+
+    const saveData = Object.assign({}, itemData, {
+      namespace
+    })
+
+    const apiName = itemData.id ? `${name}Save` : `${name}Create`
+    const apiHandler = itemData.id ? apis.save : apis.create
+
+    const { answer, error } = yield call(apiSaga, {
+      name: apiName,
+      handler: apiHandler,
+      payload: {
+        id: itemData.id,
+        data: saveData
+      }
+    })
+
+    if(error) {
+      yield put(systemActions.message(error))
+    }
+    else {
+      yield put(routerActions.hook(`${name}Cancel`))
+      yield put(systemActions.message(`item saved`))
+    }
+  }
+
+
   const digger = {    
     descendents,
     list,
     load,
+    save,
   }
 
   return digger
