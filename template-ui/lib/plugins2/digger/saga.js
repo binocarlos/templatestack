@@ -48,7 +48,7 @@ const DiggerSagas = (opts = {}) => {
   function* descendents() {
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
 
-    const { answer, error } = yield call(apiSaga, {
+    let { answer, error } = yield call(apiSaga, {
       name: `${name}Descendents`,
       handler: apis.descendents,
       payload: {
@@ -61,6 +61,10 @@ const DiggerSagas = (opts = {}) => {
       yield put(actions.tree.setData([]))
     }
     else {
+
+      if(opts.processTreeData) {
+        answer = opts.processTreeData(answer)
+      }
       yield put(actions.tree.setData(answer))
     }
   }

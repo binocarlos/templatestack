@@ -54,10 +54,12 @@ const BaseListFactory = (opts = {}) => {
           />
         )
       }
+
+      const useIcon = opts.getIcon ? opts.getIcon(this.props) : opts.icon
       
       return (
         <Toolbar
-          leftIcon={ opts.icon }
+          leftIcon={ useIcon }
           title={ title }
           leftContent={ buttons }
         />
@@ -110,20 +112,27 @@ const BaseListFactory = (opts = {}) => {
       const data = this.props.data || []
       const selected = this.props.selected || []
       const selectedItems = selected.map(i => data[i])
+
+      let title = opts.title
+
+      if(opts.getTitle) {
+        title = opts.getTitle(this.props)
+      }
+
       return (
         <ToolbarLayout
           toolbar={this.getToolbar()}
         >
           { this.getTable() }
           <CrudDeleteModal
-            title={ opts.title }
+            title={ title }
             active={ this.props.deleteActive }
             items={ selectedItems }
             onCancel={ this.props.cancelDeleteWindow }
             onConfirm={ this.props.confirmDeleteWindow }
           />
           <CrudSearchModal
-            title={ `Search ${opts.title}s` }
+            title={ `Search ${title}` }
             active={ this.props.searchActive }
             onCancel={ this.props.cancelSearchWindow }
             onConfirm={ this.props.confirmSearchWindow }

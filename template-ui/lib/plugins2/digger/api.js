@@ -60,12 +60,15 @@ const DiggerApi = (opts = {}) => {
     return new Promise(resolve => {
       resolve([{
         id: 1,
+        type: 'folder',
         name: 'top',
         children: [{
           id: 2,
+          type: 'folder',
           name: 'middle',
           children: [{
             id: 3,
+            type: 'item',
             name: 'bottom'
           }]
         }]

@@ -12,8 +12,8 @@ const BaseTreeFactory = (opts = {}) => {
         <GreySidebar>
           <ListTree
             data={ this.props.data }
-            rootItemName={ opts.title }
             onClick={ this.props.clickTree }
+            getIcon={ opts.getIcon }
             selectedId={ this.props.selectedId }
           />
         </GreySidebar>

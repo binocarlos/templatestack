@@ -42,16 +42,20 @@ const CrudListFactory = (opts = {}) => {
   }
 
   return connect(
-    (state, ownProps) => ({
-      data: selectors.list.data(state),
-      selected: selectors.list.selected(state),
-      deleteActive: selectors.list.deleteWindow(state),
-      searchActive: selectors.list.searchWindow(state),
-      loaded: apiSelectors.loaded(state, `${name}List`),
-      error: apiSelectors.error(state, `${name}List`),
-      icons: opts.icons,
-      user: authSelectors.user(state),
-    }),
+    (state, ownProps) => {
+      const baseProps = {
+        data: selectors.list.data(state),
+        selected: selectors.list.selected(state),
+        deleteActive: selectors.list.deleteWindow(state),
+        searchActive: selectors.list.searchWindow(state),
+        loaded: apiSelectors.loaded(state, `${name}List`),
+        error: apiSelectors.error(state, `${name}List`),
+        icons: opts.icons,
+        user: authSelectors.user(state),
+      }
+      const extraProps = opts.getProps ? opts.getProps(state, ownProps) : {}
+      return Object.assign({}, baseProps, extraProps)
+    },
     (dispatch) => ({
       onSelect: (data) => {
         dispatch(actions.list.setSelected(data))

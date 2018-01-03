@@ -52,14 +52,6 @@ class ListTree extends Component {
 
   render() {
     let data = this.props.data || []
-    if(this.props.rootItemName) {
-      const rootItem = {
-        name: this.props.rootItemName,
-        type: '_root',
-        children: data
-      }
-      data = [rootItem]
-    }
     const items = this.getItems(data, 0, 0)
     return (
       <List selectable ripple>
