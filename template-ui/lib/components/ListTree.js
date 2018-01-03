@@ -13,15 +13,28 @@ class ListTree extends Component {
   }
 
   getItem(item, index, depth) {
+
+    let selected = false
+
+    if(!this.props.selectedId && !item.id) {
+      selected = true
+    }
+    else if(this.props.selectedId && item.id == this.props.selectedId) {
+      selected = true
+    }
+
     return (
       <ListItem
         key={ index }
-        className={ theme['depth' + depth]}
+        className={ theme['depth' + depth] }
         caption={ item.name }
         leftIcon={ this.getIcon(item) }
-        onClick={ item => this.props.onClick(item) }
+        onClick={ () => this.props.onClick(item) }
         theme={{
-          itemAction: theme.itemAction
+          itemAction: theme.itemAction,
+          listItem: selected ? theme.selectedItem : '',
+          itemText: selected ? theme.selectedText : '',
+          left: selected ? theme.selectedLeft : '',
         }}
       />
     )
@@ -39,7 +52,16 @@ class ListTree extends Component {
   }
 
   render() {
-    const items = this.getItems(this.props.data || [], 0, 0)
+    let data = this.props.data || []
+    if(this.props.rootItemName) {
+      const rootItem = {
+        name: this.props.rootItemName,
+        type: '_root',
+        children: data
+      }
+      data = [rootItem]
+    }
+    const items = this.getItems(data, 0, 0)
     return (
       <List selectable ripple>
         {

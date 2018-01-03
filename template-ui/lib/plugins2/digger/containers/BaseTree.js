@@ -8,6 +8,7 @@ import authSelectors from '../../auth/selectors'
 import formSelectors from '../../form/selectors'
 import apiSelectors from '../../api/selectors'
 import routerActions from '../../router/actions'
+import routerSelectors from '../../router/selectors'
 
 const REQUIRED = [
   'name',
@@ -44,9 +45,12 @@ const DiggerTreeFactory = (opts = {}) => {
       data: selectors.tree.data(state),
       loaded: apiSelectors.loaded(state, `${name}Descendents`),
       error: apiSelectors.error(state, `${name}Descendents`),
+      selectedId: routerSelectors.param(state, `viewid`),
     }),
     (dispatch) => ({
-      
+      clickTree: (item) => {
+        dispatch(routerActions.hook(`${name}View`, item.id))
+      }
     })
   )(TreeContainer)
 

@@ -3,7 +3,6 @@ import { delay } from 'redux-saga'
 
 import options from 'template-tools/src/utils/options'
 
-import CrudSaga from '../crud/saga'
 import systemActions from '../system/actions'
 import formActions from '../form/actions'
 import routerActions from '../router/actions'
@@ -46,19 +45,6 @@ const DiggerSagas = (opts = {}) => {
     selectors
   } = opts
 
-  const crud = CrudSaga({
-    name,
-    actions,
-    selectors,
-    apis: {
-      list: apis.children,
-      get: apis.load,
-      create: apis.create,
-      save: apis.save,
-      del: apis.del
-    }
-  })
-
   function* descendents() {
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
 
@@ -79,13 +65,33 @@ const DiggerSagas = (opts = {}) => {
     }
   }
 
-  const digger = {    
-    descendents,
+  function* list() {
+    //const searchForm = yield select(state => formSelectors.values(state, `${name}Search`))
+    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+
+    const { answer, error } = yield call(apiSaga, {
+      name: `${name}List`,
+      handler: apis.descendents,
+      payload: {
+        namespace,
+      }
+    })
+
+    if(error) {
+      yield put(systemActions.message(error))
+      yield put(actions.list.setData([]))
+    }
+    else {
+      yield put(actions.list.setData(answer))
+    }
   }
 
-  const merged = Object.assign({}, crud, digger)
+  const digger = {    
+    descendents,
+    list,
+  }
 
-  return merged
+  return digger
 }
 
 export default DiggerSagas

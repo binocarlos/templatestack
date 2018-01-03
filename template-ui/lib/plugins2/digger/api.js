@@ -29,7 +29,7 @@ const DiggerApi = (opts = {}) => {
     })
   }
 
-  const children = (payload) => {
+  const children = (payload = {}) => {
     let url =  `${BASE_URL}/children`
     if(payload.id) url += `/${payload.id}`
 
@@ -53,7 +53,7 @@ const DiggerApi = (opts = {}) => {
     */
   }
 
-  const descendents = (payload, state) => {
+  const descendents = (payload = {}, state) => {
     let url =  `${BASE_URL(state)}/descendents`
     if(payload.id) url += `/${payload.id}`
 
