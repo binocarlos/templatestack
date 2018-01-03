@@ -24,7 +24,7 @@ export class IconButtons extends Component {
           tooltip={ title }
           key={ i }
           options={ options }
-          onClick={ () => this.props.onClick(id) }
+          onClick={ (clickid) => this.props.onClick(id, clickid) }
           {...props}
         />
       )

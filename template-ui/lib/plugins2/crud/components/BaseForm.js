@@ -24,18 +24,20 @@ const BaseFormFactory = (opts = {}) => {
         />
       )
 
+      const icon = opts.getIcon ? opts.getIcon(this.props) : opts.icon
+      const title = opts.getTitle ? opts.getTitle(this.props) : opts.title
       return (
         <Toolbar
-          leftIcon={ opts.icon }
-          title={ opts.title }
+          leftIcon={ icon }
+          title={ title }
           leftContent={ buttons }
         />
       )
     }
 
     render() {
-      const data = this.props.data || []
-      const fields = formUtils.getFields(opts.form)
+      const useForm = opts.getForm ? opts.getForm(props) : opts.form
+      const fields = formUtils.getFields(useForm)
       
       return (
         <ToolbarLayout

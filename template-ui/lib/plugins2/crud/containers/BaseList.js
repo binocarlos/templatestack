@@ -76,7 +76,7 @@ const CrudListFactory = (opts = {}) => {
           }))
         }
       },
-      toolbarClick: (actionName, selectedItems) => {
+      toolbarClick: (actionName, selectedItems, clickName) => {
         if(actionName == 'delete') {
           dispatch(actions.list.setDeleteWindow(true))
         }
@@ -87,7 +87,7 @@ const CrudListFactory = (opts = {}) => {
           }
         }
         else if(actionName == 'add') {
-          dispatch(routerActions.hook(`${name}Add`))
+          dispatch(routerActions.hook(`${name}Add`, clickName))
         }
         else if(actionName == 'search') {
           dispatch(actions.list.setSearchWindow(true))

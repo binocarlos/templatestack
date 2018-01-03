@@ -47,12 +47,14 @@ const DiggerSagas = (opts = {}) => {
 
   function* descendents() {
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const type = opts.descendentType
 
     let { answer, error } = yield call(apiSaga, {
       name: `${name}Descendents`,
       handler: apis.descendents,
       payload: {
-        namespace
+        namespace,
+        type
       }
     })
 
@@ -90,9 +92,41 @@ const DiggerSagas = (opts = {}) => {
     }
   }
 
+  function* load() {
+    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const type = yield select(state => routerSelectors.param(state, 'type'))
+    const id = yield select(state => routerSelectors.param(state, 'id'))
+    if(id) {
+      const { answer, error } = yield call(apiSaga, {
+        name: `${name}Load`,
+        handler: apis.load,
+        payload: {
+          id
+        }
+      })
+      if(error) {
+        yield put(systemActions.message(error))
+      }
+      else {
+        yield put(formActions.initialize(name, answer))
+      }
+    }
+    else {
+      let initialData = {}
+      if(opts.loadInitialData) {
+        initialData = yield call(opts.loadInitialData, {
+          namespace,
+          type
+        })
+      }
+      yield put(formActions.initialize(name, initialData))
+    }
+  }
+
   const digger = {    
     descendents,
     list,
+    load,
   }
 
   return digger

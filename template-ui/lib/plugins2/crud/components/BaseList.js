@@ -41,7 +41,7 @@ const BaseListFactory = (opts = {}) => {
           icons={icons}
           selected={selected}
           activeButtons={opts.activeButtons}
-          onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
+          onClick={ (name, clickname) => this.props.toolbarClick(name, selectedItems, clickname) }
         />
       )
 
@@ -50,7 +50,7 @@ const BaseListFactory = (opts = {}) => {
         buttons = (
           <IconButtons
             options={ options }
-            onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
+            onClick={ (name, clickname) => this.props.toolbarClick(name, selectedItems, clickname) }
           />
         )
       }

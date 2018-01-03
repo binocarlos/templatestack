@@ -38,6 +38,7 @@ const CrudFormFactory = (opts = {}) => {
 
   return connect(
     (state, ownProps) => ({
+      formvalues: formSelectors.values(state, name),
       valid: formSelectors.valid(state, name),
       loading: apiSelectors.loading(state, `${name}Form`),
       error: apiSelectors.error(state, `${name}Form`)
