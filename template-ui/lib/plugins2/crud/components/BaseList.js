@@ -1,35 +1,28 @@
 import React, { Component, PropTypes } from 'react'
 
 import ProgressBar from 'react-toolbox/lib/progress_bar'
-import ToolbarLayout from 'template-ui/lib/components/layout2/ToolbarLayout'
-import Toolbar from 'template-ui/lib/components/Toolbar'
-import Table from 'template-ui/lib/components/Table'
-import CrudButtonsListToolbar from 'template-ui/lib/components/CrudButtonsListToolbar'
-import IconButtons from 'template-ui/lib/components/IconButtons'
-import CrudDeleteModal from 'template-ui/lib/components/CrudDeleteModal'
-import CrudSearchModal from 'template-ui/lib/components/CrudSearchModal'
+import ToolbarLayout from '../../../components/layout2/ToolbarLayout'
+import Toolbar from '../../../components/Toolbar'
+import Table from '../../../components/Table'
+import CrudButtonsListToolbar from '../../../components/CrudButtonsListToolbar'
+import IconButtons from '../../../components/IconButtons'
+import CrudDeleteModal from '../../../components/CrudDeleteModal'
+import CrudSearchModal from '../../../components/CrudSearchModal'
 
-import horizontal from 'template-ui/lib/components/theme/horizontal.css'
+import horizontal from '../../../components/theme/horizontal.css'
 
 const BaseListFactory = (opts = {}) => {
   return class BaseList extends Component {
 
     getToolbar() {
+      if(opts.getToolbar) {
+        return opts.getToolbar(this.props)
+      }
+
       const icons = this.props.icons || {}
       const data = this.props.data || []
       const selected = opts.selectable ? (this.props.selected || []) : []
       const selectedItems = selected.map(i => data[i])
-
-      const buttons = (
-        <CrudButtonsListToolbar
-          primary
-          icons={icons}
-          selected={selected}
-          search={opts.searchActive}
-          activeButtons={opts.activeButtons}
-          onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
-        />
-      )
 
       const count = opts.selectable && selected.length > 0 ? selected.length : data.length
       let title = `${opts.title} (${count})`
@@ -38,6 +31,30 @@ const BaseListFactory = (opts = {}) => {
         title = selectedItems[0].name
       }
 
+      if(opts.getTitle) {
+        title = opts.getTitle(this.props)
+      }
+
+      let buttons = (
+        <CrudButtonsListToolbar
+          primary
+          icons={icons}
+          selected={selected}
+          activeButtons={opts.activeButtons}
+          onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
+        />
+      )
+
+      if(opts.getToolbarButtons) {
+        const options = opts.getToolbarButtons(this.props)
+        buttons = (
+          <IconButtons
+            options={ options }
+            onClick={ (name) => this.props.toolbarClick(name, selectedItems) }
+          />
+        )
+      }
+      
       return (
         <Toolbar
           leftIcon={ opts.icon }

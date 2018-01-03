@@ -62,6 +62,7 @@ const DiggerStorageSQL = (opts) => {
   // * id
   // * type
   // * search
+  // * namespace
   const search = (query, done) => {
     const { sql, params } = sqlQueries.search(query)
     knex
@@ -71,6 +72,7 @@ const DiggerStorageSQL = (opts) => {
 
   // * installationid
   // * id
+  // * namespace
   const children = (query, done) => {
     const { sql, params } = sqlQueries.children(query)
     knex
@@ -82,6 +84,7 @@ const DiggerStorageSQL = (opts) => {
   // * id
   // * type
   // * search
+  // * namespace
   const descendents = (query, done) => {
     const { sql, params } = sqlQueries.descendents(query)
     knex

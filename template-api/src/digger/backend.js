@@ -65,6 +65,7 @@ const DiggerBackend = (opts) => {
       * installationid
       * type
       * search
+      * namespace
     
   */
   const search = (call, done) => {
@@ -72,7 +73,8 @@ const DiggerBackend = (opts) => {
     logic.search({
       installationid: req.installationid,
       type: req.type,
-      search: req.search
+      search: req.search,
+      namespace: req.namespace,
     }, done)
   }
   
@@ -85,6 +87,7 @@ const DiggerBackend = (opts) => {
       * type
       * search
       * withLinks
+      * namespace
     
   */
   const children = (call, done) => {
@@ -94,7 +97,8 @@ const DiggerBackend = (opts) => {
       installationid: req.installationid,
       id: req.id,
       type: req.type,
-      search: req.search
+      search: req.search,
+      namespace: req.namespace,
     }
 
     async.waterfall([
@@ -123,6 +127,7 @@ const DiggerBackend = (opts) => {
       * type
       * search
       * withLinks
+      * namespace
     
   */
   const descendents = (call, done) => {
@@ -132,7 +137,8 @@ const DiggerBackend = (opts) => {
       installationid: req.installationid,
       id: req.id,
       type: req.type,
-      search: req.search
+      search: req.search,
+      namespace: req.namespace,
     }
 
     async.waterfall([

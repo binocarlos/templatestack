@@ -62,6 +62,7 @@ const ResourceSQL = (opts = {}) => {
   // * id
   // * type
   // * search
+  // * namespace
   const search = (query) => {
 
     let params = [query.installationid]
@@ -77,6 +78,11 @@ const ResourceSQL = (opts = {}) => {
     if(query.search) {
       clause.push('lower(name) like lower(?)')
       params.push(`%${query.search}%`)
+    }
+
+    if(query.namespace) {
+      clause.push('namespace = ?')
+      params.push(query.namespace)
     }
 
     const sqlClause = clause.join(' and ')
@@ -100,6 +106,7 @@ order by
 
   // * installationid
   // * id
+  // * namespace
   const children = (query) => {
 
     let params = [query.installationid]
@@ -118,6 +125,11 @@ order by
     if(query.type) {
       clause.push('type = ?')
       params.push(query.type)
+    }
+
+    if(query.namespace) {
+      clause.push('namespace = ?')
+      params.push(query.namespace)
     }
 
     if(query.search) {
@@ -148,6 +160,7 @@ order by
   // * id
   // * search
   // * type
+  // * namespace
   const descendents = (query) => {
     if(!query.id) return search(query)
 
@@ -164,6 +177,11 @@ order by
     if(query.search) {
       clause.push('lower(name) like lower(?)')
       params.push(`%${query.search}%`)
+    }
+
+    if(query.namespace) {
+      clause.push('namespace = ?')
+      params.push(query.namespace)
     }
 
     const sqlClause = clause.join(' and ')

@@ -26,10 +26,7 @@ class CrudButtonsList extends Component {
 
     if(selected <= 0) {
       if(this.includeButton('add')) options.push(addButton)
-
-      if(this.props.search) {
-        if(this.includeButton('search')) options.push(searchButton)
-      }
+      if(this.includeButton('search')) options.push(searchButton)
     }
     else {
       if(selected >=1) {

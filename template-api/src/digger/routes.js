@@ -54,7 +54,8 @@ const DiggerRoutes = (opts) => {
     client.search({
       installationid,
       type: req.qs.type,
-      search: req.qs.search
+      search: req.qs.search,
+      namespace: req.qs.namespace,
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(areResourcesFromDifferentInstallation(installationid, resources)) return webserverTools.errorReply(next, res, 'wrong installation id', 403)
@@ -74,6 +75,7 @@ const DiggerRoutes = (opts) => {
       id,
       type: req.qs.type,
       search: req.qs.search,
+      namespace: req.qs.namespace,
       withLinks: req.qs.links ? true : false
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
@@ -95,6 +97,7 @@ const DiggerRoutes = (opts) => {
       id,
       type: req.qs.type,
       search: req.qs.search,
+      namespace: req.qs.namespace,
       withLinks: req.qs.links ? true : false
     }, (err, resources) => {
       if(err) return webserverTools.errorReply(next, res, err)
