@@ -13,7 +13,7 @@ const Types = (opts = {}) => {
     },
     getType: (type) => types[type] || types.item,
     getIcon: (item) => {
-      if(digger.isRoot(item)) return icons.disk
+      if(digger.isRoot(item)) return icons.root
       const schema = digger.getType(item.type)
       return schema.icon
     },

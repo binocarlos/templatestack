@@ -31,6 +31,7 @@ const icons = {
   time: 'access_time',
   star: 'star',
   disk: 'storage',
+  root: 'apps',
   up: 'arrow_upward'
 }
 
