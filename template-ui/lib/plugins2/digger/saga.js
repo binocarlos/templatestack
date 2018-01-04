@@ -199,7 +199,14 @@ const DiggerSagas = (opts = {}) => {
   }
 
   function* tableAction(payload) {
-    if(opts.tableAction) {
+    if(payload.name == 'open') {
+      yield put(routerActions.hook('resourceView', payload.item.id))
+    }
+    else if(payload.name == 'up') {
+      const currentItem = yield select(state => selectors.tree.selectedItem(state))
+      yield put(routerActions.hook('resourceView', currentItem.parent))
+    }
+    else if(opts.tableAction) {
       yield call(opts.tableAction, payload)
     }
   }

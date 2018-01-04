@@ -8,6 +8,7 @@ import { processRoutes } from 'template-ui/lib/plugins2/router/tools'
 import Section from 'template-ui/lib/components/Section'
 
 import config from './config'
+import digger from './digger'
 
 import Application from './containers/Application'
 import LoginForm from './containers/LoginForm'
@@ -17,12 +18,13 @@ import UserList from './containers/UserList'
 import UserForm from './containers/UserForm'
 import InstallationList from './containers/InstallationList'
 import InstallationForm from './containers/InstallationForm'
-import ResourceTree from './containers/ResourceTree'
-import ResourceList from './containers/ResourceList'
-import ResourceForm from './containers/ResourceForm'
 import Home from './components/Home'
 
 import selectors from './selectors'
+
+const ResourceTree = digger.resource.TreeContainer
+const ResourceList = digger.resource.ListContainer
+const ResourceForm = digger.resource.FormContainer
 
 const Route = RouteFactory(config.basepath)
 

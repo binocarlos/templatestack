@@ -1,10 +1,32 @@
 import React, { Component, PropTypes } from 'react'
 
-import Types from 'template-ui/lib/plugins2/digger/types'
+import Factory from 'template-ui/lib/plugins2/digger/factory'
+import apitools from './api/tools'
 import config from './config'
-import forms from './forms'
 
 const icons = config.icons
+
+const folderForm = {
+  name: {
+    title: 'Name',
+    validate: []
+  }
+}
+
+const itemForm = {
+  name: {
+    title: 'Name',
+    validate: []
+  },
+  'meta.comment': {
+    title: 'Comment'
+  }
+}
+
+const forms = {
+  folder: folderForm,
+  item: itemForm
+}
 
 const folder = {
   type: 'folder',
@@ -33,9 +55,21 @@ const types = {
   item,
 }
 
-const digger = Types({
+const resource = Factory({
+  title: 'Resource',
+  name: 'resource',
   types,
-  icons
+  icons,
+  url: apitools.url(),
+  suburl: '/resources',
+  descendentType: 'folder',
+  rootItem: {
+    name: 'Resources',
+  }
 })
 
-export default digger
+const diggers = {
+  resource
+}
+
+export default diggers

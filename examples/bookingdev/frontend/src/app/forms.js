@@ -36,23 +36,6 @@ const user = {
   }
 }
 
-const folder = {
-  name: {
-    title: 'Name',
-    validate: []
-  }
-}
-
-const item = {
-  name: {
-    title: 'Name',
-    validate: []
-  },
-  'meta.comment': {
-    title: 'Comment'
-  }
-}
-
 const installationCore = {
   name: {
     title: 'Name',
@@ -77,8 +60,6 @@ const forms = {
   user,
   installationCore,
   installationCollaborators,
-  folder,
-  item,
 }
 
 export default forms

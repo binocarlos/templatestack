@@ -13,11 +13,11 @@ import systemSagas from 'template-ui/lib/plugins2/system/sagas'
 
 import UserSaga from './user'
 import InstallationSaga from './installation'
-import ResourceSaga from './resource'
 
 import config from '../config'
 import actions from '../actions'
 import selectors from '../selectors'
+import digger from '../digger'
 
 import { redirects } from '../routes'
 
@@ -55,9 +55,7 @@ const Hooks = (opts = {}) => {
     apis: apis.installation
   })
 
-  const resource = ResourceSaga({
-    apis: apis.resource
-  })
+  const resource = digger.resource.saga
 
   const auth = AuthSaga({
     apis: apis.auth,

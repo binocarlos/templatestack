@@ -4,7 +4,6 @@ import IconBadge from 'template-ui/lib/components/widgets/IconBadge'
 import ActiveInstallationFilter from 'template-ui/lib/plugins2/installation/containers/ActiveInstallationFilter'
 import selectors from './selectors'
 import utils from './utils'
-import digger from './digger'
 
 const user = {
   id: {
@@ -55,26 +54,9 @@ const installation = {
   }
 }
 
-const diggerTable = {
-  name: {
-    getValue: (row, props, index) => {
-      return (
-        <IconBadge
-          name={ row.name }
-          icon={ digger.getIcon(row) }
-          primary={ row.type != 'folder' }
-          dark={ row.type == 'folder' }
-        />
-      )
-    }
-  },
-  type: {}
-}
-
 const tables = {
   user,
   installation,
-  digger: diggerTable
 }
 
 export default tables
