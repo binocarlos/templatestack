@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 
 import Factory from 'template-ui/lib/plugins2/digger/factory'
+import TabForm from 'template-ui/lib/plugins2/crud/components/TabForm'
+
 import apitools from './api/tools'
 import config from './config'
 import forms from './forms'
@@ -34,12 +36,25 @@ const bookingFormSchema = {
   type: 'bookingForm',
   form: {
     type: 'normal',
-    fields: forms.item
+    fields: forms.bookingForm
   },
   title: 'Booking Form',
   icon: icons.bookingForm,
   leaf: true,
 }
+
+const bookingFormForm = TabForm({
+  title: 'Booking Form',
+  icon: icons.bookingForm,
+  tabs: [{
+    label: 'Details',
+    fields: forms.bookingFormCore
+  }, {
+    label: 'Config',
+    fields: forms.bookingFormConfig
+  }],
+  icons: config.icons,
+})
 
 const resourceTypes = {
   folder,
@@ -71,6 +86,7 @@ const bookingForm = Factory({
   namespace: 'bookingForm',
   types: bookingFormTypes,
   childTypes: ['bookingForm'],
+  FormComponent: bookingFormForm,
   icons,
   noTree: true,
   rootItem: {

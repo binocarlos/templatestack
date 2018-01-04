@@ -41,9 +41,6 @@ const installationCore = {
     title: 'Name',
     validate: []
   },
-  'meta.url': {
-    title: 'url'
-  }
 }
 
 const installationCollaborators = {
@@ -78,6 +75,22 @@ const item = {
   }
 }
 
+const bookingFormCore = {
+  name: {
+    title: 'Name',
+    validate: []
+  },
+  'meta.url': {
+    title: 'Url'
+  }
+}
+
+const bookingFormConfig = {
+  'meta.yaml': {
+    title: 'Yaml',
+  }
+}
+
 const forms = {
   authLogin,
   authRegister,
@@ -86,6 +99,8 @@ const forms = {
   installationCollaborators,
   folder,
   item,
+  bookingFormCore,
+  bookingFormConfig,
 }
 
 export default forms

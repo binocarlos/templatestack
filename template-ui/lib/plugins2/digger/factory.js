@@ -88,14 +88,14 @@ const Factory = (opts = {}) => {
     
   */
 
-  const TreeComponent = BaseTreeComponent({
+  const TreeComponent = opts.TreeComponent || BaseTreeComponent({
     width: '250px',
     getIcon: types.getIcon
   })
 
   const icon = opts.icon || opts.icons.folder
 
-  const ListComponent = BaseListComponent({
+  const ListComponent = opts.ListComponent || BaseListComponent({
     title: opts.title,
     icon,
     table,
@@ -149,7 +149,7 @@ const Factory = (opts = {}) => {
   })
 
 
-  const FormComponent = BaseFormComponent({
+  const FormComponent = opts.FormComponent || BaseFormComponent({
     title: opts.title,
     getIcon: (props) => {
       const item = props.formvalues || {}
