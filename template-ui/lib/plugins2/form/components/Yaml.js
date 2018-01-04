@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import Input from 'react-toolbox/lib/input'
+import yaml from '../../../utils/yaml'
 
-const yaml = ({
+const YamlComponent = ({
   input,
   label,
   meta: { touched, error },
@@ -20,4 +21,16 @@ const yaml = ({
   )
 }
 
-export default yaml
+const validator = (val) => yaml.validate(val)
+  
+const YamlField = (opts = {}) => {
+  return {
+    title: opts.title,
+    component: YamlComponent,
+    validate: [validator],
+    multiline: true,
+    rows: 10,
+  }
+}
+
+export default YamlField

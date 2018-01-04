@@ -51,6 +51,7 @@ const Factory = (opts = {}) => {
     selectors,
     apis: api,
     descendentType: opts.descendentType,
+    mapData: opts.mapData,
     loadInitialData,
     processTreeData: (data) => {
       if(opts.rootItem) {

@@ -3,6 +3,8 @@ import models from 'template-ui/lib/plugins2/form/models'
 import fields from 'template-ui/lib/plugins2/form/fields'
 import utils from 'template-ui/lib/plugins2/form/utils'
 
+import Yaml from 'template-ui/lib/plugins2/form/components/Yaml'
+
 import validators from 'template-tools/src/utils/validators'
 
 import CollaboratorField from 'template-ui/lib/plugins2/installation/collaboratorField'
@@ -86,9 +88,9 @@ const bookingFormCore = {
 }
 
 const bookingFormConfig = {
-  'meta.yaml': {
+  'meta.yaml': Yaml({
     title: 'Yaml',
-  }
+  })
 }
 
 const forms = {

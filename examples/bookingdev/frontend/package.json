@@ -30,10 +30,10 @@
     "redux-logger": "^2.7.4",
     "redux-saga": "^0.15.4",
     "reselect": "^3.0.1",
+    "shared": "file:../shared",
     "template-api": "^2.4.1",
     "template-tools": "^1.2.3",
-    "template-ui": "^1.9.3",
-    "shared": "file:../shared"
+    "template-ui": "^1.9.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
@@ -56,7 +56,7 @@
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "html-webpack-plugin": "^2.29.0",
-    "js-yaml": "^3.8.2",
+    "js-yaml": "^3.10.0",
     "json-loader": "^0.5.4",
     "postcss-cssnext": "^2.9.0",
     "postcss-each": "^0.9.3",

@@ -167,9 +167,13 @@ const DiggerSagas = (opts = {}) => {
     const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
     const itemData = yield select(state => formSelectors.values(state, name))
 
-    const saveData = Object.assign({}, itemData, {
+    let saveData = Object.assign({}, itemData, {
       namespace
     })
+
+    if(opts.mapData) {
+      saveData = opts.mapData(saveData)
+    }
 
     const apiName = itemData.id ? `${name}Save` : `${name}Create`
     const apiHandler = itemData.id ? apis.save : apis.create

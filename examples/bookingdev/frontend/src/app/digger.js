@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 
 import Factory from 'template-ui/lib/plugins2/digger/factory'
 import TabForm from 'template-ui/lib/plugins2/crud/components/TabForm'
+import yaml from 'template-ui/lib/utils/yaml'
 
 import apitools from './api/tools'
 import config from './config'
@@ -91,6 +92,15 @@ const bookingForm = Factory({
   noTree: true,
   rootItem: {
     name: 'Booking Forms',
+  },
+  mapData: (data) => {
+    const parsed = yaml.load(data.meta.yaml)
+    if(parsed.error) {
+      alert(parsed.error)
+      return data
+    }
+    data.meta.config = parsed.doc
+    return data
   }
 })
 
