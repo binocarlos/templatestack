@@ -1,46 +1,41 @@
 # template-stack
 
+Install [nodejs](https://nodejs.org/en/download/)
 
-## build
+
+## create new app
 
 ```bash
-$ docker-compose build
+$ export TEMPLATE="google-digger-project"
+$ export FOLDER="examples/myapp"
+$ docker run -ti \
+  -e TEMPLATE \
+  -e FOLDER \
+  -v $PWD:/output \
+  -v $PWD/run.sh:/run.sh \
+  binocarlos/templatestack
+$ cd myapp
+$ make setup
+$ make build
+$ ls -la
 ```
 
 ## start
 
-Manually:
-
 ```bash
-$ MANUALRUN=1 docker-compose up
-```
-
-API in other window:
-
-```bash
-$ docker exec -ti templateapp_api bash
+$ make dev
+$ make api.cli
 $ node src/index.js
-```
-
-Frontend in other window:
-
-```bash
-$ docker exec -ti templateapp_frontend bash
+$ make frontend.cli
 $ yarn run watch
 ```
 
-Automatically:
+## initial boot
+
+After the first initial boot - there are no database tables, create them:
 
 ```bash
-$ docker-compose up
-```
-
-#### linked
-
-To run the stack linked against `template-stack`:
-
-```bash
-$ TEMPLATELINKED=1 MANUALRUN=1 docker-compose -f docker-compose.yml -f docker-compose.linked.yml up
+$ make schema
 ```
 
 ## database ops
@@ -60,13 +55,15 @@ $ cat scripts/sql/drop.sql | bash scripts/postgres.sh psql
 #### create tables
 
 ```bash
-$ docker exec -ti template_stack_api npm run knex -- migrate:latest
+$ make api.cli
+$ yarn run knex -- migrate:latest
 ```
 
 #### create new migration for app
 
 ```bash
-$ docker exec -ti template_stack_api npm run knex -- migrate:make mymigration
+$ make api.cli
+$ yarn run knex -- migrate:make mymigration
 ```
 
 #### reset database
@@ -76,17 +73,3 @@ stop docker
 ```bash
 $ rm -rf .data
 ```
-
-## run tests
-
-```bash
-$ docker exec -ti template_stack_api npm test
-```
-
-## scaffold
-
-
-
-## license
-
-MIT

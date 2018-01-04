@@ -1,15 +1,12 @@
-.PHONY: dev
-dev: ; MANUALRUN=1 docker-compose -f docker-compose.yml -f docker-compose.linked.yml up
+VERSION=v0.0.1
+IMAGE=binocarlos/templatestack
 
 .PHONY: build
 build:
-	docker-compose -f docker-compose.yml -f docker-compose.linked.yml build
+	docker build -t $(IMAGE):$(VERSION) .
+	docker tag $(IMAGE):$(VERSION) $(IMAGE):latest
 
-.PHONY: frontend.cli
-frontend.cli:
-	docker exec -ti templatestack_frontend bash
-
-.PHONY: api.cli
-api.cli:
-	docker exec -ti templatestack_api bash
-
+.PHONY: release
+release:
+	docker push $(IMAGE):$(VERSION)
+	docker push $(IMAGE):latest
