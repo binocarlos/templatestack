@@ -30,9 +30,24 @@ const item = {
   leaf: true,
 }
 
-const types = {
+const bookingFormSchema = {
+  type: 'bookingForm',
+  form: {
+    type: 'normal',
+    fields: forms.item
+  },
+  title: 'Booking Form',
+  icon: icons.bookingForm,
+  leaf: true,
+}
+
+const resourceTypes = {
   folder,
   item,
+}
+
+const bookingFormTypes = {
+  bookingForm: bookingFormSchema
 }
 
 const resource = Factory({
@@ -40,7 +55,7 @@ const resource = Factory({
   name: 'resource',
   api: apis.resource,
   namespace: 'resource',
-  types,
+  types: resourceTypes,
   icons,
   descendentType: 'folder',
   rootItem: {
@@ -48,8 +63,24 @@ const resource = Factory({
   }
 })
 
+const bookingForm = Factory({
+  title: 'Booking Forms',
+  icon: icons.bookingForm,
+  name: 'bookingForm',
+  api: apis.resource,
+  namespace: 'bookingForm',
+  types: bookingFormTypes,
+  childTypes: ['bookingForm'],
+  icons,
+  noTree: true,
+  rootItem: {
+    name: 'Booking Forms',
+  }
+})
+
 const diggers = {
-  resource
+  resource,
+  bookingForm
 }
 
 export default diggers

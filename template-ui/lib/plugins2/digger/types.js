@@ -13,8 +13,10 @@ const Types = (opts = {}) => {
     },
     getType: (type) => types[type] || types.item,
     getIcon: (item) => {
-      if(digger.isRoot(item)) return icons.root
+      if(!item) return icons.item
+      if(digger.isRoot(item)) return item.icon || icons.root
       const schema = digger.getType(item.type)
+      if(!schema) return icons.item
       return schema.icon
     },
     getForm: (item) => {
@@ -25,6 +27,7 @@ const Types = (opts = {}) => {
     },
     getTitle: (item) => {
       const schema = digger.getType(item.type)
+      if(!schema) return 'item'
       return schema.title || 'item'
     },
     isLeaf: (item) => {
@@ -36,7 +39,7 @@ const Types = (opts = {}) => {
     getChildrenTypes: (item) => {
       if(digger.isRoot(item)) return ['folder', 'item']
       const schema = types[item.type] || types.item
-      if(schema.leaf) return []
+      if(!schema || schema.leaf) return []
       return schema.children || []
     },
   }

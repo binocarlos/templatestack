@@ -93,27 +93,29 @@ const Factory = (opts = {}) => {
     getIcon: types.getIcon
   })
 
+  const icon = opts.icon || opts.icons.folder
 
   const ListComponent = BaseListComponent({
     title: opts.title,
-    icon: opts.icons.folder,
+    icon,
     table,
     icons: opts.icons,
     showHead: true,
     selectable: false,
     noLoading: true,
     getTitle: (props) => {
+      if(opts.noTree) return opts.title
       if(!props.selectedTreeItem) return ''
       return props.selectedTreeItem.name
     },
     getIcon: (props) => {
+      if(opts.noTree) return icon
       const selectedItem = props.selectedTreeItem || {}
       return types.getIcon(selectedItem)    
     },
     getToolbarButtons: (props) => {
-      const selectedItem = props.selectedTreeItem || {}
-      if(!selectedItem) return []
-      const childTypes = types.getChildrenTypes(selectedItem)
+      const selectedItem = props.selectedTreeItem
+      const childTypes = opts.childTypes || types.getChildrenTypes(selectedItem || {})
       const add = ['add', 'Add', icons.add, {
         primary: true,
         floating: true,
@@ -129,8 +131,10 @@ const Factory = (opts = {}) => {
       ]
       const search = ['search', 'Search', icons.search, {}]
       const up = ['up', 'Up', icons.up, {}]
-      if(types.isLeaf(selectedItem)) return []
-      if(types.isRoot(selectedItem)) return [add, search]
+
+      if(!opts.noTree && !selectedItem) return []
+      if(!opts.noTree && types.isLeaf(selectedItem || {})) return []
+      if(opts.noTree || types.isRoot(selectedItem || {})) return [add, search]
       return [add, up, search]
     },
     getRowButtons: (row, props, index) => {

@@ -32,7 +32,8 @@ const icons = {
   star: 'star',
   disk: 'storage',
   root: 'apps',
-  up: 'arrow_upward'
+  up: 'arrow_upward',
+  bookingForm: 'event',
 }
 
 const config = {
@@ -72,6 +73,7 @@ const config = {
         ['-'],
         ['/projects', 'Projects', icons.project],
         ['/resources', 'Resources', icons.folder],
+        ['/bookingForms', 'Booking Forms', icons.bookingForm],
         ['-'],
         ['/help', 'Help', icons.help],
         ['authLogout', 'Logout', icons.logout]

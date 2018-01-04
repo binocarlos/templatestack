@@ -52,6 +52,7 @@ const Hooks = (opts = {}) => {
   const installation = crud.installation.saga
 
   const resource = digger.resource.saga
+  const bookingForm = digger.bookingForm.saga
 
   const auth = AuthSaga({
     apis: apis.auth,
@@ -103,6 +104,16 @@ const Hooks = (opts = {}) => {
     resourceAdd: redirectorHook('resourceAdd'),
     resourceEdit: redirectorHook('resourceEdit'),
     resourceCancel: redirectorHook('resourceCancel'),
+
+    // resource saga
+    bookingFormList: bookingForm.list,
+    bookingFormLoad: bookingForm.load,
+    bookingFormSave: bookingForm.save,
+    bookingFormDelete: bookingForm.del,
+    bookingFormTableAction: bookingForm.tableAction,
+    bookingFormAdd: redirectorHook('bookingFormAdd'),
+    bookingFormEdit: redirectorHook('bookingFormEdit'),
+    bookingFormCancel: redirectorHook('bookingFormCancel'),
 
     // auth sagas
     authLogout,

@@ -11,11 +11,20 @@ export class IconButtons extends Component {
 
   getMenuItem(option, i) {
     if(!option) return null
-    const id = option[0]
-    const title = option[1]
-    const icon = option[2]
-    const props = option[3]
-    const options = option[4]
+    let id = option[0]
+    let title = option[1]
+    let icon = option[2]
+    let props = option[3]
+    let options = option[4]
+    let forceClickId = null
+
+    if(options && options.length == 1) {
+      let option = options[0]
+      forceClickId = option[0]
+      //title = option[1]
+      //icon = option[2]
+      options = null
+    }
     
     if(options) {
       return (
@@ -34,7 +43,7 @@ export class IconButtons extends Component {
         <TooltipButton
           tooltip={ title } 
           icon={ icon }
-          onClick={ () => this.props.onClick(id) }
+          onClick={ () => this.props.onClick(id, forceClickId) }
           key={ i }
           floating
           mini

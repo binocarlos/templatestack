@@ -24,6 +24,9 @@ const ResourceTree = digger.resource.TreeContainer
 const ResourceList = digger.resource.ListContainer
 const ResourceForm = digger.resource.FormContainer
 
+const BookingFormList = digger.bookingForm.ListContainer
+const BookingFormForm = digger.bookingForm.FormContainer
+
 const UserList = crud.user.ListContainer
 const UserForm = crud.user.FormContainer
 
@@ -91,6 +94,17 @@ export const routeConfig = processRoutes({
       hooks: ['resourceLoad', 'resourceDescendents']
     },
   },
+  '/bookingForms': {
+    hooks: ['bookingFormList'],
+    '/add/:type': {
+      formmode: 'add',
+      hooks: ['bookingFormLoad']
+    },
+    '/edit/:id': {
+      formmode: 'add',
+      hooks: ['bookingFormLoad']
+    },
+  },
 }, config.basepath)
 
 export const redirects = {
@@ -126,6 +140,9 @@ export const redirects = {
       return `/resources`
     }
   },
+  bookingFormAdd: () => `/bookingForms/add/bookingForm`,
+  bookingFormEdit: (id) => `/bookingForms/edit/${id}`,
+  bookingFormCancel: () => `/bookingForms`,
   userEdit: (id) => `/users/edit/${id}`,
   userCancel: () => `/users`,
 }
@@ -208,6 +225,16 @@ export const routes = (
           <ResourceForm />
         </Route>
       </ResourceTree>
+    </Route>
+
+    <Route path='/bookingForms' exact>
+      <BookingFormList />
+    </Route>
+    <Route route='/bookingForms/add/:type' exact>
+      <BookingFormForm />
+    </Route>
+    <Route route='/bookingForms/edit/:id' exact>
+      <BookingFormForm />
     </Route>
 
   </Application>
