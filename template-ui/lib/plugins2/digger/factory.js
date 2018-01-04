@@ -13,7 +13,6 @@ import BaseListComponent from '../crud/components/BaseList'
 import BaseFormContainer from '../crud/containers/BaseForm'
 import BaseFormComponent from '../crud/components/BaseForm'
 
-import Api from './api'
 import Actions from './actions'
 import Selectors from './selectors'
 import Types from './types'
@@ -22,15 +21,10 @@ import Saga from './saga'
 const REQUIRED = [
   'name',
   'title',
-  'url',
-  'suburl',
+  'api',
   'types',
   'icons'
 ]
-
-const Tree = (opts = {}) => {
-
-}
 
 const Factory = (opts = {}) => {
 
@@ -38,7 +32,7 @@ const Factory = (opts = {}) => {
     required: REQUIRED
   })
 
-  const api = Api(opts)
+  const api = opts.api
   const types = Types(opts)
   const actions = Actions({name: opts.name})
   const selectors = Selectors({name: opts.name})
@@ -216,7 +210,6 @@ const Factory = (opts = {}) => {
     actions,
     selectors,
     saga,
-    api,
     table,
     TreeComponent,
     TreeContainer,

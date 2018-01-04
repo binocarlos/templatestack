@@ -4,6 +4,7 @@ import Factory from 'template-ui/lib/plugins2/digger/factory'
 import apitools from './api/tools'
 import config from './config'
 import forms from './forms'
+import apis from './api'
 
 const icons = config.icons
 
@@ -37,11 +38,10 @@ const types = {
 const resource = Factory({
   title: 'Resource',
   name: 'resource',
+  api: apis.resource,
   namespace: 'resource',
   types,
   icons,
-  url: apitools.url(),
-  suburl: '/resources',
   descendentType: 'folder',
   rootItem: {
     name: 'Resources',

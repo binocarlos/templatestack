@@ -9,15 +9,13 @@ import Section from 'template-ui/lib/components/Section'
 
 import config from './config'
 import digger from './digger'
+import crud from './crud'
 
 import Application from './containers/Application'
 import LoginForm from './containers/LoginForm'
 import RegisterForm from './containers/RegisterForm'
 import AuthTabs from './containers/AuthTabs'
-import UserList from './containers/UserList'
-import UserForm from './containers/UserForm'
-import InstallationList from './containers/InstallationList'
-import InstallationForm from './containers/InstallationForm'
+
 import Home from './components/Home'
 
 import selectors from './selectors'
@@ -25,6 +23,12 @@ import selectors from './selectors'
 const ResourceTree = digger.resource.TreeContainer
 const ResourceList = digger.resource.ListContainer
 const ResourceForm = digger.resource.FormContainer
+
+const UserList = crud.user.ListContainer
+const UserForm = crud.user.FormContainer
+
+const InstallationList = crud.installation.ListContainer
+const InstallationForm = crud.installation.FormContainer
 
 const Route = RouteFactory(config.basepath)
 

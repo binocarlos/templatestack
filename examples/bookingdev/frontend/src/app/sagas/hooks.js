@@ -11,13 +11,11 @@ import AuthSaga from 'template-ui/lib/plugins2/auth/saga'
 import FormSagas from 'template-ui/lib/plugins2/form/sagas'
 import systemSagas from 'template-ui/lib/plugins2/system/sagas'
 
-import UserSaga from './user'
-import InstallationSaga from './installation'
-
 import config from '../config'
 import actions from '../actions'
 import selectors from '../selectors'
 import digger from '../digger'
+import crud from '../crud'
 
 import { redirects } from '../routes'
 
@@ -51,9 +49,7 @@ const Hooks = (opts = {}) => {
 
   const apis = opts.apis
 
-  const installation = InstallationSaga({
-    apis: apis.installation
-  })
+  const installation = crud.installation.saga
 
   const resource = digger.resource.saga
 
@@ -67,9 +63,7 @@ const Hooks = (opts = {}) => {
 
   const form = FormSagas()
 
-  const user = UserSaga({
-    apis: apis.user
-  })
+  const user = crud.user.saga
 
   const hooks = {
     

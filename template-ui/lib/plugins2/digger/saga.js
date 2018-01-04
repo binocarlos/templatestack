@@ -72,11 +72,6 @@ const DiggerSagas = (opts = {}) => {
     const namespace = yield call(getNamespace)
     const type = opts.descendentType
 
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.log('-------------------------------------------');
-    console.dir(namespace)
-
     let { answer, error } = yield call(apiSaga, {
       name: `${name}Descendents`,
       handler: apis.descendents,
