@@ -173,6 +173,31 @@ const DiggerSagas = (opts = {}) => {
     }
   }
 
+  function* delItem(id) {
+    const { answer, error } = yield call(apiSaga, {
+      name: `${name}Delete`,
+      handler: apis.del,
+      payload: {
+        id
+      }
+    })
+    if(error) {
+      yield put(systemActions.message(error))
+    }
+  }
+
+  function* del(payload) {
+    const selectedItems = yield select(state => selectors.list.selectedItems(state))
+    while(selectedItems.length > 0) {
+      const item = selectedItems.shift()
+      yield call(delItem, item.id)
+    }
+    yield put(systemActions.message(`items deleted`))
+    yield put(actions.list.setSelected([]))
+    yield call(list)
+    yield call(descendents)
+  }
+
   function* tableAction(payload) {
     if(opts.tableAction) {
       yield call(opts.tableAction, payload)
@@ -185,6 +210,7 @@ const DiggerSagas = (opts = {}) => {
     list,
     load,
     save,
+    del,
     tableAction,
   }
 
