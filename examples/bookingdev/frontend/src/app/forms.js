@@ -6,12 +6,12 @@ import utils from 'template-ui/lib/plugins2/form/utils'
 import Yaml from 'template-ui/lib/plugins2/form/components/Yaml'
 
 import validators from 'template-tools/src/utils/validators'
+import authSelectors from 'template-ui/lib/plugins2/auth/selectors'
 
 import CollaboratorField from 'template-ui/lib/plugins2/installation/collaboratorField'
 
 import apis from './api'
 import config from './config'
-import selectors from './selectors'
 
 const auth = {
   username: {
@@ -48,7 +48,7 @@ const installationCore = {
 const installationCollaborators = {
   collaborators: CollaboratorField({
     icons: config.icons,
-    selectors: selectors.auth,
+    selectors: authSelectors,
     api: apis.user.list,
   })
 }
@@ -77,6 +77,17 @@ const item = {
   }
 }
 
+
+const settingsItem = {
+  name: {
+    title: 'Name',
+    validate: []
+  },
+  'meta.value': {
+    title: 'Value'
+  }
+}
+
 const bookingFormCore = {
   name: {
     title: 'Name',
@@ -101,6 +112,7 @@ const forms = {
   installationCollaborators,
   folder,
   item,
+  settingsItem,
   bookingFormCore,
   bookingFormConfig,
 }

@@ -72,8 +72,8 @@ const config = {
       ret = ret.concat([
         ['-'],
         ['/projects', 'Projects', icons.project],
-        ['/resources', 'Resources', icons.folder],
         ['/bookingForms', 'Booking Forms', icons.bookingForm],
+        ['/settings', 'Settings', icons.settings],
         ['-'],
         ['/help', 'Help', icons.help],
         ['authLogout', 'Logout', icons.logout]

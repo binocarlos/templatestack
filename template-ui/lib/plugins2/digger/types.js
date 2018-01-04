@@ -37,7 +37,7 @@ const Types = (opts = {}) => {
     },
     isRoot: (item) => item.type == 'root',
     getChildrenTypes: (item) => {
-      if(digger.isRoot(item)) return ['folder', 'item']
+      if(digger.isRoot(item)) return opts.rootTypes || ['folder', 'item']
       const schema = types[item.type] || types.item
       if(!schema || schema.leaf) return []
       return schema.children || []

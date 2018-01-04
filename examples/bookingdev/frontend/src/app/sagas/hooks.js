@@ -51,7 +51,7 @@ const Hooks = (opts = {}) => {
 
   const installation = crud.installation.saga
 
-  const resource = digger.resource.saga
+  const settings = digger.settings.saga
   const bookingForm = digger.bookingForm.saga
 
   const auth = AuthSaga({
@@ -93,19 +93,19 @@ const Hooks = (opts = {}) => {
     installationEdit: redirectorHook('installationEdit'),
     installationCancel: redirectorHook('installationCancel'),
 
-    // resource saga
-    resourceDescendents: resource.descendents,
-    resourceList: resource.list,
-    resourceLoad: resource.load,
-    resourceSave: resource.save,
-    resourceDelete: resource.del,
-    resourceTableAction: resource.tableAction,
-    resourceView: redirectorHook('resourceView'),
-    resourceAdd: redirectorHook('resourceAdd'),
-    resourceEdit: redirectorHook('resourceEdit'),
-    resourceCancel: redirectorHook('resourceCancel'),
+    // configItem saga
+    settingsDescendents: settings.descendents,
+    settingsList: settings.list,
+    settingsLoad: settings.load,
+    settingsSave: settings.save,
+    settingsDelete: settings.del,
+    settingsTableAction: settings.tableAction,
+    settingsView: redirectorHook('settingsView'),
+    settingsAdd: redirectorHook('settingsAdd'),
+    settingsEdit: redirectorHook('settingsEdit'),
+    settingsCancel: redirectorHook('settingsCancel'),
 
-    // resource saga
+    // bookingForm saga
     bookingFormList: bookingForm.list,
     bookingFormLoad: bookingForm.load,
     bookingFormSave: bookingForm.save,

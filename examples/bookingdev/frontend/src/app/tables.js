@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react'
 import GoogleUserChip from 'template-ui/lib/components/widgets/GoogleUserChip'
 import IconBadge from 'template-ui/lib/components/widgets/IconBadge'
 import ActiveInstallationFilter from 'template-ui/lib/plugins2/installation/containers/ActiveInstallationFilter'
-import selectors from './selectors'
 import utils from './utils'
 
 const user = {
@@ -21,7 +20,6 @@ const user = {
           user={ row }
         />
       )
-      //selectors.user.displayName(row)
     }
   }
 }

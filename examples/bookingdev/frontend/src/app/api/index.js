@@ -1,13 +1,13 @@
 import auth from './auth'
 import user from './user'
 import installation from './installation'
-import resource from './resource'
+import digger from './digger'
 
 const apis = {
   auth,
   user,
   installation,
-  resource,
+  digger,
 }
 
 export default apis

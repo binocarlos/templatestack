@@ -19,17 +19,17 @@ const folder = {
   },
   title: 'Folder',
   icon: icons.folder,
-  children: ['folder', 'item'],
+  children: ['folder', 'settingsItem'],
 }
 
-const item = {
-  type: 'item',
+const settingsItem = {
+  type: 'settingsItem',
   form: {
     type: 'normal',
-    fields: forms.item
+    fields: forms.settingsItem
   },
-  title: 'Item',
-  icon: icons.item,
+  title: 'Settings Item',
+  icon: icons.settings,
   leaf: true,
 }
 
@@ -57,33 +57,34 @@ const bookingFormForm = TabForm({
   icons: config.icons,
 })
 
-const resourceTypes = {
+const settingsTypes = {
   folder,
-  item,
+  settingsItem
 }
 
 const bookingFormTypes = {
   bookingForm: bookingFormSchema
 }
 
-const resource = Factory({
-  title: 'Resource',
-  name: 'resource',
-  api: apis.resource,
-  namespace: 'resource',
-  types: resourceTypes,
+const settings = Factory({
+  title: 'Settings',
+  name: 'settings',
+  api: apis.digger,
+  namespace: 'settings',
+  types: settingsTypes,
   icons,
   descendentType: 'folder',
   rootItem: {
-    name: 'Resources',
-  }
+    name: 'Settings',
+  },
+  rootTypes: ['folder', 'settingsItem']
 })
 
 const bookingForm = Factory({
   title: 'Booking Forms',
   icon: icons.bookingForm,
   name: 'bookingForm',
-  api: apis.resource,
+  api: apis.digger,
   namespace: 'bookingForm',
   types: bookingFormTypes,
   childTypes: ['bookingForm'],
@@ -100,19 +101,13 @@ const bookingForm = Factory({
       alert(parsed.error)
       return data
     }
-    if(!data.meta.configLog) {
-      data.meta.configLog = []
-    }
-    if(data.meta.config) {
-      data.meta.configLog.push(data.meta.config)  
-    }
     data.meta.config = parsed.doc
     return data
   }
 })
 
 const diggers = {
-  resource,
+  settings,
   bookingForm
 }
 

@@ -20,9 +20,9 @@ import Home from './components/Home'
 
 import selectors from './selectors'
 
-const ResourceTree = digger.resource.TreeContainer
-const ResourceList = digger.resource.ListContainer
-const ResourceForm = digger.resource.FormContainer
+const SettingsTree = digger.settings.TreeContainer
+const SettingsList = digger.settings.ListContainer
+const SettingsForm = digger.settings.FormContainer
 
 const BookingFormList = digger.bookingForm.ListContainer
 const BookingFormForm = digger.bookingForm.FormContainer
@@ -72,26 +72,26 @@ export const routeConfig = processRoutes({
       hooks: ['installationLoad']
     }
   },
-  '/resources': {
-    hooks: ['resourceList', 'resourceDescendents'],
+  '/settings': {
+    hooks: ['settingsList', 'settingsDescendents'],
     '/view/:viewid': {
-      hooks: ['resourceList', 'resourceDescendents'],
+      hooks: ['settingsList', 'settingsDescendents'],
       '/add/:type': {
         formmode: 'add',
-        hooks: ['resourceLoad', 'resourceDescendents']
+        hooks: ['settingsLoad', 'settingsDescendents']
       },
       '/edit/:id': {
         formmode: 'add',
-        hooks: ['resourceLoad', 'resourceDescendents']
+        hooks: ['settingsLoad', 'settingsDescendents']
       },
     },
     '/add/:type': {
       formmode: 'add',
-      hooks: ['resourceLoad', 'resourceDescendents']
+      hooks: ['settingsLoad', 'settingsDescendents']
     },
     '/edit/:id': {
       formmode: 'add',
-      hooks: ['resourceLoad', 'resourceDescendents']
+      hooks: ['settingsLoad', 'settingsDescendents']
     },
   },
   '/bookingForms': {
@@ -111,33 +111,33 @@ export const redirects = {
   installationAdd: () => `/projects/add`,
   installationEdit: (id) => `/projects/edit/${id}`,
   installationCancel: () => `/projects`,
-  resourceAdd: (payload, state) => {
+  settingsAdd: (payload, state) => {
     const viewid = selectors.router.param(state, 'viewid')
     if(viewid) {
-      return `/resources/view/${viewid}/add/${payload}`
+      return `/settings/view/${viewid}/add/${payload}`
     }
     else {
-      return `/resources/add/${payload}`
+      return `/settings/add/${payload}`
     }
   },
-  resourceView: (id, state) => `/resources${id ? '/view/' + id : ''}`,
-  resourceEdit: (id, state) => {
+  settingsView: (id, state) => `/settings${id ? '/view/' + id : ''}`,
+  settingsEdit: (id, state) => {
     const viewid = selectors.router.param(state, 'viewid')
     if(viewid) {
-      return `/resources/view/${viewid}/edit/${id}`
+      return `/settings/view/${viewid}/edit/${id}`
     }
     else {
-      return `/resources/edit/${id}`
+      return `/settings/edit/${id}`
     }
     
   },
-  resourceCancel: (payload, state) => {
+  settingsCancel: (payload, state) => {
     const viewid = selectors.router.param(state, 'viewid')
     if(viewid) {
-      return `/resources/view/${viewid}`
+      return `/settings/view/${viewid}`
     }
     else {
-      return `/resources`
+      return `/settings`
     }
   },
   bookingFormAdd: () => `/bookingForms/add/bookingForm`,
@@ -204,27 +204,27 @@ export const routes = (
       <InstallationForm />
     </Route>
 
-    <Route path='/resources'>
-      <ResourceTree>
-        <Route path='/resources' exact>
-          <ResourceList />
+    <Route path='/settings'>
+      <SettingsTree>
+        <Route path='/settings' exact>
+          <SettingsList />
         </Route>
-        <Route route='/resources/add/:type' exact>
-          <ResourceForm />
+        <Route route='/settings/add/:type' exact>
+          <SettingsForm />
         </Route>
-        <Route route='/resources/edit/:id' exact>
-          <ResourceForm />
+        <Route route='/settings/edit/:id' exact>
+          <SettingsForm />
         </Route>
-        <Route route='/resources/view/:viewid' exact>
-          <ResourceList />
+        <Route route='/settings/view/:viewid' exact>
+          <SettingsList />
         </Route>
-        <Route route='/resources/view/:viewid/add/:type' exact>
-          <ResourceForm />
+        <Route route='/settings/view/:viewid/add/:type' exact>
+          <SettingsForm />
         </Route>
-        <Route route='/resources/view/:viewid/edit/:id' exact>
-          <ResourceForm />
+        <Route route='/settings/view/:viewid/edit/:id' exact>
+          <SettingsForm />
         </Route>
-      </ResourceTree>
+      </SettingsTree>
     </Route>
 
     <Route path='/bookingForms' exact>
