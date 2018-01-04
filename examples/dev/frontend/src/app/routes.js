@@ -65,25 +65,25 @@ export const routeConfig = processRoutes({
   },
   '/resources': {
     namespace: 'resource',
-    hooks: ['resourceDescendents', 'resourceList'],
+    hooks: ['resourceList', 'resourceDescendents'],
     '/view/:viewid': {
-      hooks: ['resourceDescendents', 'resourceList'],
+      hooks: ['resourceList', 'resourceDescendents'],
       '/add/:type': {
         formmode: 'add',
-        hooks: ['resourceDescendents', 'resourceLoad']
+        hooks: ['resourceLoad', 'resourceDescendents']
       },
       '/edit/:id': {
         formmode: 'add',
-        hooks: ['resourceDescendents', 'resourceLoad']
+        hooks: ['resourceLoad', 'resourceDescendents']
       },
     },
     '/add/:type': {
       formmode: 'add',
-      hooks: ['resourceDescendents', 'resourceLoad']
+      hooks: ['resourceLoad', 'resourceDescendents']
     },
     '/edit/:id': {
       formmode: 'add',
-      hooks: ['resourceDescendents', 'resourceLoad']
+      hooks: ['resourceLoad', 'resourceDescendents']
     },
   },
 }, config.basepath)

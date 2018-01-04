@@ -1,13 +1,10 @@
 # template-stack
 
-Install [nodejs](https://nodejs.org/en/download/)
-
-
 ## create new app
 
 ```bash
 $ export TEMPLATE="google-digger-project"
-$ export FOLDER="examples/myapp"
+$ export FOLDER="myapp"
 $ docker run -ti \
   -e TEMPLATE \
   -e FOLDER \

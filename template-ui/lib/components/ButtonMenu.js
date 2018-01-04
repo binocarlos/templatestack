@@ -50,7 +50,7 @@ export class ButtonMenu extends Component {
   render () {
     const options = this.props.options || []
     return (
-      <div className={ theme.container }>
+      <div className={ theme.container } style={ this.props.style }>
         <TooltipButton
           label={ this.props.label }
           icon={ this.props.icon }

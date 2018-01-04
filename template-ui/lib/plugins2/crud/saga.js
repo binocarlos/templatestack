@@ -47,7 +47,8 @@ const CrudSagas = (opts = {}) => {
     const { answer, error } = yield call(apiSaga, {
       name: `${name}List`,
       handler: apis.list,
-      payload: searchForm
+      payload: searchForm,
+      keepPayload: true,
     })
     if(error) {
       yield put(systemActions.message(error))

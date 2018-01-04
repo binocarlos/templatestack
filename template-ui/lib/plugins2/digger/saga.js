@@ -7,6 +7,7 @@ import systemActions from '../system/actions'
 import formActions from '../form/actions'
 import routerActions from '../router/actions'
 import apiSaga from '../api/saga'
+import apiSelectors from '../api/selectors'
 import routerSelectors from '../router/selectors'
 import formSelectors from '../form/selectors'
 import formUtils from '../form/utils'
@@ -76,19 +77,27 @@ const DiggerSagas = (opts = {}) => {
 
   function* list() {
     let searchForm = yield select(state => formSelectors.values(state, `${name}Search`))
+    const apiName = `${name}List`
     const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
     const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
+    const lastListPayload = yield select(state => apiSelectors.payload(state, apiName))
+
+    // wipe the list when loading a different set of children
+    if(lastListPayload && lastListPayload.id != viewid) {
+      yield put(actions.list.setData([]))
+    }
 
     searchForm = searchForm || {}
     
     const { answer, error } = yield call(apiSaga, {
-      name: `${name}List`,
+      name: apiName,
       handler: searchForm.search ? apis.descendents : apis.children,
       payload: {
         namespace,
         id: viewid,
         search: searchForm.search
-      }
+      },
+      keepPayload: true,
     })
 
     if(error) {

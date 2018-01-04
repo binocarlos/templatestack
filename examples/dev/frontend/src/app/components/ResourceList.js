@@ -32,6 +32,9 @@ const ResourceList = BaseList({
       primary: true,
       floating: true,
       mini: true,
+      style: {
+        marginRight: '5px'
+      }
     }, 
       childTypes.map(type => {
         const schema = digger.types[type]
@@ -41,8 +44,8 @@ const ResourceList = BaseList({
     const search = ['search', 'Search', icons.search, {}]
     const up = ['up', 'Up', icons.up, {}]
     if(digger.isLeaf(selectedItem)) return []
-    if(digger.isRoot(selectedItem)) return [search, add]
-    return [up, search, add]
+    if(digger.isRoot(selectedItem)) return [add, search]
+    return [add, up, search]
   },
   getRowButtons: (row, props, index) => {
     let ret = []

@@ -14,22 +14,25 @@ const getErrorText = (error) => {
 
 const getValueKey = (name) => `api_${name}`
 
-const loadingState = (name) => ({
+const loadingState = (name, payload, keepPayload) => ({
   name,
   status: 'loading',
-  error: null
+  error: null,
+  payload: keepPayload ? payload : null
 })
 
-const errorState = (name, error) => ({
+const errorState = (name, error, payload, keepPayload) => ({
   name,
   status: 'loaded',
-  error
+  error,
+  payload: keepPayload ? payload : null
 })
 
-const loadedState = (name) => ({
+const loadedState = (name, payload, keepPayload) => ({
   name,
   status: 'loaded',
-  error: null
+  error: null,
+  payload: keepPayload ? payload : null
 })
 
 const REQUIRED = [
@@ -53,7 +56,7 @@ function* ApiSaga(opts = {}) {
   }
   
   const state = yield select(state => state)
-  yield call(writeState, loadingState(name))
+  yield call(writeState, loadingState(name, payload, opts.keepPayload))
 
   let apiResult = null, apiError = null
 
@@ -69,7 +72,7 @@ function* ApiSaga(opts = {}) {
       console.log(`API RESPONSE: ${name}`)
       console.dir(apiResult)
     })
-    yield call(writeState, loadedState(name))
+    yield call(writeState, loadedState(name, payload, opts.keepPayload))
   }
   catch(error) { 
     apiError = getErrorText(error)
@@ -77,7 +80,7 @@ function* ApiSaga(opts = {}) {
       console.log(`API ERROR: ${name}`)
       console.log(apiError)
     })
-    yield call(writeState, errorState(name, apiError))
+    yield call(writeState, errorState(name, apiError, payload, opts.keepPayload))
   }
 
   const ret = {
