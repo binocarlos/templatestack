@@ -51,6 +51,8 @@ const Factory = (opts = {}) => {
 
   const saga = Saga({
     name: opts.name,
+    namespace: opts.namespace,
+    getNamespace: opts.getNamespace,
     actions,
     selectors,
     apis: api,

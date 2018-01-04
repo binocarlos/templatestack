@@ -48,9 +48,34 @@ const DiggerSagas = (opts = {}) => {
     selectors
   } = opts
 
+  /*
+  
+    3 ways to get the namespace (in order of preference):
+
+     * have a `namespace` prop at any point in the route config tree
+     * supply a `namespace` opt
+     * supply a `getNamespace` opt
+    
+  */
+  function* getNamespace() {
+    const routeNamespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    if(routeNamespace) return routeNamespace
+    if(opts.namespace) return opts.namespace
+    if(opts.getNamespace) {
+      const ret = yield call(opts.getNamespace)
+      return ret
+    }
+    return null
+  }
+
   function* descendents() {
-    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const namespace = yield call(getNamespace)
     const type = opts.descendentType
+
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.log('-------------------------------------------');
+    console.dir(namespace)
 
     let { answer, error } = yield call(apiSaga, {
       name: `${name}Descendents`,
@@ -78,7 +103,7 @@ const DiggerSagas = (opts = {}) => {
   function* list() {
     let searchForm = yield select(state => formSelectors.values(state, `${name}Search`))
     const apiName = `${name}List`
-    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const namespace = yield call(getNamespace)
     const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
     const lastListPayload = yield select(state => apiSelectors.payload(state, apiName))
 
@@ -111,7 +136,7 @@ const DiggerSagas = (opts = {}) => {
   }
 
   function* load() {
-    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const namespace = yield call(getNamespace)
     const type = yield select(state => routerSelectors.param(state, 'type'))
     const id = yield select(state => routerSelectors.param(state, 'id'))
     yield put(formActions.initialize(name, {}))
@@ -143,7 +168,7 @@ const DiggerSagas = (opts = {}) => {
   }
 
   function* save() {
-    const namespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const namespace = yield call(getNamespace)
     const viewid = yield select(state => routerSelectors.param(state, 'viewid'))
     const itemData = yield select(state => formSelectors.values(state, name))
 

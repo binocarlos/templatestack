@@ -66,7 +66,6 @@ export const routeConfig = processRoutes({
     }
   },
   '/resources': {
-    namespace: 'resource',
     hooks: ['resourceList', 'resourceDescendents'],
     '/view/:viewid': {
       hooks: ['resourceList', 'resourceDescendents'],

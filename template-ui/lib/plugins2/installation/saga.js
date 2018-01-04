@@ -35,6 +35,7 @@ const InstallationSaga = (opts = {}) => {
 
   function* loadActive() {
     const id = yield select(state => authSelectors.activeInstallationId(state))
+    if(!id) return
     const { answer, error } = yield call(apiSaga, {
       name: `installationActiveLoad`,
       handler: opts.apis.get,

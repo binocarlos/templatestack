@@ -37,6 +37,7 @@ const types = {
 const resource = Factory({
   title: 'Resource',
   name: 'resource',
+  namespace: 'resource',
   types,
   icons,
   url: apitools.url(),
