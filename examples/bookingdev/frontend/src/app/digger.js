@@ -3,30 +3,9 @@ import React, { Component, PropTypes } from 'react'
 import Factory from 'template-ui/lib/plugins2/digger/factory'
 import apitools from './api/tools'
 import config from './config'
+import forms from './forms'
 
 const icons = config.icons
-
-const folderForm = {
-  name: {
-    title: 'Name',
-    validate: []
-  }
-}
-
-const itemForm = {
-  name: {
-    title: 'Name',
-    validate: []
-  },
-  'meta.comment': {
-    title: 'Comment'
-  }
-}
-
-const forms = {
-  folder: folderForm,
-  item: itemForm
-}
 
 const folder = {
   type: 'folder',

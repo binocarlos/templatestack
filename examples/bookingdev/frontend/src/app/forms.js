@@ -54,12 +54,38 @@ const installationCollaborators = {
   })
 }
 
+/*
+
+  digger
+  
+*/
+
+
+const folder = {
+  name: {
+    title: 'Name',
+    validate: []
+  }
+}
+
+const item = {
+  name: {
+    title: 'Name',
+    validate: []
+  },
+  'meta.comment': {
+    title: 'Comment'
+  }
+}
+
 const forms = {
   authLogin,
   authRegister,
   user,
   installationCore,
   installationCollaborators,
+  folder,
+  item,
 }
 
 export default forms
