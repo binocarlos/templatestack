@@ -93,11 +93,18 @@ const bookingForm = Factory({
   rootItem: {
     name: 'Booking Forms',
   },
+  // when saved we keep a log of previous configs
   mapData: (data) => {
     const parsed = yaml.load(data.meta.yaml)
     if(parsed.error) {
       alert(parsed.error)
       return data
+    }
+    if(!data.meta.configLog) {
+      data.meta.configLog = []
+    }
+    if(data.meta.config) {
+      data.meta.configLog.push(data.meta.config)  
     }
     data.meta.config = parsed.doc
     return data
