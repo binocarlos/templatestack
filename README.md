@@ -25,6 +25,7 @@ $ make api.cli
 $ node src/index.js
 $ make frontend.cli
 $ yarn run watch
+$ make database.create
 ```
 
 ## initial boot

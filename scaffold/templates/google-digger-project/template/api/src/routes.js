@@ -119,29 +119,6 @@ const Routes = (app, rpcClients) => {
   app.put(iPath('/resources/:id'), installationAccess.editor(), digger.save)
   app.delete(iPath('/resources/:id'), installationAccess.editor(), digger.delete)
 
-  /*
-  
-    
-  // config
-  app.get(basePath('/config'), config.load)
-
-  // public booking api
-  app.get(basePath('/bookings/range'), booking.range)
-  app.get(basePath('/bookings/slot/:type/:date/:slot'), bookingSubmit.slot)
-  app.post(basePath('/bookings/check'), bookingSubmit.check)
-  app.post(basePath('/bookings/submit'), bookingSubmit.submit)
-
-  // admin booking api
-  app.get(basePath('/bookings'), authAccess.loggedIn(), booking.search)
-  app.post(basePath('/bookings'), authAccess.loggedIn(), bookingSubmit.create)
-  app.get(basePath('/bookings/:id'), authAccess.loggedIn(), booking.load)
-  app.put(basePath('/bookings/:id'), authAccess.loggedIn(), bookingSubmit.save)
-  app.delete(basePath('/bookings/:id'), authAccess.loggedIn(), booking.del)
-  app.post(basePath('/bookings/block'), authAccess.loggedIn(), bookingSubmit.block)
-  app.post(basePath('/bookings/unblock'), authAccess.loggedIn(), bookingSubmit.unblock)
-
-    
-  */
 }
 
 module.exports = Routes

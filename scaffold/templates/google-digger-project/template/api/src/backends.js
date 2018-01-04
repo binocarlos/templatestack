@@ -13,15 +13,6 @@ const InstallationStorage = require('template-api/src/installation/storage_sql')
 const DiggerBackend = require('template-api/src/digger/backend')
 const DiggerStorage = require('template-api/src/digger/storage_sql')
 
-/*
-const BookingBackend = require('template-api/src/booking2/backend')
-const MailgunBackend = require('template-api/src/mailgun/backend')
-const MailgunTestBackend = require('template-api/src/mailgun/testBackend')
-const TwilioBackend = require('template-api/src/twilio/backend')
-const TwilioTestBackend = require('template-api/src/twilio/testBackend')
-const StripeBackend = require('template-api/src/stripe/backend')
-*/
-
 const Knex = require('./databases/knex')
 const packageJSON = require('../package.json')
 
@@ -58,31 +49,6 @@ const Backends = () => {
     storage: DiggerStorage({knex}),
     hooks: {}
   })
-
-  /*
-  
-    
-  const stripe = StripeBackend({
-    secretKey: settings.stripe_secret_key
-  })
-
-  const mailgun = (!settings.mailgun_api_key || !settings.mailgun_domain) ?
-    MailgunTestBackend()
-    :
-    MailgunBackend({
-      apiKey: settings.mailgun_api_key,
-      domain: settings.mailgun_domain
-    })
-  
-  const twilio = (!settings.twilio_sid || !settings.twilio_token) ?
-    TwilioTestBackend()
-    :
-    TwilioBackend({
-      sid: settings.twilio_sid,
-      token: settings.twilio_token
-    })
-    
-  */
 
   return {
     system,

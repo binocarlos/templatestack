@@ -1,0 +1,74 @@
+image: binocarlos/cibase:v6
+
+# NOTE - this assumes the runner is using the host docker and there is only one runner
+# (i.e. it expects images it built in one job to be there for the next job)
+
+# TODO - we should use some kind of registry to solve above and that this has to all be on the same runner
+
+variables:
+  DOCKER_API_VERSION: "1.23"
+  DOCKER_REGISTRY: gcr.io
+  GCP_PROJECT_ID: webkit-servers
+  GCP_ZONE: europe-west1-b
+  GCP_CLUSTER_ID: appcluster
+  NAMESPACE_DEV: {{name}}
+  NAMESPACE_PROD: {{name}}
+  IMAGE_BUILDER: {{name}}-builder
+  IMAGE_FRONTEND: {{name}}-frontend
+  IMAGE_API: {{name}}-api
+
+stages:
+  - build
+  - push_images
+  - deploy_staging
+
+build_frontend:
+  stage: build
+  after_script:
+    - docker rm -f $IMAGE_BUILDER || true
+  script:  
+    - docker build -t $IMAGE_BUILDER -f Dockerfile.frontend .
+    - docker run -e NODE_ENV=production --name $IMAGE_BUILDER --entrypoint yarn $IMAGE_BUILDER run release  
+    - docker cp $IMAGE_BUILDER:/app/frontend/dist frontend/dist
+    - ls -la frontend/dist
+    - docker build -t $IMAGE_FRONTEND -f Dockerfile.nginx .
+
+build_api:
+  stage: build
+  script:
+    - docker build -t $IMAGE_API -f Dockerfile.api .
+
+push_frontend:
+  stage: push_images  
+  before_script:
+    - bash /scripts/ci.sh connect
+    - export SHA_TAG=$(echo $CI_COMMIT_SHA | cut -c1-8)
+  script:
+    - docker tag $IMAGE_FRONTEND $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_FRONTEND
+    - docker tag $IMAGE_FRONTEND $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_FRONTEND:$SHA_TAG
+    - gcloud docker -- push $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_FRONTEND:latest
+    - gcloud docker -- push $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_FRONTEND:$SHA_TAG
+
+push_api:
+  stage: push_images  
+  before_script:
+    - bash /scripts/ci.sh connect
+    - export SHA_TAG=$(echo $CI_COMMIT_SHA | cut -c1-8)
+  script:
+    - docker tag $IMAGE_API $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_API
+    - docker tag $IMAGE_API $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_API:$SHA_TAG
+    - gcloud docker -- push $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_API:latest
+    - gcloud docker -- push $DOCKER_REGISTRY/$GCP_PROJECT_ID/$IMAGE_API:$SHA_TAG
+
+deploy_staging:
+  stage: deploy_staging
+  before_script:
+    - bash /scripts/ci.sh connect
+    - export NAMESPACE=${NAMESPACE_DEV}
+    - export SHA_TAG=$(echo $CI_COMMIT_SHA | cut -c1-8)
+  script:
+    - cat deploy/04-api-deployment.yaml | envsubst
+    - cat deploy/04-api-deployment.yaml | envsubst | kubectl apply -f -
+    - cat deploy/04-frontend-deployment.yaml | envsubst
+    - cat deploy/04-frontend-deployment.yaml | envsubst | kubectl apply -f -
+

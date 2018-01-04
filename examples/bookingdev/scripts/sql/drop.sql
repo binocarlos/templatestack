@@ -1,0 +1,9 @@
+drop table resource_link;
+drop table resource;
+drop table booking;
+drop table collaboration;
+drop table installation;
+drop table useraccount;
+drop table knex_migrations;
+drop table knex_migrations_lock;
+drop extension ltree;

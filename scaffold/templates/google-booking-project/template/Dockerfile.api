@@ -1,0 +1,10 @@
+FROM binocarlos/yarn-base
+MAINTAINER kaiyadavenport@gmail.com
+WORKDIR /app/api
+COPY ./api/package.json /app/api/package.json
+COPY ./api/yarn.lock /app/api/yarn.lock
+COPY ./shared /app/shared
+RUN yarn install
+COPY ./api /app/api
+ENTRYPOINT ["npm", "run"]
+CMD ["serve"]
