@@ -88,6 +88,20 @@ const settingsItem = {
   }
 }
 
+
+const appleItem = {
+  name: {
+    title: 'Name',
+    validate: []
+  },
+  'meta.value': {
+    title: 'Value'
+  },
+  'meta.price': {
+    title: 'Price'
+  }
+}
+
 const bookingFormCore = {
   name: {
     title: 'Name',
@@ -113,6 +127,7 @@ const forms = {
   folder,
   item,
   settingsItem,
+  appleItem,
   bookingFormCore,
   bookingFormConfig,
 }

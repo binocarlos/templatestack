@@ -19,7 +19,7 @@ const folder = {
   },
   title: 'Folder',
   icon: icons.folder,
-  children: ['folder', 'settingsItem'],
+  children: ['folder', 'settingsItem', 'appleItem'],
 }
 
 const settingsItem = {
@@ -29,6 +29,17 @@ const settingsItem = {
     fields: forms.settingsItem
   },
   title: 'Settings Item',
+  icon: icons.settings,
+  leaf: true,
+}
+
+const appleItem = {
+  type: 'appleItem',
+  form: {
+    type: 'normal',
+    fields: forms.appleItem
+  },
+  title: 'Apple Item',
   icon: icons.settings,
   leaf: true,
 }
@@ -59,7 +70,8 @@ const bookingFormForm = TabForm({
 
 const settingsTypes = {
   folder,
-  settingsItem
+  settingsItem,
+  appleItem
 }
 
 const bookingFormTypes = {
