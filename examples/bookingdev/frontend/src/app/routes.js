@@ -61,7 +61,7 @@ export const routeConfig = processRoutes({
       hooks: ['userLoad']
     }
   },
-  '/projects': {
+  '/companies': {
     hooks: ['installationList'],
     '/add': {
       formmode: 'add',
@@ -108,9 +108,9 @@ export const routeConfig = processRoutes({
 }, config.basepath)
 
 export const redirects = {
-  installationAdd: () => `/projects/add`,
-  installationEdit: (id) => `/projects/edit/${id}`,
-  installationCancel: () => `/projects`,
+  installationAdd: () => `/companies/add`,
+  installationEdit: (id) => `/companies/edit/${id}`,
+  installationCancel: () => `/companies`,
   settingsAdd: (payload, state) => {
     const viewid = selectors.router.param(state, 'viewid')
     if(viewid) {
@@ -192,15 +192,15 @@ export const routes = (
       <UserForm />
     </Route>
 
-    <Route path='/projects' exact>
+    <Route path='/companies' exact>
       <InstallationList />
     </Route>
 
-    <Route path='/projects/add' exact>
+    <Route path='/companies/add' exact>
       <InstallationForm />
     </Route>
 
-    <Route route='/projects/edit/:id' exact>
+    <Route route='/companies/edit/:id' exact>
       <InstallationForm />
     </Route>
 

@@ -112,7 +112,7 @@ const Factory = (opts = {}) => {
     getIcon: (props) => {
       if(opts.noTree) return icon
       const selectedItem = props.selectedTreeItem || {}
-      return types.getIcon(selectedItem)    
+      return types.getIcon(selectedItem)
     },
     getToolbarButtons: (props) => {
       const selectedItem = props.selectedTreeItem
@@ -126,17 +126,27 @@ const Factory = (opts = {}) => {
         }
       }, 
         childTypes.map(type => {
-          const schema = types.types[type]
+          const schema = types.types[type] || {}
           return [type, schema.title, schema.icon]
         })
       ]
       const search = ['search', 'Search', icons.search, {}]
       const up = ['up', 'Up', icons.up, {}]
 
+      // selectedItem can be root
+
       if(!opts.noTree && !selectedItem) return []
       if(!opts.noTree && types.isLeaf(selectedItem || {})) return []
-      if(opts.noTree || types.isRoot(selectedItem || {})) return [add, search]
-      return [add, up, search]
+
+      let ret = [add]
+
+      if(!opts.noTree && !types.isRoot(selectedItem || {})) {
+        ret.push(up)
+      }
+
+      if(!opts.noSearch) ret,push(search)
+
+      return ret
     },
     getRowButtons: (row, props, index) => {
       let ret = []

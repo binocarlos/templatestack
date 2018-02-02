@@ -15,7 +15,8 @@ const InstallationSaga = (opts = {}) => {
   function* loadInitialData() {
     const user = yield select(state => authSelectors.user(state))
 
-    const collaborator = Object.assign({}, user, {
+    const collaborator = Object.assign({}, {
+      id: user.id,
       collaboration_permission: 'owner'
     })
     return {

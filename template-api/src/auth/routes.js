@@ -28,9 +28,10 @@ const AuthRoutes = (opts) => {
   // QUERIES
   const status = (req, res) => {
     const user = req.user
-    const ret = user ? Object.assign({}, user, {
+    let ret = user ? Object.assign({}, user, {
       tags: getUserTags ? getUserTags(req.user) : {}
     }) : null
+    ret = opts.mapUser ? opts.mapUser(ret) : ret
     res
       .status(200)
       .json({
@@ -112,9 +113,10 @@ const AuthRoutes = (opts) => {
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!user) return webserverTools.errorReply(next, res, err, 400)
+      let ret = opts.mapUser ? opts.mapUser(user) : user
       res
         .status(200)
-        .json(user)
+        .json(ret)
     })
   }
 
@@ -129,9 +131,11 @@ const AuthRoutes = (opts) => {
     }, (err, user) => {
       if(err) return webserverTools.errorReply(next, res, err)
       if(!user) return webserverTools.errorReply(next, res, err, 400)
+
+      let ret = opts.mapUser ? opts.mapUser(user) : user
       res
         .status(200)
-        .json(user)
+        .json(ret)
     })
   }
 

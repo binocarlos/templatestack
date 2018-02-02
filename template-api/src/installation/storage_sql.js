@@ -205,10 +205,13 @@ on
             .asCallback(tools.singleExtractor(next))
         },
         (installation, next) => {
-          createCollaborations(installation.id, collaborators, next)
+          createCollaborations(installation.id, collaborators, (err) => {
+            if(err) return next(err)
+            return next(null, installation)
+          })
         }
       ], finish)
-    }, done)
+    }, tools.singleExtractor(done))
   }
 
   /*

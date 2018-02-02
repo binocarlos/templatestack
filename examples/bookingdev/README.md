@@ -1,4 +1,4 @@
-## bookingdev
+# developing the stack
 
 ## build
 

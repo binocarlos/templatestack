@@ -37,7 +37,7 @@ const installationForm = TabForm({
 
 const installation = Factory({
   name: 'installation',
-  title: 'Project',
+  title: 'Company',
   api: apis.installation,
   form: forms.installation,
   table: tables.installation,
@@ -57,7 +57,7 @@ const installation = Factory({
 
     let ret = []
 
-    ret.push(['open', 'Load Project', icons.star, {}])
+    ret.push(['open', 'Load Company', icons.star, {}])
 
     if(permission == 'owner') {
       ret.push(['delete', 'Delete', icons.delete, {}])

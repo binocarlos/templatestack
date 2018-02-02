@@ -1,5 +1,5 @@
 const Types = (opts = {}) => {
-  const { types, icons } = opts
+  const { types, icons, icon } = opts
   const digger = {
     types,
     getInitialData: (type) => {
@@ -14,7 +14,7 @@ const Types = (opts = {}) => {
     getType: (type) => types[type] || types.item,
     getIcon: (item) => {
       if(!item) return icons.item
-      if(digger.isRoot(item)) return item.icon || icons.root
+      if(digger.isRoot(item)) return item.icon || icon || icons.root
       const schema = digger.getType(item.type)
       if(!schema) return icons.item
       return schema.icon

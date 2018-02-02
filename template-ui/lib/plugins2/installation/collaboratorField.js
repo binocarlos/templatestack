@@ -49,8 +49,9 @@ const CollaboratorField = (opts = {}) => {
       )
     },
     processNewItem: (item) => {
-      return Object.assign({}, item, {
-        collaboration_permission: 'editor'
+      return Object.assign({}, {
+        item: item.id,
+        collaboration_permission: 'editor',
       })
     },
     filterNewItem: (item, currentData) => {
