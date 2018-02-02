@@ -144,7 +144,7 @@ const Factory = (opts = {}) => {
         ret.push(up)
       }
 
-      if(!opts.noSearch) ret,push(search)
+      if(!opts.noSearch) ret.push(search)
 
       return ret
     },
