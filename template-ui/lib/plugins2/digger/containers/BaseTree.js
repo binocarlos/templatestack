@@ -45,11 +45,12 @@ const DiggerTreeFactory = (opts = {}) => {
       data: selectors.tree.data(state),
       loaded: apiSelectors.loaded(state, `${name}Descendents`),
       error: apiSelectors.error(state, `${name}Descendents`),
+      namespace: routerSelectors.param(state, `namespace`),
       selectedId: routerSelectors.param(state, `viewid`),
     }),
     (dispatch) => ({
       clickTree: (item) => {
-        dispatch(routerActions.hook(`${name}View`, item.id))
+        dispatch(routerActions.hook(`${name}View`, item))
       }
     })
   )(TreeContainer)

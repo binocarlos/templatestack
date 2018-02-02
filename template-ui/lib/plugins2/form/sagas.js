@@ -33,7 +33,8 @@ const DEFAULTS = {
 
 function* search(req) {
 
-  const searchString = req.payload
+  const payload = req.payload
+  const searchString = payload.search
   const api = req.api
   const id = req.id
 
@@ -44,12 +45,17 @@ function* search(req) {
     return
   }
 
+  const state = yield select(state => state)
+  const extraParams = req.getExtraSearchArguments ? req.getExtraSearchArguments(state) : {}
+
+  const finalPayload = Object.assign({}, {
+    search: searchString
+  }, extraParams)
+
   let { answer, error } = yield call(apiSaga, {
     name: `itemSearchApi_${id}`,
     handler: api,
-    payload: {
-      search: searchString
-    }
+    payload: finalPayload,
   })
   if(error) {
     yield put(systemActions.message(error))

@@ -53,7 +53,10 @@ const Factory = (opts = {}) => {
     descendentType: opts.descendentType,
     mapData: opts.mapData,
     loadInitialData,
-    processTreeData: (data) => {
+    processTreeData: (data, state) => {
+      if(opts.getRootItems) {
+        return opts.getRootItems(data, state)
+      }
       if(opts.rootItem) {
         const rootItem = Object.assign({}, opts.rootItem)
         rootItem.type = 'root'

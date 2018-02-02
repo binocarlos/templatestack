@@ -2,6 +2,7 @@ const Types = (opts = {}) => {
   const { types, icons, icon } = opts
   const digger = {
     types,
+    // for before the api data has loaded
     getInitialData: (type) => {
       const schema = digger.getType(type)
       return {
@@ -32,13 +33,23 @@ const Types = (opts = {}) => {
     },
     isLeaf: (item) => {
       if(digger.isRoot(item)) return false
-      const schema = types[item.type] || types.item
+      const schema = types[item.type] || types.item || {}
       return schema.leaf ? true : false
     },
     isRoot: (item) => item.type == 'root',
     getChildrenTypes: (item) => {
-      if(digger.isRoot(item)) return opts.rootTypes || ['folder', 'item']
-      const schema = types[item.type] || types.item
+      if(digger.isRoot(item)) {
+        if(opts.getRootTypes) {
+          return opts.getRootTypes(item) || []
+        }
+        else if(opts.rootTypes) {
+          return opts.rootTypes || []
+        }
+        else {
+          return ['folder', 'item']
+        }
+      }
+      const schema = types[item.type] || types.item || {}
       if(!schema || schema.leaf) return []
       return schema.children || []
     },

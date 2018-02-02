@@ -102,6 +102,10 @@ const RouterSaga = (opts = {}) => {
       }
     })
     yield call(runHookArray, enterRouteHooks)
+
+    if(router.result && router.result.redirect) {
+      yield call(runRedirect, router.result.redirect) 
+    }
   }
 
   function* initialize() {

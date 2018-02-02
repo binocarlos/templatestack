@@ -16,7 +16,7 @@ class ListTree extends Component {
 
     let selected = false
 
-    if(!this.props.selectedId && !item.id) {
+    if(!this.props.selectedId && !item.id && item.namespace==this.props.namespace) {
       selected = true
     }
     else if(this.props.selectedId && item.id == this.props.selectedId) {

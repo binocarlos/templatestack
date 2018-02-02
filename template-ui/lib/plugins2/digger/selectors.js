@@ -10,10 +10,12 @@ const flattenItems = (items) => {
   }, [])
 }
 
-const getItem = (items, id) => {
+const getItemFn = (items, fn) => {
   const flatItems = flattenItems(items)
-  return flatItems.filter(item => item.id == id)[0]
+  return flatItems.filter(fn)[0]
 }
+
+const getItem = (items, id) => getItemFn(items, item => item.id == id)
 
 const DiggerSelectors = (opts = {}) => {
   const {
@@ -35,7 +37,13 @@ const DiggerSelectors = (opts = {}) => {
       selectedItem: (state) => {
         const id = router.param(state, 'viewid')
         const data = selectors.tree.data(state)
-        return getItem(data, id)
+        if(!id) {
+          const namespace = router.param(state, 'namespace')
+          return getItemFn(data, item => item.namespace == namespace)
+        }
+        else {
+          return getItem(data, id)
+        }
       }
     }
   }

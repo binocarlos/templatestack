@@ -59,10 +59,11 @@ const DiggerSagas = (opts = {}) => {
   */
   function* getNamespace() {
     const routeNamespace = yield select(state => routerSelectors.firstValue(state, 'namespace'))
+    const state = yield select(state => state)
     if(routeNamespace) return routeNamespace
     if(opts.namespace) return opts.namespace
     if(opts.getNamespace) {
-      const ret = yield call(opts.getNamespace)
+      const ret = yield call(opts.getNamespace, state)
       return ret
     }
     return null
@@ -70,6 +71,7 @@ const DiggerSagas = (opts = {}) => {
 
   function* descendents() {
     const namespace = yield call(getNamespace)
+    const state = yield select(state => state)
     const type = opts.descendentType
 
     let { answer, error } = yield call(apiSaga, {
@@ -89,7 +91,7 @@ const DiggerSagas = (opts = {}) => {
     else {
 
       if(opts.processTreeData) {
-        answer = opts.processTreeData(answer)
+        answer = opts.processTreeData(answer, state)
       }
       yield put(actions.tree.setData(answer))
     }

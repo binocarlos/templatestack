@@ -77,7 +77,10 @@ export default connect(
           action: 'search',
           id,
           api: ownProps.api,
-          payload: val
+          payload: {
+            search: val
+          },
+          getExtraSearchArguments: ownProps.getExtraSearchArguments
         }))
       }
     }
