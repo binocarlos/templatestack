@@ -1,6 +1,6 @@
 {
   "name": "template-ui",
-  "version": "1.9.5",
+  "version": "1.10.0",
   "description": "template components for frontend apps",
   "scripts": {
     "test": "tape -r babel-register lib/**/*.test.js"
