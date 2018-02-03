@@ -9,8 +9,7 @@ import apiSelectors from '../../api/selectors'
 import routerActions from '../../router/actions'
 
 const REQUIRED = [
-  'name',
-  'component',
+  'name',  
 ]
 
 const CrudFormFactory = (opts = {}) => {
@@ -19,14 +18,25 @@ const CrudFormFactory = (opts = {}) => {
     required: REQUIRED
   })
 
-  const {
+  let {
     name,
-    component,
   } = opts
+
+  
+
+  const ComponentWrapper = (props) => {
+    let UseComponent = opts.component
+    if(opts.getComponent) {
+      UseComponent = opts.getComponent(props)
+    }
+    return (
+      <UseComponent {...props} />
+    )
+  }
 
   const Form = reduxForm({
     form: name
-  })(component)
+  })(ComponentWrapper)
 
   class FormContainer extends Component {
     render() {

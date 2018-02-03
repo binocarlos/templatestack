@@ -52,6 +52,7 @@ const Factory = (opts = {}) => {
     apis: api,
     descendentType: opts.descendentType,
     mapData: opts.mapData,
+    clearOnLoad: opts.clearOnLoad,
     loadInitialData,
     processTreeData: (data, state) => {
       if(opts.getRootItems) {
@@ -163,7 +164,7 @@ const Factory = (opts = {}) => {
   })
 
 
-  const FormComponent = opts.FormComponent || BaseFormComponent({
+  const FormComponent = BaseFormComponent({
     title: opts.title,
     getIcon: (props) => {
       const item = props.formvalues || {}
@@ -212,7 +213,11 @@ const Factory = (opts = {}) => {
 
   const FormContainer = BaseFormContainer({
     name: opts.name,
-    component: FormComponent,
+    getComponent: (props) => {
+      if(opts.FormComponent) return opts.FormComponent
+      if(opts.getFormComponent) return opts.getFormComponent(props, FormComponent)
+      return FormComponent
+    },
     getIcon: (props) => {
       return types.getIcon(props.data)
     },

@@ -109,6 +109,10 @@ const DiggerSagas = (opts = {}) => {
       yield put(actions.list.setData([]))
     }
 
+    if(opts.clearOnLoad) {
+      yield put(actions.list.setData([]))
+    }
+    
     searchForm = searchForm || {}
     
     const { answer, error } = yield call(apiSaga, {
