@@ -3,7 +3,7 @@ import options from 'template-tools/src/utils/options'
 import authSelectors from '../auth/selectors'
 
 const REQUIRED = [
-  'url',
+  
 ]
 
 const DiggerApi = (opts = {}) => {
@@ -12,10 +12,9 @@ const DiggerApi = (opts = {}) => {
     required: REQUIRED
   })
 
-  const BASE_URL = (state) => {
-    const installationid = authSelectors.activeInstallationId(state)
-    return `${opts.url}/installation/${installationid}${opts.suburl}`
-  }
+  let BASE_URL = (state) => opts.url
+
+  if(opts.getBaseUrl) BASE_URL = opts.getBaseUrl
 
   const search = (payload = {}, state) => {
     return request({

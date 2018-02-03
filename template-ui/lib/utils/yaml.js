@@ -8,7 +8,18 @@ const load = (val) => {
       error: e
     }
   }
-  return {doc}
+  return doc
+}
+
+const dump = (val) => {
+  try {
+    var string = yaml.safeDump(val)
+  } catch (e) {
+    return {
+      error: e
+    }
+  }
+  return string
 }
 
 const validate = (val) => {
@@ -22,7 +33,8 @@ const validate = (val) => {
 
 const ret = {
   load,
-  validate
+  dump,
+  validate,
 }
 
 export default ret

@@ -12,8 +12,8 @@ const databaseTools = require('../database/tools')
 
 const REQUIRED = [
   'knex',
-  'getCalendar', // (type, installationid) => {}
-  'getSchedule', // (type, installationid) => {}
+  'getCalendar', // (type, installationid, done) => {}
+  'getSchedule', // (type, installationid, done) => {}
   'validateBookingOptions', // (booking) => {}
   'canBookSlot', // (booking, slot) => {}
   'sendCommunications', // (booking, opts, done) => {}

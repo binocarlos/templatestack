@@ -19,7 +19,7 @@ class Toolbar extends Component {
     if(props.leftContent) {
       if(props.title) {
         const newTitle = (
-          <div className={ horizontal.left }>
+          <div className={ horizontal.left + ' ' + theme.leftContent }>
             <span className={ theme.injectedTitle}>
               {
                 this.props.small ? this.props.title : (
