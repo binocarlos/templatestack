@@ -1,0 +1,14 @@
+.inline {
+  display: inline-block;
+}
+
+.titleBar {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  font-size: 18px;
+  font-weight: bold;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

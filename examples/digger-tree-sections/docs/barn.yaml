@@ -1,0 +1,549 @@
+prices:
+  default:
+    icecream: 125
+    sandwich_selection: 1950
+    oriental_snacks: 1950
+    indian_snacks: 1950
+    party_bags: 200
+    characters: 3000
+    balloons: 200
+    plain_balloons: 100
+    farm_visit_child: 425
+    farm_visit_adult: 375
+  offpeak:
+    children: 995
+  peak:
+    children: 1295
+  exclusive:
+    children: 1695
+  farmAndBarn:
+    children: 1395
+
+payment:
+  name: The Big Play Barn
+  description: Deposit for party booking
+  panelLabel: Pay Deposit
+  stripeKey: ${STRIPE_PUBLIC_KEY}
+  type: deposit
+  deposit: 5000
+  subject: Deposit for booking at The Big Play Barn
+  text: To secure your booking we require you to make a {amount} deposit.
+  confirmed: Your booking has been confirmed! We look forward to seeing you on the day.
+  notes:
+    - Please be aware a £50 non-returnable deposit is required online or over the phone.
+    - This will be deducted from your final bill which is payable on the day of your party.
+    - We will reschedule parties wherever possible should your time or date need to change.
+
+email:
+  subject: Your booking at The Big Play Barn and Children's Farm
+  template: |
+    Dear <%= name %>,
+
+    Thanks for booking a party. Here is confirmation of your details:
+
+    <%= summary %>
+
+    Don't worry if there are small changes between now and your party date as we will check you in on arrival and alterations can be discussed at that point.
+    Please note, you will be charged for just the children you bring on the day but this is subject to minimum booking numbers - see Charging Policy, below.
+    
+    Please feel free to give us a call or email info@bigplaybarn.com if you have any questions, specific requests, or wish to make any significant changes (e.g. date or time).
+       
+    Charging Policy:
+    All bookings have a minimum charge of 12 paying children.
+    All children that enter the farm or barn as a guest of your party must pay the party price, regardless of how long they stay or whether they are eating.
+    The siblings of your guests may not enter for free. They must join your party as an extra chargeable guest, or, if they are not joining the meal, pay independently for entry as a normal day-visitor (see website for rates).
+
+    We look forward to seeing you on the big day,
+
+    The Big Play Barn and Children's Farm team
+
+sms:
+  template: >
+    Thanks for your party booking at The Big Play Barn and Children's Farm: <%= summary %>
+
+schedule:
+  peak:
+    meta:
+      notes: "price is per child"
+      description: Weekends and school holidays are peak. We offer standard parties at £12.95 and exclusive-use, after-hours parties at £16.95 per child
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+          - start: 10.30
+            location: "Play Barn Zoo Lodge"
+          - start: 11.00
+            location: "Play Barn Pig Sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+          - start: 13.00
+            location: "Play Barn Zoo Lodge"
+          - start: 13.30
+            location: "Play Barn Pig Sty"
+      - name: Afternoon
+        slots:
+          - start: 15.00
+            location: "Play Barn Cow Pen"
+          - start: 15.30
+            location: "Play Barn Zoo Lodge"
+          - start: 16.00
+            location: "Play Barn Pig Sty"
+      - name: Exclusive
+        slots:
+          - start: 18.30
+            location: "Play Barn Zoo Lodge"
+            price: 'exclusive'
+  holiday-midweek:
+  # note: this is like a weekend day but with the 11.00 and 4.00 pig pen slots removed as they might be taken by farm n barn
+    meta:
+      notes: "price is per child"
+      description: School holidays mid-week are peak. We offer standard parties at £12.95 and exclusive after-hour parties at £16.95 per child.
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+          - start: 10.30
+            location: "Play Barn Zoo Lodge"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+          - start: 13.00
+            location: "Play Barn Zoo Lodge"
+          - start: 13.30
+            location: "Play Barn Pig Sty"
+      - name: Afternoon
+        slots:
+          - start: 15.00
+            location: "Play Barn Cow Pen"
+          - start: 15.30
+            location: "Play Barn Zoo Lodge"
+      - name: Exclusive
+        slots:
+          - start: 18.30
+            location: "Play Barn Zoo Lodge"
+            price: 'exclusive'
+  offpeak:
+    # note: This is monday to thursday: the zoo lodge slots have been removed in the day time to avoid clash with any Mother and Toddler Farm n' Barn groups. Also there is no pig pen after school to keep space for farm and barn parties
+    meta:
+      notes: "price is per child"
+      description: Weekday parties are charged at a lower price except during school holidays. New for 2018, we now offer Farm n Barn parties which start with an dedicated farm tour.
+    merge:
+      duration: 120
+      price: 'offpeak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+          - start: 13.30
+            location: "Play Barn Pig Sty"
+      - name: Afternoon
+        merge:
+          notes: You can arrive any time between 15.30 and 16.30
+        slots:
+          - start: 16.00
+            location: "Play Barn Cow Pen"
+          - start: 16.00
+            location: "Play Barn Zoo Lodge"
+      - name: NEW Farm And Barn Midweek Parties
+        slots:
+          - start: 14.30
+            location: "Start at The Farm"
+            price: 'farmAndBarn'
+          - start: 16.00
+            location: "Start at The Farm"
+            price: 'farmAndBarn'
+  friday-offpeak:
+    # note: Friday (no daytime zoo lodge slots cos of Mother and Toddler Farm n' Barn groups. Pig Pen retained as often busy on a Friday
+    meta:
+      notes: "price is per child"
+      description: Weekday parties are charged at a lower price except during school holidays.
+    merge:
+      duration: 120
+      price: 'offpeak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+          - start: 13.30
+            location: "Play Barn Pig Sty"
+      - name: Afternoon
+        merge:
+          notes: You can arrive any time between 15.30 and 16.30
+        slots:
+          - start: 16.00
+            location: "Play Barn Cow Pen"
+          - start: 16.00
+            location: "Play Barn Zoo Lodge"
+          - start: 16.00
+            location: "Play Barn Pig Sty"
+      - name: Exclusive
+        slots:
+          - start: 18.30
+            location: "Play Barn Zoo Lodge"
+            price: 'exclusive'
+  christmasPeak:
+    meta:
+      notes: "price is per child"
+      description: Weekends and school holidays are peak price parties.
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+          - start: 11.00
+            location: "Play Barn Pig Sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+          - start: 13.30
+            location: "Play Barn Pig Sty"
+      - name: Afternoon
+        slots:
+          - start: 15.00
+            location: "Play Barn Cow Pen"
+          - start: 16.00
+            location: "Play Barn Pig Sty"            
+  christmasOffPeak:
+    meta:
+      notes: "price is per child"
+      description: Weekday parties are charged at a lower price except during school holidays
+    merge:
+      duration: 120
+      price: 'offpeak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+          - start: 11.00
+            location: "Play Barn Pig Sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+          - start: 13.30
+            location: "Play Barn Pig Sty"
+      - name: Afternoon
+        merge:
+          notes: You can arrive any time between 15.30 and 16.30
+        slots:
+          - start: 16.00
+            location: "Play Barn Cow Pen"
+          - start: 16.00
+            location: "Play Barn Pig Sty"
+  christmasEve:
+    meta:
+      notes: "price is per child"
+      description: We are closed a little earlier on Christmas Eve!
+    merge:
+      duration: 120
+      price: 'peak'
+    blocks:
+      - name: Morning
+        slots:
+          - start: 10.00
+            location: "Play Barn Cow Pen"
+          - start: 11.00
+            location: "Play Barn Pig Sty"
+      - name: Lunchtime
+        slots:
+          - start: 12.30
+            location: "Play Barn Cow Pen"
+  closure:
+    meta:
+      description: Sorry, we are closed.
+
+time_window:
+  min:
+  max:
+
+calendar:
+  - name: Weekday
+    schedule: 'offpeak'
+    days:
+      - 'Mon'
+      - 'Tue'
+      - 'Wed'
+      - 'Thu'
+  - name: Friday
+    schedule: 'friday-offpeak'
+    days:
+      - 'Fri'
+  - name: Weekend
+    schedule: 'peak'
+    days:
+      - 'Sat'
+      - 'Sun'
+  - name: Birmingham Easter Holidays
+    schedule: 'peak'
+    dates:
+      from: 2017-04-08
+      to: 2017-04-23
+  - name: Birmingham Summer Half Term
+    schedule: 'peak'
+    dates:
+      from: 2017-05-28
+      to: 2017-06-03
+  - name: Birmingham Summer Holidays
+    schedule: 'peak'
+    dates:
+      from: 2017-07-26
+      to: 2017-09-03
+  - name: Birmingham Autumn Half Term
+    schedule: 'peak'
+    dates:
+      from: 2017-10-23
+      to: 2017-10-28
+  - name: Birmingham Christmas Holidays
+    schedule: 'peak'
+    dates:
+      from: 2017-12-23
+      to: 2018-01-07
+#santa overrides 
+ # - name: Christmas Peak
+   # schedule: 'christmasPeak'
+  #  dates:
+   #   - 2017-12-02
+ #     - 2017-12-03
+   #   - 2017-12-09
+  #    - 2017-12-10
+   #   - 2017-12-16
+ #     - 2017-12-17
+  #    - 2017-12-23
+#  - name: Christmas Off Peak
+  #  schedule: 'christmasOffPeak'
+ #   dates: 
+ #     - 2017-12-01
+  #    - 2017-12-08
+   #   - 2017-12-14
+  #    - 2017-12-15
+   #   - 2017-12-18
+   #   - 2017-12-19
+ #     - 2017-12-20
+  #    - 2017-12-21
+   #   - 2017-12-22
+ # - name: Santa Schedule Christmas Eve
+ #   schedule: 'christmasEve'
+#    dates: 
+#      - 2017-12-24
+  # CLOSURES
+ # - name: Christmas Closures
+  #  schedule: 'closure'
+  #  dates: 
+   #   - 2017-12-25
+  #    - 2017-12-26
+   #   - 2018-01-01
+  #2018 dates 
+  - name: Birmingham February Half Term 2018
+    schedule: 'holiday-midweek'
+    dates:
+      from: 2018-02-19
+      to: 2018-02-23
+  - name: Birmingham Easter Holidays 2018
+    schedule: 'holiday-midweek'
+    dates:
+       - 2018-03-30
+       - 2018-04-02
+       - 2018-04-03
+       - 2018-04-04
+       - 2018-04-05
+       - 2018-04-06
+       - 2018-04-09
+       - 2018-04-10
+       - 2018-04-11
+       - 2018-04-12
+       - 2018-04-13
+  - name: Birmingham Summer Half Term 2018 
+    schedule: 'peak'
+    dates:
+      from: 2018-05-28
+      to: 2018-06-01
+  - name: Birmingham Summer Holidays 2018 
+    schedule: 'peak'
+    dates:
+      from: 2018-07-25
+      to: 2018-09-02
+options:
+  - title: Attendees
+    removeAdmin: true
+    sections:
+    - id: children
+      title: Number of children
+      short_title: Children
+      input_type: number
+      default: 12
+      calculate: children
+      validate:
+        required: true
+        minimum: 12
+      description:
+        - "{price} per child"
+        - "You'll only be charged for the numbers you bring on the day, but please note there is a minimum charge of 12 children."
+        - "Please only contact us to update if your numbers change significantly."
+    - id: adults
+      title: Approx. number of adults
+      short_title: Adults
+      input_type: number
+      default: 0
+      description: >
+        No charge but please advise approximate numbers so that we have an idea of the size of your group
+  - title: Children's Food (included in cost)
+    sections:
+    - id: foodtype
+      title: Choose hot or cold food
+      short_title: Food
+      input_type: radio
+      default: cold
+      options:
+        - cold
+        - hot
+      description: >
+        HOT BOX: nuggets, sausage or burger with chips.  
+        COLD BUFFET: sandwiches, nuggets, pizza, mini-sausages, crisps.  
+        Both options come with fruit shoot and yoghurt or upgrade to ice cream.  
+        Vegetarian options offered on day. Please let us know on arrival.  
+    - id: icecream
+      title: Upgrade your yoghurts to ice cream @£1.25
+      short_title: Ice Cream
+      input_type: checkbox
+      calculate:
+        if: icecream
+        field: children
+      description:
+        - "{price} per child"
+        - "A Mr Whippy Tub replaces the yoghurt. (Other ice cream options may be available on the day)"
+  - title: Balloons in your party space (to take away)
+    sections:
+    - id: balloons
+      title: Number of shiny Happy Birthday helium balloons @£2.00
+      short_title: Balloons
+      input_type: number
+      default: 0
+      description: "{price} each"
+      calculate: balloons
+    - id: plain_balloons
+      title: Number of plain helium balloons @£1.00
+      short_title: Plain Balloons
+      input_type: number
+      default: 0
+      description: "{price} each"
+      calculate: plain_balloons
+  - title: Extras
+    sections:
+    - id: party_bags
+      title: Party Bags @£2.00
+      short_title: Party Bags
+      input_type: checkbox
+      calculate:
+        if: party_bags
+        field: children 
+      description:
+        - "{price} per child"
+        - "OFFER: includes a return ticket for your child to revisit the barn, £2 off voucher for EVERY guest + a lovely bag of party goodies"
+    - id: characters
+      title: Giant dress up characters @£30
+      short_title: Characters
+      input_type: multiple_checkbox
+      calculate:
+        if: characters
+        field: characters
+      options:
+        - Mickey
+        - Ninja Turtle
+        - Marshall
+        - Minion
+      description:
+        - "{price} each"
+        - "15 minutes visit during your meal"
+  - title: Adult Food Trays
+    sections: 
+    - id: sandwich_selection
+      title: Mixed Sandwich Tray @£19.50
+      input_type: number
+      default: 0
+      calculate: sandwich_selection
+      description: "{price} each - (number of trays)"
+    - id: oriental_snacks
+      title: Oriental Snacks @£19.50
+      input_type: number
+      default: 0
+      calculate: oriental_snacks
+      description: "{price} each - Mini spring rolls etc. (number of trays)"
+    - id: indian_snacks
+      title: Indian Snacks @£19.50
+      input_type: number
+      default: 0
+      calculate: indian_snacks
+      description: "{price} each - Mini Samosas etc. (number of trays)"
+  - title: Farm Tickets @50% off standard admission - add time on the farm to your Play Barn party
+    sections:
+    - id: farm_visit_child
+      title:  Child tickets for farm  @£4.25
+      short_title: Farm Tickets CHILDREN
+      input_type: number
+      default: 0
+      calculate: farm_visit_child
+      description: 
+        - "{price} each. Spend time with family and friends on the farm, paying just for the tickets you require on the day."
+        - "This is 'free range' (no tour guide). You are welcome to join in any regular activities on the farm subject but recommend you call or email after booking for advice about timings."
+        - "NOTE: this option is not applicable to Farm n' Barn parties which start on the farm anyway."
+    - id: farm_visit_adult
+      title:  Adult tickets for farm @3.75
+      short_title: Farm Tickets ADULT 
+      input_type: number
+      default: 0
+      calculate: farm_visit_adult
+      description: 
+        - "{price} each. See details above."
+info:
+  - id: child_name
+    title: Child's Name
+    removeAdmin: true
+  - id: age
+    title: Age on Birthday
+    input_type: number
+  - id: name
+    title: Your Name
+    removeAdmin: true
+  - id: email
+    input_type: email
+    title: Email Address
+  - id: mobile
+    input_type: tel
+    title: Mobile Number 
+    description: >
+      (We'll send you a confirmation to both your mobile and email. Please call us if you haven't received one or the other.)
+  - id: address
+    title: Address
+  - id: postcode
+    title: Postcode
+  - id: notes
+    title: Notes
+    multiline: true
+    rows: 5
+    admin: true

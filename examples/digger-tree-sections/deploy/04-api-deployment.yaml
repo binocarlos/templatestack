@@ -1,0 +1,66 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: ${DOCKER_REGISTRY}/${GCP_PROJECT_ID}/${IMAGE_API}:${SHA_TAG}
+        ports:
+        - containerPort: 80
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: REDIS_SERVICE_HOST
+          value: redis.redis.svc.cluster.local
+        - name: POSTGRES_SERVICE_HOST
+          value: postgres.postgres.svc.cluster.local
+        - name: ADMIN_USERS
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: ADMIN_USERS
+        - name: APP_URL
+          value: http://sandl.wk1.co
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: POSTGRES_USER
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: POSTGRES_DB
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: POSTGRES_PASSWORD
+        - name: COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: COOKIE_SECRET
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: GOOGLE_CLIENT_ID
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: appsecrets
+              key: GOOGLE_CLIENT_SECRET
+
+        
