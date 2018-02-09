@@ -63,9 +63,7 @@ const FormModalFactory = (opts = {}) => {
         dispatch(valueActions.set(`${form}WindowOpen`, true))
       },
       onConfirm: () => {
-        console.log('-------------------------------------------');
-        console.log('-------------------------------------------');
-        console.log('here')
+        if(opts.trigger) opts.trigger(dispatch)
       }
     })
   )(FormItemFieldContainer)

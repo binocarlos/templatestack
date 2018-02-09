@@ -4,6 +4,7 @@
 // format    = reduxcer -> gui
 //
 import dateLight from 'template-tools/src/utils/dateLight'
+import yamlLib from '../../utils/yaml'
 
 export const number = (opts = {}) => {
   return Object.assign({}, {
@@ -26,9 +27,31 @@ export const date = (opts = {}) => {
   }, opts)
 }
 
+export const yaml = (opts = {}) => {
+  const validator = (val) => yamlLib.validate(val)
+  return Object.assign({}, {
+    validate: [validator],
+    multiline: true,
+    rows: 10,
+    // to input
+    format: (value) => {
+      value = value || {}
+      return value.text
+    },
+    // from input
+    normalize: (value) => {
+      return {
+        text: value,
+        data: yamlLib.load(value),
+      }      
+    }
+  }, opts)
+}
+
 const Models = {
   number,
-  date
+  date,
+  yaml,
 }
 
 export default Models

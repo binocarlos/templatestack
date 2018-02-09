@@ -4,7 +4,7 @@ import { reduxForm } from 'redux-form'
 import Modal from './Modal'
 import FormLayout from './FormLayout'
 
-import formUtils from 'template-ui/lib/plugins2/form/utils'
+import formUtils from '../plugins2/form/utils'
 
 const FormContainer = reduxForm({
   
@@ -14,10 +14,12 @@ class FormModal extends Component {
 
   getForm() {
     const fields = formUtils.getFields(this.props.schema)
+    const defaults = formUtils.getDefaults(this.props.schema)
     return (
       <FormContainer
         form={ this.props.form }
         fields={ fields }
+        initialValues={ defaults }
       />
     )
   }
