@@ -226,6 +226,21 @@ export const clearField = (Component) => (props) => {
   )
 }
 
+export const description = (Component) => (props) => {
+  return (
+    <div>
+      <div>
+        <Component
+          {...props}
+        />
+      </div>
+      <div className={ theme.description }>
+        { props.description }
+      </div>
+    </div>
+  )
+}
+
 export const list = ListField
 export const item = ItemField
 
@@ -269,6 +284,7 @@ const fields = {
   item,
   section,
   clearField,
+  description,
 }
 
 export default fields

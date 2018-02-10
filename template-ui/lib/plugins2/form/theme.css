@@ -50,3 +50,8 @@
   width: 20%;
 }
 
+.description {
+  font-size: .85em;
+  color: #999;
+  font-style: italic;
+}

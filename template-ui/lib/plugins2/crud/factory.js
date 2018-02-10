@@ -37,7 +37,7 @@ const Factory = (opts = {}) => {
 
   function* loadInitialData(payload) {
     if(opts.loadInitialData) {
-      return opt.loadInitialData(payload)
+      return opts.loadInitialData(payload)
     }
     else {
       return opts.initialData || {}  
