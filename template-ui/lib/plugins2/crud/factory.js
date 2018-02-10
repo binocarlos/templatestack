@@ -36,7 +36,12 @@ const Factory = (opts = {}) => {
   const icons = opts.icons
 
   function* loadInitialData(payload) {
-    return opts.initialData || {}
+    if(opts.loadInitialData) {
+      return opt.loadInitialData(payload)
+    }
+    else {
+      return opts.initialData || {}  
+    }
   }
 
 

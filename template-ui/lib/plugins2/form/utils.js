@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Field } from 'redux-form'
+import dotty from 'dotty'
 import fields from './fields'
 
 const composeParts = (parts = []) => {
@@ -45,10 +46,12 @@ const fieldNames = (schema = {}) => {
 const getDefaults = (schema = {}) => {
   return Object.keys(schema || {}).reduce((all, fieldname) => {
     const opts = schema[fieldname] || {}
-    if(opts.childSchema) {
-      all[fieldname] = getDefaults(opts.childSchema)
+    if(opts.childSchema) {      
+      dotty.put(all, fieldname, getDefaults(opts.childSchema))
     }
-    else if(opts.default) all[fieldname] = opts.default
+    else if(opts.default) {
+      dotty.put(all, fieldname, opts.default)
+    }
     return all
   }, {})
 }
