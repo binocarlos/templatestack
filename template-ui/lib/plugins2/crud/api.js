@@ -2,7 +2,7 @@ import { request } from '../../utils/ajax'
 import options from 'template-tools/src/utils/options'
 
 const REQUIRED = [
-  'url',
+  
 ]
 
 const CrudApi = (opts = {}) => {
@@ -13,43 +13,47 @@ const CrudApi = (opts = {}) => {
 
   const BASE_URL = opts.url
 
-  const list = (payload = {}) => {
+  const defaultGetUrl = (state) => BASE_URL
+
+  const getUrl = opts.getUrl || defaultGetUrl
+
+  const list = (payload = {}, state) => {
     return request({
       method: 'get',
-      url: `${BASE_URL}`,
+      url: `${getUrl(state)}`,
       params: {
         search: payload.search 
       }
     })
   }
 
-  const get = (payload) => {
+  const get = (payload, state) => {
     return request({
       method: 'get',
-      url: `${BASE_URL}/${payload.id}`
+      url: `${getUrl(state)}/${payload.id}`
     })
   }
 
-  const create = (payload) => {
+  const create = (payload, state) => {
     return request({
       method: 'post',
-      url: `${BASE_URL}`,
+      url: `${getUrl(state)}`,
       data: payload.data
     })
   }
 
-  const save = (payload) => {
+  const save = (payload, state) => {
     return request({
       method: 'put',
-      url: `${BASE_URL}/${payload.id}`,
+      url: `${getUrl(state)}/${payload.id}`,
       data: payload.data
     })
   }
 
-  const del = (payload) => {
+  const del = (payload, state) => {
     return request({
       method: 'delete',
-      url: `${BASE_URL}/${payload.id}`
+      url: `${getUrl(state)}/${payload.id}`
     })
   }
 

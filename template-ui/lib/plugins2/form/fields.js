@@ -8,6 +8,8 @@ import DatePicker from 'react-toolbox/lib/date_picker'
 import TimePicker from 'react-toolbox/lib/time_picker'
 import { RadioGroup, RadioButton } from 'react-toolbox/lib/radio'
 import Dropdown from 'react-toolbox/lib/dropdown'
+import Navigation from 'react-toolbox/lib/navigation'
+import {Button, IconButton} from 'react-toolbox/lib/button'
 
 import ErrorText from '../../components/ErrorText'
 import FormLayout from '../../components/FormLayout'
@@ -185,32 +187,44 @@ export const multipleCheckbox = ({
   )
 }
 
-export const date = ({
-  input,
-  label,
-  meta: { touched, error },
-  ...props
-}) => (
-  <DatePicker
-    autoOk
-    label={label}
-    error={touched && error ? error : null}
-    {...input}
-  />
-)
+export const date = (props) => {
+  const { touched, error } = props.meta
+  return (
+    <DatePicker
+      autoOk
+      label={ props.label }
+      error={ touched && error ? error : null }
+      {...props.input}
+    />
+  )
+}
 
-export const time = ({
-  input,
-  label,
-  meta: { touched, error },
-  ...props
-}) => (
-  <TimePicker
-    label={label}
-    error={touched && error ? error : null}
-    {...input}
-  />
-)
+export const time = (props) => {
+  const { touched, error } = props.meta
+  return (
+    <TimePicker
+      label={ props.label }
+      error={ touched && error ? error : null }
+      {...props.input}
+    />
+  )
+}
+
+export const clearField = (Component) => (props) => {
+  const onClear = () => props.input.onChange(null)
+  return (
+    <div>
+      <div className={ theme.clearContent }>
+        <Component
+          {...props}
+        />
+      </div>
+      <div className={ theme.clearButton }>
+        <IconButton icon='clear' primary onClick={ onClear } />
+      </div>
+    </div>
+  )
+}
 
 export const list = ListField
 export const item = ItemField
@@ -253,7 +267,8 @@ const fields = {
   multipleCheckbox,
   list,
   item,
-  section
+  section,
+  clearField,
 }
 
 export default fields
