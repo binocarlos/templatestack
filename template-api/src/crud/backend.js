@@ -4,7 +4,6 @@
 const async = require('async')
 const options = require('template-tools/src/utils/options')
 const Range = require('template-tools/src/schedule/range')
-const selectors = require('template-tools/src/booking/selectors')
 const idTools = require('template-tools/src/utils/id')
 const dateTools = require('template-tools/src/utils/date')
 
