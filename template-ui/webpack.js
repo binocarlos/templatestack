@@ -12,11 +12,17 @@ const DEFAULT_LINKED_MODULES = [
   'template-ui/lib'
 ]
 
-const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
+const WebpackConfig = (opts = {}) => {
+  const { toolboxVariables, appsConfig, dirname } = opts
   const APPS = appsConfig.apps || []
   const SHARED_MODULES = appsConfig.sharedModules || []
   const LINKED_MODULES = appsConfig.linkedModules || DEFAULT_LINKED_MODULES
   const isDevelopment = process.env.NODE_ENV !== "production"
+
+  const defineVariables = Object.keys(opts.defineVariables || {}).reduce((all, key) => {
+    all[key] = JSON.stringify(opts.defineVariables[key])
+    return all
+  }, {})
 
   const isExternalModule = (module) => {
     var userRequest = module.userRequest
@@ -31,9 +37,9 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
       new ExtractTextPlugin('[name].[hash].css', { allChunks: true }),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoErrorsPlugin(),
-      new webpack.DefinePlugin({
+      new webpack.DefinePlugin(Object.assign({}, {
         'process.env.NODE_ENV': JSON.stringify('development')
-      }),
+      }, defineVariables)),
       new CopyWebpackPlugin([{
         from: 'www',
         to: ''
@@ -44,9 +50,9 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
   const prodPlugins = () => {
     return [
       new ExtractTextPlugin('[name].[hash].css', { allChunks: true }),
-      new webpack.DefinePlugin({
+      new webpack.DefinePlugin(Object.assign({}, {
         'process.env.NODE_ENV': JSON.stringify('production')
-      }),
+      }, defineVariables)),
       new webpack.optimize.AggressiveMergingPlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.optimize.DedupePlugin(),
@@ -79,7 +85,7 @@ const WebpackConfig = ({ toolboxVariables, appsConfig, dirname } = opts) => {
         chunks: [app.name],
         title: app.title,
         template: 'template.ejs',
-        filename: `${app.name}/index.html`
+        filename: app.isRoot ? `index.html` : `${app.name}/index.html`
       })
     })
   }
