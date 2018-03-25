@@ -52,6 +52,7 @@ const DevServer = (opts = {}) => {
 
   // the express handler for server-side render of single app
   const appServer = (appConfig) => (req, res) => {
+    console.log(`serving: ${webpackConfig.output.path}/${appConfig.name}/index.html`)
     const htmlBuffer = devMiddleware.fileSystem.readFileSync(`${webpackConfig.output.path}/${appConfig.name}/index.html`)
     res.send(htmlBuffer.toString())
   }
