@@ -300,6 +300,7 @@ const AuthBackend = (opts) => {
 
   return {
     load,
+    loadByUsername,
     list,
     login,
     ensure,

@@ -247,6 +247,7 @@ const AuthRoutes = (opts) => {
 
   return {
     status,
+    exists,
     login,
     register,
     update,
