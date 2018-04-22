@@ -40,6 +40,22 @@ const AuthRoutes = (opts) => {
       })
   }
 
+  const exists = (req, res) => {
+    const qs = req.qs || {}
+    const username = qs.username || ''
+    
+    client.loadByUsername({
+      username,
+    }, (err, user) => {
+      if(err) return webserverTools.errorReply(next, res, err)
+      res
+        .status(200)
+        .json({
+          exists: user ? true : false
+        })
+    })
+  }
+
   // COMMANDS
 
   const login = (req, res, next) => {

@@ -135,6 +135,22 @@ const AuthBackend = (opts) => {
 
   /*
   
+    loadByUsername
+
+      * username
+    
+  */
+  const loadByUsername = (call, done) => {
+    storage.loadByUsername({
+      username: call.request.username
+    }, (err, user) => {
+      if(err) return done(err)
+      done(null, opts.displayUser(user))
+    })
+  }
+
+  /*
+  
     list
 
       * search
