@@ -51,7 +51,7 @@ const AuthRoutes = (opts) => {
       res
         .status(200)
         .json({
-          exists: user ? true : false
+          user
         })
     })
   }
