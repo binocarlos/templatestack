@@ -142,7 +142,7 @@ const InstallationBackend = (opts) => {
     hooks.authUpdate({
       id: call.request.userid,
       data: {
-        activeInstallation: call.request.id
+        activeInstallationId: call.request.id
       }
     }, done)
   }
