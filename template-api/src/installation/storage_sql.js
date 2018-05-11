@@ -247,9 +247,11 @@ on
             .asCallback(tools.singleExtractor(next))
         },
         (next) => {
+          if(!collaborators || collaborators.length <= 0) return next()
           deleteCollaborations(req.id, next)
         },
         (next) => {
+          if(!collaborators || collaborators.length <= 0) return next()
           createCollaborations(req.id, collaborators, next)
         }
       ], finish)
