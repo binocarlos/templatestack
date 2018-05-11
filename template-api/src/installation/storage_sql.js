@@ -193,14 +193,23 @@ on
   */
   const create = (req, done) => {
     const insertData = Object.assign({}, req.data)
-    const collaborators = insertData.collaborators
+    let collaborators = insertData.collaborators
     delete(insertData.collaborators)
+    if(!collaborators) {
+      collaborators = []
+    }
+    if(collaborators.filter(c => c.id == req.userid).length <= 0) {
+      collaborators.push({
+        id: req.userid,
+        collaboration_permission: 'owner',
+      })
+    }
     transaction((trx, finish) => {
       async.waterfall([
         (next) => {
           return knex
             .insert(insertData)
-            .into(tables.installation)
+            .into(tables.installation) 
             .returning('*')
             .asCallback(tools.singleExtractor(next))
         },
