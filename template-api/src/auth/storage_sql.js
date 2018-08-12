@@ -142,7 +142,9 @@ const StorageSQL = (opts) => {
       const meta = Object.assign({}, user.meta, req.data)
       knex(opts.table)
         .where({id: req.id})
-        .update({meta})
+        .update({
+          meta: JSON.stringify(meta)
+        })
         .returning('*')
         .asCallback(tools.singleExtractor(done))
     })
